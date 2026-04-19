@@ -1,0 +1,87 @@
+{
+  "$schema": "./audio_config.schema.json",
+  "version": 2,
+  "sliders": [
+    { "key": "master",   "label": "Volume Geral",  "default": 1.0, "persist": true },
+    { "key": "music",    "label": "Música",        "default": 0.5, "persist": true },
+    { "key": "sfx",      "label": "Efeitos",       "default": 0.7, "persist": true },
+    { "key": "vocalize", "label": "Vozes",         "default": 0.85, "persist": true }
+  ],
+  "categories": {
+    "master": 1.0,
+    "music": 0.5,
+    "sfx": 0.7,
+    "vocalize": 0.85,
+    "ambience": 0.3
+  },
+  "ambienceFollowsSlider": "sfx",
+  "overrides": {
+    "boss_defeat": 0.95,
+    "smart_bomb_explode": 0.95,
+    "boss_appear": 0.9,
+    "boss_phase_change": 0.88,
+    "player_die": 0.9,
+    "pickup_tapioca": 0.92,
+    "voc_oxe": 0.95,
+    "voc_se_lascou": 0.95,
+    "enemy_hit": 0.55,
+    "ui_select": 0.45,
+    "mosca_swarm_loop": 0.35,
+    "player_invuln_loop": 0.4,
+    "boss_iara_water_attack": 0.85,
+    "boss_coronel_laser": 0.9,
+    "boss_coronel_pergaminho": 0.7
+  },
+  "categoryOf": {
+    "vocalize_prefix": "voc_",
+    "ambience_prefix": "amb_",
+    "music_prefix": null,
+    "default": "sfx"
+  },
+  "ducking": [
+    {
+      "trigger": "boss_appear",
+      "ducks": ["music"],
+      "amount": 0.5,
+      "durationMs": 2000,
+      "fadeOutMs": 200,
+      "fadeInMs": 600
+    },
+    {
+      "trigger": "voc_*",
+      "ducks": ["sfx"],
+      "amount": 0.7,
+      "durationMs": "vocalize+100",
+      "fadeOutMs": 80,
+      "fadeInMs": 150
+    },
+    {
+      "trigger": "smart_bomb_explode",
+      "ducks": ["music", "sfx"],
+      "amount": 0.4,
+      "durationMs": 600,
+      "fadeOutMs": 80,
+      "fadeInMs": 200
+    },
+    {
+      "trigger": "pause_in",
+      "ducks": ["music"],
+      "amount": 0.2,
+      "durationMs": "until_pause_out",
+      "fadeOutMs": 200,
+      "fadeInMs": 200
+    }
+  ],
+  "crossfadeMs": {
+    "menu_to_phase": 800,
+    "phase_to_boss": 600,
+    "boss_to_phase": 1000,
+    "any_to_game_over": 500,
+    "any_to_victory": 1000,
+    "default": 600
+  },
+  "persist": {
+    "localStorageKey": "os_cabra_audio_settings",
+    "version": 1
+  }
+}
