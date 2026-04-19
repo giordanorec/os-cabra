@@ -1,0 +1,30 @@
+{
+  "name": "os-cabra",
+  "version": "0.0.1",
+  "description": "Os Cabra — shoot 'em up vertical em Phaser com tema Recife/Pernambuco",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "phaser",
+    "shoot-em-up",
+    "recife",
+    "pernambuco",
+    "xilogravura"
+  ],
+  "author": "giordanorec",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "phaser": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.8"
+  }
+}
