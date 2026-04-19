@@ -35,7 +35,7 @@ Layout em 800×600:
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│ 🐓🐓🐓                   SCORE: 12,340              💣 💣 │  ← top bar (~40px)
+│ 🐓🐓🐓      SCORE  012.340      ×1.5         💣 💣      │  ← top bar (y=0..40)
 │                                                         │
 │                                                         │
 │                    [ gameplay area ]                    │
@@ -44,92 +44,83 @@ Layout em 800×600:
 │                                                         │
 │                       [ player ]                        │
 │                                                         │
-│ [POWER-UP: SOMBRINHA DE FREVO]                          │  ← bottom strip (só se ativo)
+│ [icone] SOMBRINHA DE FREVO  ████████░░░░  10s           │  ← bottom strip (y=560..600, condicional)
 └─────────────────────────────────────────────────────────┘
 ```
 
-- **Vidas**: ícones de galo pequeno, alinhados à esquerda
-- **Score**: centro, fonte display grande
-- **Smart bombs**: ícones de garrafinha à direita
-- **Power-up ativo**: barra inferior, só aparece se tiver power-up. Pulsa quando expirando
+- **Vidas** (x=20,52,84 y=10, 24×24): ícones de galo, alinhados à esquerda. Slot perdido fica como silhueta @ 30% alpha
+- **Score** (x=300 label, x=360 valor, y=8-12): fonte display bold 24px, 6 dígitos com padding zero (`000000`). Valor sobe animado ao ganhar pontos.
+- **Multiplicador** (x=500 y=10, display italic 20px): aparece só se ×>1, pulsa, vermelho `#b84a2e`
+- **Smart bombs** (x=700,740 y=10, 24×24): garrafinha dourada. Sempre 2 slots como silhueta; preenche por bomb disponível
+- **Power-up ativo** (bottom strip y=560..600): só aparece se há powerup com duração. Ícone à esq (x=20), nome (x=60), barra (x=360..640), timer (x=760). Pulsa vermelho nos últimos 3s
+
+**Especificação pixel-perfect**: ver [`wireframes/07-hud.md`](wireframes/07-hud.md) — coordenadas exatas, estados, comportamentos de cada elemento.
+
+**Safe zones**: inimigos spawnam em y=60..540 (20px de folga de cada HUD). HUD está em depth 100+, sempre visível.
 
 ## 4. Textos e glossário pernambucano
 
-### Menu
-- "JOGAR" → **"ARROCHA AÍ"**
-- "CÓDIGOS" → **"CÓDIGOS DOS CABRA"**
-- "CRÉDITOS" → **"QUEM FEZ ESSE TRAÇADO"**
-- "SAIR" → **"VAZAR"**
+Todas as strings do jogo — ~120 entradas cobrindo menus, feedbacks, fases, bosses, game over, dicas de loading, créditos, erros — estão em [`GLOSSARY_PT_BR.md`](GLOSSARY_PT_BR.md).
 
-### Feedbacks de jogo
-- Ready → **"PAI D'ÉGUA"**
-- Game Start → **"VAI, MENINO"**
-- Pausa → **"PAREI"**
-- Continuar → **"BORA"**
-- Game Over → **"SE LASCOU"**
-- Boss aparece → **"OXE!"** (grande, animado)
-- Power-up pego → **"ARRETADO!"**, **"VISSE?!"**, **"ÉGUA!"**
-- Perdeu vida → **"AÍ, VIU?"**
-- 1-up → **"TÁ COM TUDO"**
+**Chaves hierárquicas** (`menu.play`, `boss.1.name`, `feedback.chain5`) prontas pra um módulo `Strings.ts` futuro. Nenhuma string hardcoded em TS — `StringService.get('menu.play')` retorna "ARROCHA AÍ".
 
-### Fases (intros)
-- Fase 1 → **"MARCO ZERO — ONDE TUDO COMEÇA"**
-- Fase 2 → **"LADEIRAS DE OLINDA — DESCE QUEM PODE"**
-- Fase 3 → **"RECIFE ANTIGO — DENTRO DA FESTA"**
-- Fase 4 → **"CAPIBARIBE — A MARÉ VIROU"**
-- Fase 5 → **"SERTÃO — A HORA É AGORA"**
+**Samples** (amostra — ver glossário completo):
 
-### Game Over
-```
-SE LASCOU
-_______________
-
-SCORE: 12,340
-RECORDE: 18,900
-
-SEU CÓDIGO: A3X9K2
-manda pros cabra
-
-[ENTER] menu
-```
-
-### Vitória
-```
-OS CABRA VENCERAM
-(ou não)
-
-tudo volta ao normal,
-mas o mangue guarda segredo
-
-SCORE FINAL: 48,320
-```
+- Menu: `ARROCHA AÍ` · `CÓDIGOS DOS CABRA` · `QUEM FEZ ESSE TRAÇADO` · `VAZAR`
+- Feedbacks: `PAI D'ÉGUA` · `VAI, MENINO` · `ARRETADO!` · `AÍ, VIU?` · `TÁ COM TUDO` · `ENGATADO` · `É BRABO MESMO`
+- Boss appear: `OXE!`
+- Pausa: `PAREI` · `BORA`
+- Game Over (variações): `SE LASCOU` · `RAPAZ...` · `NÃO DEU NÃO` · `VOLTA ESSA FITA` · `FOI BRABO MESMO`
+- Checkpoint: `ONDE EU TAVA`
 
 ## 5. Tipografia
 
-- **Display** (títulos): fonte inspirada em cordel, pesada, com serifa irregular. Candidatos: **Rye**, **Bungee**, **Modak** (Google Fonts). Ou fonte customizada
-- **Corpo** (textos longos): sans-serif legível, ex. **Inter**, **DM Sans**
-- **Mono** (debug, códigos): **JetBrains Mono**, **IBM Plex Mono**
+Definição final: **Rye** (display) + **Inter** (corpo) + **JetBrains Mono** (mono/códigos).
 
-Tamanhos (em 800×600):
-- Título: 48-64px
-- Subtítulo: 24-32px
-- Corpo: 16-18px
-- HUD número: 20-24px
-- Micro: 12px
+Escala tipográfica completa, tokens de espaçamento, paleta de UI e regras de caixa: ver [`UI_STYLE_GUIDE.md`](UI_STYLE_GUIDE.md).
+
+Tamanhos-chave em 800×600:
+- `display.xl` 88px (Game Over "SE LASCOU", boss "OXE!")
+- `display.l` 64px (nome de fase, "PAREI")
+- `display.m` 48px (títulos de tela)
+- `display.s` 32px (botões ativos, score destaque)
+- `body.s` 16px — **piso para qualquer texto legível durante gameplay**
+- `mono.code` 32px (código de compartilhamento)
+- `micro` 12px (hints de atalho)
 
 ## 6. Feedback visual — padrões
 
-| Evento | Feedback |
-|---|---|
-| Player atira | Muzzle flash (partícula 60ms) + som |
-| Inimigo atingido | Tint branco 80ms + som hit |
-| Inimigo morre | Partículas de explosão + shake leve + som |
-| Boss atingido | Tint + freeze frame 40ms |
-| Player leva dano | Red flash tela 120ms + shake médio + som + invulnerabilidade piscante |
-| Power-up pego | Flash da cor do power-up + som triunfal + texto flutuante "ARRETADO!" |
-| Checkpoint | Texto em cena "ONDE EU TAVA" com fade, sem pausa |
-| Boss aparece | Freeze de 1.5s, letreiro entra + som característico |
-| Score milestone (10k, 50k) | Texto celebrativo "ÉGUA!" |
+Duração, easing e componentes de cada feedback. Todos os valores em `anim.*` seguem os tokens de [`UI_STYLE_GUIDE.md`](UI_STYLE_GUIDE.md) §6.
+
+| Evento | Duração | Easing | Descrição |
+|---|---|---|---|
+| Player atira | 60ms | Linear | Muzzle flash (partícula branca `#f4e4c1` @ início do cano) + SFX `sfx_shoot` |
+| Inimigo atingido | 80ms | Linear | Tint branco `#f4e4c1` full sobre sprite + SFX `sfx_hit` + -1 HP numérico discreto |
+| Inimigo morre | 400ms | — | 4-6 partículas xilográficas explosão + shake leve (amplitude 3px, 120ms) + SFX `sfx_enemy_die` + score pop up |
+| Boss atingido (hit comum) | 80ms | Linear | Tint branco + freeze frame 80ms + SFX `sfx_boss_hit` |
+| Boss atingido (hit letal) | 150ms | Back.easeOut | Tint + freeze 150ms + flash branco tela 40% + SFX mais alto |
+| Player leva dano | 1500ms total | — | Red flash tela `#b84a2e` @ 30% 120ms + shake médio (6px, 250ms) + SFX `sfx_player_hit` + i-frames 1500ms com blink 15Hz |
+| Power-up pego | 600ms | Quad.easeOut | Flash cor do powerup (120ms) + SFX `sfx_pickup` + texto flutuante aleatório do glossário (`pickup.*`) sobe 40px em 600ms |
+| Vida extra (Tapioca) | 700ms | Back.easeOut | Flash `#5a7a3a` + SFX `sfx_1up` + "TÁ COM TUDO" scale 1.2→1.0 + ícone galo preenche slot vazio no HUD |
+| Checkpoint | 2000ms total | — | Ver [`wireframes/09-checkpoint.md`](wireframes/09-checkpoint.md); linhas entram, texto "ONDE EU TAVA" entra, tudo fade out — sem pausar gameplay |
+| Boss aparece | 1500ms | — | Ver [`wireframes/10-boss-intro.md`](wireframes/10-boss-intro.md); freeze, OXE!, nome, barra HP entra; input bloqueado |
+| Boss transição fase | 400ms | Cubic.easeOut | Freeze 400ms + flash branco + label "EITA, MUDOU" / "DANOU-SE AGORA" (ver glossário `boss.phase2/3`) |
+| Boss derrotado | 2500ms total | — | Ver [`wireframes/11-boss-defeated.md`](wireframes/11-boss-defeated.md); explosão, "SE FOI", bônus contando |
+| Score milestone 10k | 800ms | Back.easeOut | "ÉGUA! 10 MIL" no centro, scale bounce + fade |
+| Score milestone 50k | 800ms | Back.easeOut | "MEIO CENTO, CABRA!" |
+| Score milestone 100k | 1000ms | Back.easeOut | "CEM MIL ARRETADO" + sparkle VFX |
+| Novo recorde (em Game Over/Vitória) | 600ms + loop | Back.easeOut | "NOVO RECORDE!" scale 1.2→1.0, depois pulse 1s loop em `#d4a04c` |
+| Chain ×1.5 ativa | 300ms | Quad.easeOut | Multiplicador aparece no HUD com scale 1.4→1.0 |
+| Chain expira | 300ms | Cubic.easeIn | Multiplicador pisca 3× em 300ms e some |
+| Chain milestone 5/10/20 | 500ms | Back.easeOut | Texto flutuante "ENGATADO" / "TÁ ARRASANDO" / "É BRABO MESMO" |
+| Última vida | 400ms + loop | — | Texto flutuante "É A ÚLTIMA!" + barra inferior de HUD pulsa vermelho sutil |
+| Near-miss (projétil passa raspando) | 200ms | Linear | Pequeno slow-mo 90% por 150ms + flash amarelo na hitbox — **opcional v2** |
+
+### Bloco de todo feedback
+
+- **SFX sempre** acompanha — redundância sensorial para acessibilidade
+- **Nada linear** em feedback de UI (exceto flashes de frame único)
+- **Nada bloqueia input** além de boss intro/outro — gameplay não espera por feedback
 
 ## 7. Acessibilidade
 
@@ -140,23 +131,56 @@ Mesmo sendo v1, seguir o básico:
 - Não usar só cor pra diferenciar inimigos (silhueta importa)
 - Modo daltônico: deixar previsto — toggle em Opções (mesmo que só funcione em v2)
 
-## 8. Animação/transições
+## 8. Animação/transições entre cenas
 
-- Menu → Gameplay: **wipe horizontal** (como quando você vira página de cordel)
-- Pausa entra: **zoom out rápido** + desfoque leve
-- Fase → Boss: **slow zoom in** no jogador, depois reveal do boss
-- Game Over: **fade to black lento** (2s) + letreiro aparece
+Tabela completa. Durações em ms, easings nomeados como em Phaser (`Cubic.easeOut` etc).
+
+| De → Para | Trigger | Duração | Easing | Descrição |
+|---|---|---|---|---|
+| Splash → Menu | auto (1.5s) ou tecla | 400 | Cubic.easeOut | Wipe horizontal E→D (tipo vira-página de cordel); áudio de tambor abafa |
+| Menu → Preload | Enter em "ARROCHA AÍ" | 300 | Cubic.easeIn | Botão flash branco 80ms + fade to `#1a0f08`; Preload aparece com fade 200ms |
+| Menu → Códigos | Enter em "CÓDIGOS" | 250 | Cubic.easeOut | Slide horizontal D→E (tela empurra pra esquerda) |
+| Menu → Créditos | Enter em "CRÉDITOS" | 250 | Cubic.easeOut | Slide vertical de baixo pra cima |
+| Códigos/Créditos → Menu | ESC | 250 | Cubic.easeIn | Slide inverso da entrada |
+| Preload → Intro Fase | asset pronto + min 500ms | 400 | Cubic.easeInOut | Wipe horizontal + fade parallax da fase já visível em blur |
+| Intro Fase → Gameplay | auto (2s) ou tecla | 400 | Cubic.easeIn | Texto da fase some em scale+fade, dissolve tela; HUD entra em cascata 150ms stagger |
+| Gameplay → Pausa | ESC | 250 | Cubic.easeOut | Snapshot do gameplay + blur 8px + dimmer 50% + "PAREI" scale 1.3→1.0 + botões cascata |
+| Pausa → Gameplay | ESC ou "BORA" | 180 | Cubic.easeIn | Reverte: botões saem, "PAREI" some, blur e dimmer clareiam; gameplay retoma sem contagem |
+| Pausa → Menu | "VAZAR" + confirm | 400 | Cubic.easeIn | Fade to black 400ms + fade in do menu 400ms |
+| Gameplay → Checkpoint overlay | 50% das ondas | 300 in + 300 out | Cubic.easeOut / Cubic.easeIn | Linhas e texto entram e saem; gameplay segue — ver [`wireframes/09`](wireframes/09-checkpoint.md) |
+| Gameplay → Boss Intro | HP da onda final zerada | 1500 cinematic | — | Freeze + slow zoom 1.0→1.05 no player 800ms + boss desce 600ms + OXE! 300ms + barra HP sobe 300ms — ver [`wireframes/10`](wireframes/10-boss-intro.md) |
+| Boss Intro → Boss Fight | auto (1.5s) ou tecla | 300 | Cubic.easeIn | OXE! e linhas dissolvem; HP do boss permanece; player recebe input de volta |
+| Boss HP 66/33% | hit que cruza threshold | 400 | Back.easeOut | Freeze 400ms + flash branco tela + label de transição de fase |
+| Boss Fight → Boss Defeated | HP=0 | 2500 cinematic | — | Explosão 500ms + "SE FOI" bounce + recap contando — ver [`wireframes/11`](wireframes/11-boss-defeated.md) |
+| Boss Defeated → Fim de Fase | auto (2.5s) | 400 | Cubic.easeIn | Dissolve + move up 20px; Fim de Fase entra fade |
+| Fim de Fase → Intro próxima fase | Enter | 400 | Cubic.easeInOut | Wipe horizontal; Intro de fase entra direto |
+| Gameplay → Game Over | vidas=0 | 2000 cinematic | — | Fade to black lento 2000ms (`Cubic.easeIn`) + "SE LASCOU" cai do topo Bounce.easeOut 600ms + stats cascata + código máquina de escrever |
+| Game Over → Menu / Retry | Enter / R | 400 | Cubic.easeIn | Fade → cena de destino |
+| Boss final Defeated → Vitória | auto | 1000 cinematic | Cubic.easeInOut | Slow fade + título "OS CABRA VENCERAM" fade+scale 1.2→1.0 em 500ms |
+| Vitória p1 → p2 | Enter | 400 | Cubic.easeInOut | Crossfade; scroll de créditos começa |
+| Vitória → Menu | Enter ao fim | 600 | Cubic.easeIn | Fade to black + fade in menu |
+
+### Princípios de transição
+
+- **Wipe horizontal** é a linguagem-padrão entre telas "iguais" de menu (evoca virar página de cordel)
+- **Fade to black** fica reservado para momentos de peso dramático (Game Over, entre atos)
+- **Slide** para hierarquia (entrar em sub-menu desliza pra dentro; voltar desliza pra fora)
+- **Zoom/freeze** para cinemáticas de boss (respeita o ritmo arcade)
+- Toda transição mantém áudio coerente: nada de corte brusco de música; usa ducking 30% durante transições cinematográficas
 
 ## 9. Entregáveis do UI/UX
 
-1. **Wireframes** de todas as 14 telas (papel/figma, esboço OK)
-2. **Glossário PT-BR pernambucano completo** (lista final de todos os textos do jogo)
-3. **Style guide de UI** (tipografia, cores de UI, espaçamentos)
-4. **Especificação de HUD** com posicionamento exato em 800×600
-5. **Animações de transição** descritas (timing, easing)
+- [x] **Wireframes** das 14 telas — ver [`wireframes/`](wireframes/) (ASCII anotado com coordenadas; PNG opcional em follow-up)
+- [x] **Glossário PT-BR pernambucano** — ver [`GLOSSARY_PT_BR.md`](GLOSSARY_PT_BR.md) (~120 strings)
+- [x] **Style guide de UI** — ver [`UI_STYLE_GUIDE.md`](UI_STYLE_GUIDE.md) (tipografia, cores, espaçamento, tokens)
+- [x] **Especificação de HUD** — §3 deste doc + [`wireframes/07-hud.md`](wireframes/07-hud.md) com coordenadas pixel-perfect
+- [x] **Animações de transição** — §8 acima (tabela completa); feedbacks em §6
 
 ## 10. Open questions
 
-- [ ] Textos sempre em caixa alta ou só títulos?
-- [ ] Legendar SFX importantes (visissíveis) pra acessibilidade?
-- [ ] Mostrar controles em overlay no início da partida 1?
+- [x] **Textos sempre em caixa alta ou só títulos?** → Só em títulos, display e botões. Corpo longo (poema, créditos, dicas) em caixa mista natural (ver `UI_STYLE_GUIDE.md` §2.4).
+- [ ] **Legendar SFX importantes pra acessibilidade?** → Previsto como v2 (stub em `UI_STYLE_GUIDE.md` §7.2). v1 já duplica feedback em visual + sonoro, mas sem legenda textual.
+- [x] **Mostrar controles em overlay no início da partida 1?** → Não — "nada de tutorial longo" é restrição. Dicas de controle saem como microtexto no preload da fase 1 ("[ESPAÇO] atira · [SETAS] move · [ESC] pausa") e pronto. Overlay completo só se for pedido em playtest.
+- [ ] **Fonte customizada do Visual Designer substitui Rye?** → Pendente sincronização com Visual Designer. Rye é o fallback garantido.
+- [ ] **@fontsource local ou CDN Google Fonts?** → Local (via npm), offline-friendly e determinístico.
+- [ ] **Modo daltônico no v1?** → Stub em Opções, default-off; ativação real em v2.
