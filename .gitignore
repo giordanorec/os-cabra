@@ -17,5 +17,11 @@ dist/
 # Playwright MCP artifacts
 .playwright-mcp/
 
+# Playwright test runner outputs (traces, screenshots em caso de falha, videos)
+test-results/
+playwright-report/
+/blob-report/
+.playwright/
+
 # Claude Code local settings
 .claude/
