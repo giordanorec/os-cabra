@@ -9,7 +9,10 @@ Arquivos que vão para o build. Toda linha precisa de autor, licença compatíve
 
 | Arquivo | Tipo | Autor / Fonte | Licença | Link | Observação |
 |---|---|---|---|---|---|
-| _vazio_ | — | — | — | — | Nenhum asset final ainda. Preencher à medida que Fase C entrega. |
+| `public/favicon.svg` | Ícone (SVG) | Visual Designer / sessão Claude 2026-04-19 | Próprio (projeto *Os Cabra*) | — | Galo da Madrugada estilizado, 3 cores da paleta. Origem em `scripts/art/generate-favicon.mjs` |
+| `public/favicon.ico` | Ícone (multi-size 16/32/48) | Derivado de `favicon.svg` | Próprio | — | Gerado via `npm run favicon` |
+| `public/favicon-192.png` | Ícone PWA / Apple touch | Derivado de `favicon.svg` | Próprio | — | Idem |
+| `public/favicon-512.png` | Ícone PWA | Derivado de `favicon.svg` | Próprio | — | Idem |
 
 ### Licenças aceitas para assets finais
 

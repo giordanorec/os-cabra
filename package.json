@@ -8,7 +8,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "favicon": "node scripts/art/generate-favicon.mjs"
   },
   "keywords": [
     "phaser",
@@ -23,7 +24,10 @@
     "phaser": "^4.0.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.59.1",
     "@types/node": "^25.6.0",
+    "sharp": "^0.34.5",
+    "to-ico": "^1.1.5",
     "typescript": "^6.0.3",
     "vite": "^8.0.8"
   }
