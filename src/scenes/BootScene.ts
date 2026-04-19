@@ -1,4 +1,4 @@
-import Phaser from 'phaser';
+import * as Phaser from 'phaser';
 
 /**
  * Scaffold placeholder. O Gameplay Developer vai substituir este arquivo
