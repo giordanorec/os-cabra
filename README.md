@@ -2,9 +2,16 @@
 
 > Shoot 'em up vertical em Phaser 4 + TypeScript com tema das manifestações culturais do Recife.
 
-**Status**: setup concluído, aguardando implementação das especialidades.
+**Status**: Milestone 2 jogável em `main`. Próximo: boss da Fase 1 (M3).
 
-## Rodando
+## Jogar online
+
+Deploy automático na Vercel a cada push em `main`.
+
+- **Produção**: _URL será preenchida após o primeiro import na Vercel — ver `docs/DEVOPS_SETUP.md` §Fase 2._
+- **Preview por PR**: comentário automático do bot da Vercel em cada PR aberto.
+
+## Rodando localmente
 
 ```bash
 npm install

@@ -65,9 +65,51 @@ gh api repos/giordanorec/os-cabra/branches/main/protection | jq
 
 GitHub pega esses arquivos automaticamente — não precisa ativar nada.
 
-## Fase 2 — Deploy (pendente)
+## Fase 2 — Deploy Vercel (2026-04-19)
 
-Acionada após o Gameplay Dev entregar M2 (primeiro milestone jogável). Ver `docs/DEVOPS.md` seção 4.2 pra Vercel.
+### `vercel.json`
+
+Na raiz do repo. Detectado automaticamente pela Vercel no import.
+
+```json
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": null,
+  "installCommand": "npm ci",
+  "cleanUrls": true
+}
+```
+
+### Importar o repo na Vercel (passo manual do usuário — crítico)
+
+Não dá pra automatizar: o Vercel CLI requer `vercel login` interativo e o MCP `deploy_to_vercel` só dá instruções. Também nenhuma das API calls disponíveis pelo MCP cria projeto.
+
+Passos (uma vez só, ~2 minutos):
+
+1. Ir em https://vercel.com/new
+2. Escolher o team `giordanorecs-projects`
+3. Selecionar o repo `giordanorec/os-cabra` da lista (repo é público desde Fase 1, aparece)
+4. Clicar **Import**
+5. Confirmar: Framework = `Other`, Build Command = `npm run build`, Output Directory = `dist`, Install Command = `npm ci` (o `vercel.json` já preenche)
+6. Clicar **Deploy**
+7. Após finalizar, copiar a URL de produção e colar no `README.md` (badge e seção "Jogar online")
+
+A partir desse ponto:
+
+- **Push em `main` → deploy de produção** automático.
+- **PR aberto → preview URL** automática como comentário no PR (cada commit no PR re-deploya a preview).
+
+### Env vars na Vercel
+
+Nenhuma exigida agora (jogo é 100% estático, sem backend, sem API key em runtime). Se algum dia precisar, ir em Project → Settings → Environment Variables. **Nunca commitar segredo no código.**
+
+### Rollback
+
+Na dashboard do projeto → Deployments → escolher um deploy anterior → "Promote to Production". Ou via Git: `git revert` do commit problemático + push em `main`.
+
+## Fase 3 — Polish (pendente)
 
 ## Fase 3 — Polish (pendente)
 
