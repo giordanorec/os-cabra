@@ -25,3 +25,8 @@ playwright-report/
 
 # Claude Code local settings
 .claude/
+
+# Python venv para geração de arte com IA
+.venv-art/
+__pycache__/
+*.pyc
