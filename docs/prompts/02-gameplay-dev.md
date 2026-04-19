@@ -36,6 +36,7 @@ Toda a implementação em Phaser/TS. Cenas, entidades, sistemas, pools, physics,
 5. `docs/UX_SPEC.md` — HUD, textos, transições
 6. `src/config.ts` — constantes já definidas, você ajusta conforme `GDD.md`
 7. `src/main.ts` e `src/scenes/BootScene.ts` — ponto de partida atual
+8. `docs/NOTES_FROM_DEVOPS.md` — inbox do DevOps (blockers, estado do CI, coisas que te afetam agora)
 
 ## Verifique antes de começar
 

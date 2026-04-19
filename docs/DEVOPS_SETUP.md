@@ -12,27 +12,35 @@ Job name: `build` — é esse o status check exigido pela branch protection.
 
 ### Branch protection na `main`
 
-**Status: pendente.** A tentativa em 2026-04-19 retornou `403 Upgrade to GitHub Pro or make this repository public to enable this feature` — GitHub Free não permite branch protection em repos privados. Executar o comando abaixo após tornar o repo público (`gh repo edit giordanorec/os-cabra --visibility public`) ou habilitar GitHub Pro.
+**Status: ATIVA desde 2026-04-19.** O repo foi tornado público (`gh repo edit giordanorec/os-cabra --visibility public`) e a proteção foi aplicada logo em seguida.
 
-Regras planejadas:
+Regras:
 
 - Exige PR (sem pushes diretos)
 - Exige 1 review aprovada antes do merge
 - Exige o status check `build` (CI) verde
 - Dismiss stale reviews quando novos commits chegam
-- Aplica a admins também (include_admins)
+- Aplica a admins também (enforce_admins)
 
-**Comando usado** (rodar da raiz do repo, autenticado como owner ou admin):
+**Comando aplicado** — nota: `gh api` com flags `-F` não envia `null` corretamente (retorna 422). Usar `--input -` com JSON body pra mandar `restrictions: null`:
 
 ```bash
-gh api -X PUT repos/giordanorec/os-cabra/branches/main/protection \
+cat <<'EOF' | gh api -X PUT repos/giordanorec/os-cabra/branches/main/protection \
   -H "Accept: application/vnd.github+json" \
-  -F required_status_checks[strict]=true \
-  -F required_status_checks[contexts][]=build \
-  -F enforce_admins=true \
-  -F required_pull_request_reviews[required_approving_review_count]=1 \
-  -F required_pull_request_reviews[dismiss_stale_reviews]=true \
-  -F restrictions=
+  --input -
+{
+  "required_status_checks": {
+    "strict": true,
+    "contexts": ["build"]
+  },
+  "enforce_admins": true,
+  "required_pull_request_reviews": {
+    "required_approving_review_count": 1,
+    "dismiss_stale_reviews": true
+  },
+  "restrictions": null
+}
+EOF
 ```
 
 **Para desativar temporariamente** (ex: emergência, hotfix sem review):
