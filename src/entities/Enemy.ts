@@ -1,16 +1,18 @@
 import * as Phaser from 'phaser';
+import { GAME_HEIGHT, GAME_WIDTH } from '../config';
 
 export interface EnemyConfig {
   hp: number;
   points: number;
   texture: string;
-  onDeath?: (points: number) => void;
+  onDeath?: (enemy: Enemy) => void;
 }
 
 export class Enemy extends Phaser.Physics.Arcade.Sprite {
   hp: number;
   readonly points: number;
-  private readonly onDeath?: (points: number) => void;
+  private readonly onDeath?: (enemy: Enemy) => void;
+  protected spawnedAt = 0;
 
   constructor(scene: Phaser.Scene, x: number, y: number, cfg: EnemyConfig) {
     super(scene, x, y, cfg.texture);
@@ -41,6 +43,24 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
 
   private die() {
     this.disableBody(true, true);
-    this.onDeath?.(this.points);
+    this.onDeath?.(this);
+  }
+
+  preUpdate(time: number, delta: number) {
+    super.preUpdate(time, delta);
+    if (!this.active) return;
+    if (this.spawnedAt === 0) this.spawnedAt = time;
+    this.onTick(time, delta);
+    if (this.isOffscreen()) {
+      this.disableBody(true, true);
+    }
+  }
+
+  protected onTick(_time: number, _delta: number) {
+    // override em subclasses
+  }
+
+  private isOffscreen(): boolean {
+    return this.y > GAME_HEIGHT + 60 || this.x < -60 || this.x > GAME_WIDTH + 60;
   }
 }
