@@ -12,7 +12,9 @@ Job name: `build` — é esse o status check exigido pela branch protection.
 
 ### Branch protection na `main`
 
-Configurada via `gh api`. Regras:
+**Status: pendente.** A tentativa em 2026-04-19 retornou `403 Upgrade to GitHub Pro or make this repository public to enable this feature` — GitHub Free não permite branch protection em repos privados. Executar o comando abaixo após tornar o repo público (`gh repo edit giordanorec/os-cabra --visibility public`) ou habilitar GitHub Pro.
+
+Regras planejadas:
 
 - Exige PR (sem pushes diretos)
 - Exige 1 review aprovada antes do merge

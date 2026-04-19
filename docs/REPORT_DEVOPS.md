@@ -8,7 +8,7 @@
 - `.github/ISSUE_TEMPLATE/bug.md` e `feature.md` — templates de issue.
 - `.github/pull_request_template.md` — template de PR com checklist.
 - `docs/DEVOPS_SETUP.md` — runbook com comandos usados (branch protection, reset, inspeção).
-- Branch protection em `main`: exige PR + 1 review + CI (`build`) verde + aplica a admins. Configurada via `gh api` (comando em `DEVOPS_SETUP.md`).
+- Branch protection em `main`: **NÃO aplicada ainda** — GitHub responde `403 Upgrade to GitHub Pro or make this repository public`. Comando está pronto em `DEVOPS_SETUP.md`; basta o usuário tornar o repo público ou habilitar Pro e re-rodar o `gh api ... PUT`.
 
 ### Comandos que o usuário precisa conhecer
 
@@ -33,6 +33,7 @@ Causa: Phaser 4 não tem mais default export — é namespace import. Fix espera
 
 ### Decisões pendentes
 
+- **Repo privado + branch protection**: GitHub Free não permite branch protection em repos privados. Opções: (a) tornar `os-cabra` público agora (menos atrito, combina com o "abrir pra público quando estiver apresentável" de `docs/DEVOPS.md` §1), (b) assinar GitHub Pro, (c) seguir sem proteção até um dos dois acontecer. Recomendo (a) ou (c) — o jogo não tem segredo no código.
 - Quando ativar o Vercel (Fase 2) — esperar M2 conforme `docs/prompts/07-devops.md`.
 - Domínio custom ou vercel.app? — aberto no `docs/DEVOPS.md` seção 9.
 - itch.io em paralelo ao Vercel ou só no release público? — aberto no `docs/DEVOPS.md` seção 9.
