@@ -1,13 +1,18 @@
 import * as Phaser from 'phaser';
-import { GAME_HEIGHT, GAME_WIDTH } from '../config';
+import { FASE1, GAME_HEIGHT, GAME_WIDTH } from '../config';
 import { Player } from '../entities/Player';
 import { BulletGroup } from '../entities/Bullet';
 import { Enemy } from '../entities/Enemy';
 import { EnemyBullet, EnemyBulletGroup } from '../entities/EnemyBullet';
-import { InputManager } from '../systems/InputManager';
+import { Action, InputManager } from '../systems/InputManager';
 import { EnemySpawner } from '../systems/EnemySpawner';
 import { ScoreManager, ScoreSnapshot } from '../systems/ScoreManager';
 import { getString } from '../strings';
+import { MaracatuNacao } from '../bosses/MaracatuNacao';
+
+const BOSS_BONUS_BASE = 5000;
+const BOSS_BONUS_PER_LIFE = 1000;
+const BOSS_DEFEATED_VIEW_MS = 2500;
 
 interface Checkpoint {
   waveIndex: number;
@@ -25,6 +30,8 @@ export class GameScene extends Phaser.Scene {
   private scoreManager!: ScoreManager;
   private checkpoint: Checkpoint | null = null;
   private ended = false;
+  private boss?: MaracatuNacao;
+  private bossActive = false;
 
   constructor() {
     super({ key: 'GameScene' });
@@ -32,6 +39,8 @@ export class GameScene extends Phaser.Scene {
 
   create() {
     this.ended = false;
+    this.bossActive = false;
+    this.boss = undefined;
     this.inputManager = new InputManager(this);
     this.scoreManager = new ScoreManager();
 
@@ -57,7 +66,7 @@ export class GameScene extends Phaser.Scene {
         onEnemySpawned: (e) => this.onEnemySpawned(e),
         onEnemyKilled: (e) => this.onEnemyKilled(e),
         onCheckpoint: (waveIdx) => this.saveCheckpoint(waveIdx),
-        onAllWavesCleared: () => this.endGame(true)
+        onAllWavesCleared: () => this.scheduleBossEntry()
       },
       this.checkpoint?.waveIndex ?? 0
     );
@@ -81,9 +90,30 @@ export class GameScene extends Phaser.Scene {
 
   override update(time: number, _delta: number) {
     if (this.ended) return;
+    if (this.inputManager.justPressed(Action.PAUSE)) {
+      this.pauseGame();
+      return;
+    }
     this.player.tick(time, this.inputManager, this.playerBullets);
-    this.spawner.tick();
+    if (!this.bossActive) this.spawner.tick();
+    this.boss?.tick(time);
     this.scoreManager.tick(time);
+  }
+
+  private pauseGame() {
+    this.scene.pause();
+    this.scene.pause('HUDScene');
+    this.scene.launch('PauseScene');
+  }
+
+  private registerPlayerVsEnemyBullets() {
+    this.physics.add.overlap(this.player, this.enemyBullets, (_p, bulletObj) => {
+      const bullet = bulletObj as EnemyBullet;
+      if (!bullet.active) return;
+      if (this.player.takeDamage(this.time.now)) {
+        bullet.disableBody(true, true);
+      }
+    });
   }
 
   private onEnemySpawned(enemy: Enemy) {
@@ -99,7 +129,7 @@ export class GameScene extends Phaser.Scene {
       const e = enemyObj as Enemy;
       if (!e.active) return;
       if (this.player.takeDamage(this.time.now)) {
-        e.takeHit(99); // colisão mata o inimigo (exceto boss — fica pra M3)
+        e.takeHit(99);
       }
     });
   }
@@ -117,14 +147,56 @@ export class GameScene extends Phaser.Scene {
     this.events.emit('hud-checkpoint');
   }
 
-  private registerPlayerVsEnemyBullets() {
-    this.physics.add.overlap(this.player, this.enemyBullets, (_p, bulletObj) => {
-      const bullet = bulletObj as EnemyBullet;
-      if (!bullet.active) return;
-      if (this.player.takeDamage(this.time.now)) {
-        bullet.disableBody(true, true);
+  private scheduleBossEntry() {
+    this.bossActive = true;
+    this.time.delayedCall(FASE1.BREATHER_BEFORE_BOSS_MS, () => this.spawnBoss());
+  }
+
+  private spawnBoss() {
+    this.boss = new MaracatuNacao(
+      this,
+      this.enemyBullets,
+      () => this.player,
+      {
+        onPhaseChange: (phase) => {
+          const key = phase === 'B' ? 'boss.phase2' : phase === 'C' ? 'boss.phase3' : '';
+          if (key) this.events.emit('hud-boss-phase', getString(key));
+        },
+        onHPChange: (hp, hpMax) => this.events.emit('hud-boss-hp', hp, hpMax),
+        onDefeated: () => this.finishBoss()
       }
+    );
+    this.boss.playIntro(() => {
+      // nothing extra after intro; tick is running
     });
+    this.events.emit('hud-boss-intro', getString('boss.1.name'), getString('boss.1.epithet'));
+    this.events.emit('hud-boss-hp', this.boss.hp, this.boss.hpMax);
+    this.registerBossCollisions();
+  }
+
+  private registerBossCollisions() {
+    if (!this.boss) return;
+    for (const member of this.boss.members()) {
+      this.physics.add.overlap(member, this.playerBullets, (memberObj, bulletObj) => {
+        const bullet = bulletObj as Phaser.Physics.Arcade.Sprite;
+        if (!bullet.active || !this.boss) return;
+        bullet.disableBody(true, true);
+        this.boss.registerMemberHit(memberObj as typeof member);
+      });
+      this.physics.add.overlap(this.player, member, () => {
+        if (!this.boss) return;
+        this.player.takeDamage(this.time.now);
+      });
+    }
+  }
+
+  private finishBoss() {
+    const lives = this.player.lives;
+    const bonus = BOSS_BONUS_BASE + BOSS_BONUS_PER_LIFE * lives;
+    this.scoreManager.registerKill(bonus, this.time.now);
+    this.events.emit('hud-boss-defeated', BOSS_BONUS_BASE, lives, bonus);
+    this.events.emit('hud-boss-hide');
+    this.time.delayedCall(BOSS_DEFEATED_VIEW_MS, () => this.endGame(true));
   }
 
   private endGame(victory: boolean) {

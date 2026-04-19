@@ -24,7 +24,22 @@ const STRINGS: Record<string, string> = {
   'gameover.score_label': 'FEZ',
   'gameover.hint': '[ENTER] volta pro menu',
 
-  'controls.hint': '[SETAS] move  [ESPAÇO] atira  [ESC] pausa'
+  'controls.hint': '[SETAS] move  [ESPAÇO] atira  [ESC] pausa',
+
+  'pause.title': 'PAREI',
+  'pause.resume': 'BORA',
+  'pause.quit': 'VAZAR PRO MENU',
+  'pause.hint': 'ESC retoma',
+
+  'boss.appear': 'OXE!',
+  'boss.1.name': 'MARACATU NAÇÃO',
+  'boss.1.epithet': 'REI · RAINHA · CALUNGA',
+  'boss.phase2': 'EITA, MUDOU',
+  'boss.phase3': 'DANOU-SE AGORA',
+  'boss.defeated': 'SE FOI',
+  'boss.bonus_label': 'BONUS DE BOSS',
+  'boss.lives_label': 'VIDAS RESTANTES',
+  'boss.total_label': 'TOTAL'
 };
 
 export function getString(key: string, ...args: Array<string | number>): string {
