@@ -50,54 +50,132 @@
 
 Detalhes de animação e sprite sheets: responsabilidade do Visual Designer (ver `ART_BIBLE.md`).
 
+### 5.1 Dano e velocidade dos projéteis inimigos
+
+Regra geral: **todo projétil inimigo e toda colisão com inimigo custam 1 vida ao player**. Não há dano fracionado — shoot'em up clássico, legibilidade total. O que varia é *como difícil é evitar*.
+
+| Projétil | Origem | Velocidade (px/s) | Hitbox | Trajetória | Observação |
+|---|---|---|---|---|---|
+| Bombinha | Passista de Frevo | 160 | 10×10 | Arco parabólico (g ≈ 400 px/s²) | Cai à frente do inimigo, telegrafada |
+| Flecha | Caboclinho | 260 | 6×18 | Reta vertical | Rápida, mas em linha previsível |
+| Cabeça-projétil | Mamulengo | 140 | 14×14 | Homing fraco (correção ±60°/s, perde o tracking após 2s) | Player consegue "virar" ela |
+| Lança | Caboclo de Lança | 300 | 6×28 | Reta, dispara no eixo do player no instante do tiro | Telegrafa 300ms antes (brilho na ponta) |
+| Fígado pulsante | Papa-Figo | 180 | 12×12 | 3 em rajada, 150ms entre cada, leque de 20° | Padrão, pulsa visualmente |
+| Cipó | Comadre Fulozinha | 130 | 8×20 | Senoide (amplitude 60px, período 1s) | Lento, mas ocupa corredor |
+| Bola de fogo | Besta-Fera | 220 | 16×16 | Reta, mira no player no instante do tiro | Alto dano visual, hitbox grande |
+
+Colisão direta com inimigo: 1 vida perdida + inimigo **também** morre (exceto boss, que apenas empurra o player). Urubu do Capibaribe, por ser kamikaze, é o único cuja estratégia ótima é matá-lo *antes* que ele atinja a linha do player.
+
 ## 6. Bosses
 
-Um boss ao final de cada fase. Cada um tem 3 fases de padrão (HP quebrado em terços).
+Um boss ao final de cada fase. Cada um tem **3 fases de padrão** (HP quebrado em terços — ao cair abaixo de 66% e 33% transiciona, com **freeze frame de 400ms + flash branco**). Bosses não morrem por colisão — player nunca perde vida ao encostar, só é empurrado.
 
-### Fase 1 — Marco Zero: Maracatu Nação
-- Rei, Rainha e Calunga como um trio que ataca junto
-- Fase 1: alternam tiros em leque
-- Fase 2: Calunga se destaca e vira projétil teleguiado
-- Fase 3: Rei e Rainha formam "corredor" que jogador precisa atravessar atirando
+Pontuação ao derrotar: **5.000 base + 1.000 × vidas restantes** (ver seção 9).
 
-### Fase 2 — Ladeiras de Olinda: Homem da Meia-Noite
-- Boneco gigante que ocupa metade da tela
-- Braços atacam independentemente (cada braço tem HP próprio, destruir um antes facilita)
-- Fase 3 (enraivecido): acelera, braços giram como moinho
+Legenda: *HP total* = 100% da barra. *Tiro* descreve projétil, velocidade, cadência.
 
-### Fase 3 — Recife Antigo: Galo da Madrugada Maligno
-- Versão corrompida do ícone — penas bio-orgânicas
-- Atira ovos explosivos em parábola
-- Em HP baixo, cospe uma mini-formação de galinhas-pintinho kamikaze
+### 6.1 Fase 1 — Marco Zero: Maracatu Nação (trio Rei, Rainha, Calunga)
+- **HP total**: 80
+- **Entrada**: trio desliza do topo para posição ~y=120. Freeze 1.5s + letreiro "OXE!"
+- **Fase A (HP 80→54, 100%→67%)** — *Cortejo*
+  - Trio parado em formação, Calunga no centro
+  - Tiro em leque a cada **2.5s**: 5 projéteis, spread 40° total, velocidade 200 px/s
+  - Rei e Rainha balançam lateralmente ±40px em 1.5s
+- **Fase B (HP 54→27, 66%→34%)** — *Calunga solta*
+  - Rei e Rainha continuam com leque de 5 tiros, agora a cada **2s**
+  - Calunga se destaca, desce até y≈300 e vira projétil teleguiado (hitbox 18×18, speed 160 px/s, destrutível com 3 tiros) a cada **4s**; se destruído, Calunga respawna no centro após 1.5s
+- **Fase C (HP 27→0, 33%→0%)** — *Corredor*
+  - Rei e Rainha vão para laterais (x=150 e x=650), mantêm leque a cada **1.8s** direcionado ao centro
+  - Calunga oscila horizontalmente no centro (y≈140), atirando rajada reta de 3 projéteis rápidos (300 px/s) a cada **1.5s**
+  - A cada **6s**, varrida horizontal telegrafada (linha vermelha 0.6s) que cruza a tela em 0.8s — player deve estar fora da linha
 
-### Fase 4 (opcional) — Capibaribe: Iara do Capibaribe
-- Sereia poluída, emerge do rio (sprite cresce da base pra cima)
-- Ataca com correntes de lixo e garrafas PET
-- Cura parte do HP se jogador ficar parado muito tempo (força movimento)
+### 6.2 Fase 2 — Ladeiras de Olinda: Homem da Meia-Noite
+- **HP total**: Corpo 60, Braço Esquerdo 25, Braço Direito 25 (total efetivo 110). Corpo só recebe dano quando **ao menos um braço está destruído**.
+- **Entrada**: boneco cresce da base pra cima, ocupando metade vertical. Freeze 1.5s + "OXE!"
+- **Fase A (braços intactos)** — *Festeiro*
+  - Braço esq: solta 2 bombinhas em arco a cada **3s** (gravidade 380 px/s², spread 80px)
+  - Braço dir: dispara laser telegrafado — aviso 1s (linha amarela), tiro 0.4s (linha vermelha reta, dano 1 vida); ciclo **4s**
+  - Corpo invulnerável, mas já pode ser "marcado" visualmente (silhueta pulsa)
+- **Fase B (1 ou 2 braços destruídos, corpo HP 60→30)** — *Desengonçado*
+  - Braço(s) restante(s) agora *oscilam* como pêndulo (amplitude 120px, período 2s) enquanto atacam com cadência 30% mais rápida
+  - Corpo vulnerável; emite **ring burst** de 6 tiros radiais a cada **3s** (speed 180 px/s)
+- **Fase C (corpo HP 30→0)** — *Moinho*
+  - Todos os braços remanescentes giram em torno do corpo (360°/4s), disparando bombinhas a cada 0.6s nos pontos cardinais
+  - Corpo emite ring burst de 8 tiros a cada **2s**
+  - Se ambos os braços foram destruídos, o moinho é "fantasma" — efeito visual apenas, sem dano; incentiva o player a matar os braços antes
 
-### Fase 5 (opcional, final) — O Coronel
-- Figura satírica do poder local
-- Ataca com "leis" (pergaminhos), "votos" (cédulas que pegam fogo), "capangas" (mini-inimigos)
-- Fase 3: tira a máscara e revela forma bio-orgânica final
+### 6.3 Fase 3 — Recife Antigo: Galo da Madrugada Maligno
+- **HP total**: 120
+- **Entrada**: galo gigante descende do topo cacarejando distorcido. Freeze 1.5s + "OXE!"
+- **Fase A (HP 120→80)** — *Galo Assentado*
+  - Move-se lentamente em padrão ∞ no topo (amplitude x=±200, y=±40, período 5s)
+  - Cospe **2 ovos** a cada **2s** em arco parabólico (gravidade 420 px/s², lançados em ângulos aleatórios 60°–120°)
+  - Ovos explodem ao tocar o fundo da tela em AoE 80px (0.3s persiste — zona de negação)
+- **Fase B (HP 80→40)** — *Ninhada*
+  - Ovos continuam (1 a cada 2s — cadência reduzida)
+  - A cada **4s**, cospe **formação de 3 galinhas-pintinho** kamikaze (HP 1 cada, speed 220 px/s, perseguem player por 3s depois saem da tela)
+- **Fase C (HP 40→0)** — *Cocoricó Final*
+  - Ovos rapid-fire: 1 a cada **1s**, cadência dupla
+  - Pintinhos: formação de 5 a cada **3s**
+  - A cada **8s**, berra — screen shake 400ms + **todos os inimigos ativos aceleram 20%** durante 3s
+  - Boss emite aura de penas que restringe área segura no centro (corredores laterais viram mais viáveis)
+
+### 6.4 Fase 4 (opcional) — Capibaribe: Iara do Capibaribe
+- **HP total**: 140
+- **Mecânica nova**: Iara **regenera 2 HP/s** se o player ficar parado mais de 1.5s (medido pelo input de movimento). Força flow constante.
+- Fase A: correntes de lixo retas lentas (speed 150 px/s, spawn cada 1.5s, 1-2 simultâneas)
+- Fase B: garrafas PET em leque de 5, rotacionam ao cair (speed 200 px/s, cadência 2s)
+- Fase C: emerge totalmente do rio, abraço de correntes — cria **2 paredes móveis de lixo** que empurram o player para dentro da tela e se fecham devagar (reduz área jogável em 30%)
+
+### 6.5 Fase 5 (final) — O Coronel
+**Decisão**: mantido como boss final. A figura satírica do poder é um **anti-clímax deliberado** que só funciona porque as fases anteriores apresentaram folclore. Trocar por algo "mais memorável" perderia a graça pernambucana (é o Coronel virando monstro bio-orgânico — o absurdo é ele estar lá no fim, não outro bicho exótico). Opção de v2: adicionar "Fase Secreta" com figura alternativa em New Game+.
+
+- **HP total**: 180
+- Fase A — *Discurso*: pergaminhos "Lei" se desenrolam do topo como projéteis retos (speed 180 px/s) + capangas humanos (3 Caboclinhos reciclados) a cada 6s
+- Fase B — *Campanha*: cédulas de dinheiro em chamas cruzam a tela em ziguezague (speed 240 px/s, padrão senoide amplitude 100px) + mini-formações de capangas
+- Fase C — *Máscara cai*: Coronel revela forma bio-orgânica final (sprite muda). Ataques anteriores combinados + **lasers de "poder"** (telegrafados 1s, tiro 0.6s, 2 simultâneos) + ring burst a cada 4s
+
+### 6.6 Regras gerais de boss
+- Projéteis de boss causam 1 vida de dano (mesma regra dos inimigos)
+- Varridas/lasers telegrafados sempre têm ≥500ms de aviso visual
+- Freeze frame de **80ms** a cada hit bem-sucedido do player no boss (só 40ms em hit comum — boss é mais "gostoso" de bater)
+- Boss não dropa power-up; dropa uma "Tapioca" garantida (+1 vida) a cada *segundo* boss derrotado (Fase 2, Fase 4) — recompensa milestone
 
 ## 7. Power-ups
 
-Dropam com ~15% chance ao destruir inimigos de 2+ HP. Só um ativo por vez (pegar outro substitui).
+**Drop rate base**: 15% de chance ao destruir qualquer inimigo com HP ≥ 2 (Mamulengo, Caboclo de Lança, Papa-Figo, Comadre Fulozinha, Besta-Fera). Enemigos de 1 HP (Passista, Caboclinho, Urubu, Mosca) **não dropam** — evita piñata em ondas de enxame e torna inimigos "gordos" significativos.
 
-| Nome | Efeito | Duração |
-|---|---|---|
-| Fogo de Artifício Triplo | Tiro se abre em 3 (leque de 30°) | Até levar dano |
-| Sombrinha de Frevo | Escudo giratório, absorve 1 hit | Até levar hit |
-| Cachaça Boa | Smart bomb, estoca até 2 (HUD mostra) | Consumível (tecla X, ou redefinir) |
-| Tapioca Dobrada | +1 vida | Instantâneo (raríssimo, 1% drop) |
-| Baque-Virado | Wingman calunga atirando junto | 18 segundos |
+**Quando dropa, seleção ponderada** (soma 100):
+
+| Peso | Nome | Efeito | Duração |
+|---|---|---|---|
+| 35 | Fogo de Artifício Triplo | Tiro se abre em 3: centro + ±18° (ângulo **fixo**, sem homing) | Até levar dano |
+| 30 | Sombrinha de Frevo | Escudo giratório, absorve 1 hit | Até levar hit |
+| 20 | Cachaça Boa | Smart bomb, estoca até 2 (HUD mostra) | Consumível (tecla X) — limpa tela de projéteis e causa 10 de dano em tudo na tela |
+| 12 | Baque-Virado | Wingman calunga atira junto (50% do cooldown) | 18 segundos |
+| 3 | Tapioca Dobrada | +1 vida | Instantâneo |
+
+**Tapioca garantida**: bosses das Fases 2 e 4 sempre dropam uma Tapioca Dobrada ao morrer, fora do sistema de pesos (ver §6.6). Isso dá +2 vidas garantidas ao longo do jogo completo de 5 fases, sem precisar depender de RNG.
+
+**Triplo fixo, não homing**: a escolha por ângulo fixo mantém o skill ceiling arcade — player precisa se posicionar. Homing tornaria o power-up dominante demais. O leque de ±18° é estreito o bastante para o player ainda mirar, amplo o suficiente para limpar ondas.
+
+**Regras de coleta**:
+- Só um power-up de "arma" ativo por vez (Fogo Triplo e Sombrinha substituem-se mutuamente ao pegar)
+- Baque-Virado é independente — pode coexistir com Fogo Triplo/Sombrinha
+- Cachaça Boa e Tapioca Dobrada são instantâneos/estocados, nunca substituem outro power-up ativo
+- Ao levar dano, Fogo Triplo é perdido; Sombrinha só se perde ao absorver hit
+- Drop fica em tela por 8s piscando nos 2s finais; some depois — não fica pra sempre
+- Pickup dá 50 pontos
 
 ## 8. Vidas e checkpoint
 
-- 3 vidas no começo da partida
-- Colisão com inimigo/projétil = perde 1 vida + invulnerabilidade 1.5s (piscando)
+- 3 vidas no começo da partida (base **não-negociável**)
+- Colisão com inimigo/projétil = perde 1 vida + **invulnerabilidade de 1.2s**, piscando a 8 Hz (125ms on/off)
+  - Decisão: reduzido de 1.5s para 1.2s. Justificativa: 1.5s em testes mentais deixa sensação "morno" em fases densas — 1.2s mantém a sensação de perigo sem ser punitivo. Se playtest acusar que é pouco, subir para 1.35s. Controlado por constante `PLAYER_INVULN_MS = 1200` em `src/config.ts`.
+- Durante invulnerabilidade: player continua podendo se mover e atirar; **colisões não causam dano mas ainda matam inimigos kamikaze** (Urubu, Mosca, pintinho do Galo) — incentiva bancar a colisão quando faz sentido
 - Zerou vidas = Game Over → tela "SE LASCOU" → volta ao menu
-- **Checkpoint**: ao passar metade da fase (ex: 50% das ondas antes do boss), salva check. Morrer 1 vida durante a fase recomeça daquele ponto da fase com a vida que você tinha no checkpoint. Game Over total ainda volta ao começo.
+- **Checkpoint**: ao passar **50% das ondas antes do boss** (ex: final da Wave 3 de 5 na Fase 1). Salva snapshot de: vidas atuais, power-up ativo, score parcial, ondas consumidas. Morrer durante a fase (mas ainda com vidas) recomeça do checkpoint com as vidas que tinha **no checkpoint** (não as de agora). Game Over total ainda volta ao começo da fase sem checkpoint
+- Checkpoints **não** acumulam entre fases — cada fase começa fresh com as vidas que você tinha ao entrar
 
 ## 9. Scoring
 
@@ -109,17 +187,25 @@ Dropam com ~15% chance ao destruir inimigos de 2+ HP. Só um ativo por vez (pega
 
 ## 10. Curva de dificuldade
 
-Por fase, a densidade e variedade aumentam:
+Revisada em relação ao rascunho original: adicionadas colunas de intervalo entre ondas, HP de boss e duração-alvo da fase. Pouca coisa mudou na espinha; a adição é para o Gameplay Dev saber o "feel" alvo sem precisar caçar o número.
 
-| Fase | Inimigos por onda | Ondas | Tipos disponíveis | Velocidade geral |
-|---|---|---|---|---|
-| 1 | 3-5 | 5 | 1, 2, enxame | 1.0× |
-| 2 | 4-7 | 6 | 1, 2, 3, 5, enxame | 1.1× |
-| 3 | 5-8 | 7 | 1-6, enxame | 1.2× |
-| 4 | 6-10 | 8 | 1-7, enxame | 1.3× |
-| 5 | 7-12 | 9 | 1-8, enxame | 1.4× |
+| Fase | Inimigos/onda | Ondas | Tipos (ver §5) | Vel. geral | Intervalo entre ondas | HP boss | Duração alvo |
+|---|---|---|---|---|---|---|---|
+| 1 | 3-5 | 5 | 1, 2, 9 (enxame) | 1.0× | 10-12s | 80 | ~2:30 |
+| 2 | 4-7 | 6 | 1, 2, 3, 5, 9 | 1.1× | 9-11s | 60+25+25 (corpo + braços) | ~3:30 |
+| 3 | 5-8 | 7 | 1-6, 9 | 1.2× | 8-10s | 120 | ~4:30 |
+| 4 (opc) | 6-10 | 8 | 1-7, 9 | 1.3× | 7-9s | 140 | ~5:30 |
+| 5 (opc) | 7-12 | 9 | 1-8, 9 | 1.4× | 6-8s | 180 | ~6:30 |
 
-Calibrar no playtest. Objetivo: primeira passagem completa do jogo em ~30 min para jogador mediano.
+**Duração alvo total** (MVP 3 fases): ~10:30 de gameplay puro; com telas de transição, intros e morte ocasional, ~15-20 min para jogador mediano. Jogo completo (5 fases): ~30 min.
+
+**"Velocidade geral"** multiplica: velocidade de inimigo, velocidade de projétil inimigo, cadência de tiro inimigo. Player stats **não** escalam — a dificuldade aumenta por hostilidade, não por nerf do jogador.
+
+**Regras de pacing**:
+- Sempre alternar ondas densas com ondas esparsas (permitir respiros de 2-3s sem tiros na tela)
+- Enxame de Mosca-da-Manga **nunca na primeira onda** de uma fase — é "prato principal", não aperitivo
+- Inimigo novo de uma fase é **sempre introduzido sozinho** na primeira onda que aparece (ensina o padrão)
+- Checkpoint sempre depois de uma onda "fácil", não antes (senão sensação de cheating)
 
 ## 11. Game feel — requisitos
 
@@ -132,11 +218,36 @@ Isso é **não-negociável** — é o que diferencia o jogo de um clone ruim:
 - **Feedback de áudio** para cada input (shoot, move, pause, menu select)
 - **Tinting** quando inimigo é atingido (piscar branco 80ms)
 
-## 12. Open questions (a calibrar)
+## 12. Decisões do Game Designer (closed) e questões remanescentes
 
-- [ ] Valores exatos de HP, dano de cada projétil
-- [ ] Drop rate ideal de power-ups em playtest
-- [ ] Duração exata de invulnerabilidade pós-dano
-- [ ] Como "esconder" o terceiro tiro triplo nos lados — angular fixo ou homing leve?
-- [ ] Boss final deveria ser o Coronel mesmo ou trocamos por algo mais memorável?
-- [ ] Música muda por fase ou é uma música que evolui?
+### Decisões fechadas nesta iteração
+
+| Tópico | Decisão | Onde |
+|---|---|---|
+| HP de inimigos regulares | Mantidos os valores da tabela §5 (nenhum ajuste). Justificativa: configuração clássica 1/2/3/4/5 já respeita a hierarquia de ameaça | §5 |
+| Dano de projéteis inimigos | **1 vida por hit**, regra universal. Variação fica na trajetória/telegrafe | §5.1 |
+| Drop rate de power-ups | **15% base** em inimigos 2+ HP; inimigos 1 HP não dropam; seleção ponderada 35/30/20/12/3 | §7 |
+| Invulnerabilidade pós-dano | **1.2s** (reduzido de 1.5s), com pisca a 8 Hz | §8 |
+| Formato do Fogo Triplo | **Ângulo fixo** ±18° + centro (sem homing) | §7 |
+| Boss final | **O Coronel** mantido. Anti-clímax proposital; alternativa (figura secreta) fica para v2 NG+ | §6.5 |
+| Música | **Uma música por fase**, com arranjo que remixa boss fight. Evita complexidade de trilha evolutiva e ainda dá identidade por região | §11.1 (abaixo) |
+
+### Questões ainda em aberto (arquiteto + outros especialistas)
+
+- [ ] **Evento de "Cachaça Boa" tem tecla X ou outra?** — Decidi X como placeholder; arquiteto/UX podem mudar se conflitar com remap futuro
+- [ ] **Checkpoint respawn: animação?** — decisão de polish com Gameplay Dev (ex: player fade-in de 500ms, 1s de invulnerabilidade extra)
+- [ ] **Bosses encerram a onda anterior ou sobem entre ondas?** — implementação: Gameplay Dev decide. Recomendo: boss spawn só após onda final limpa (score settle)
+- [ ] **Balance pass pós-playtest**: todos os números acima são "fase de papel". Plano é rodar playtest em Milestone 2 (Fase 1 jogável) e Milestone 6 (MVP 3 fases) e revisitar
+- [ ] **Chain multiplier decays como?** — §9 diz "×1.5 temporário", mas não quanto dura. Sugiro **4s sem matar = reset**; confirmar com QA em playtest
+
+## 11.1 Música — diretriz
+
+Decisão: **uma música por fase** + remix/layer extra durante boss.
+
+- Fase 1 — **Marco Zero**: base frevo em andamento moderado, percussão dominante
+- Fase 2 — **Olinda**: maracatu rural, caixa forte, andamento mais lento e pesado
+- Fase 3 — **Recife Antigo**: mangue beat, mistura frevo + eletrônico, andamento alto
+- Fase 4 (opc) — **Capibaribe**: ciranda lenta e melancólica, muitos "gotejos" sonoros
+- Fase 5 (opc) — **Coronel**: forró pé-de-serra distorcido, triple de velocidade no final
+
+**Boss fight** = mesma música da fase, **+10% BPM**, acrescentar camada de metais/distorção. Cross-fade de 2s ao aparecer o boss. Motiva cohesion (mesma fase = mesmo clima) sem custo de composição duplicada. Responsabilidade de produção: Sound Designer (ver `SOUND_SPEC.md`).
