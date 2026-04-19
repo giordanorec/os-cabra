@@ -14,5 +14,8 @@ dist/
 # Local
 *.tmp
 
+# Playwright MCP artifacts
+.playwright-mcp/
+
 # Claude Code local settings
 .claude/

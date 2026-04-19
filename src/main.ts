@@ -1,6 +1,8 @@
 import * as Phaser from 'phaser';
 import { GAME_WIDTH, GAME_HEIGHT, BACKGROUND_COLOR } from './config';
 import { BootScene } from './scenes/BootScene';
+import { PreloadScene } from './scenes/PreloadScene';
+import { GameScene } from './scenes/GameScene';
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -15,7 +17,11 @@ const config: Phaser.Types.Core.GameConfig = {
       debug: false
     }
   },
-  scene: [BootScene]
+  scene: [BootScene, PreloadScene, GameScene]
 };
 
-new Phaser.Game(config);
+const game = new Phaser.Game(config);
+
+if (import.meta.env.DEV) {
+  (window as unknown as { __osCabra?: Phaser.Game }).__osCabra = game;
+}
