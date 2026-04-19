@@ -81,6 +81,18 @@ BootScene
 
 ## 4. Padrões de código
 
+### 4.0 Import do Phaser
+
+Phaser 4 **não tem default export**. Use namespace import:
+
+```ts
+import * as Phaser from 'phaser';
+
+// depois use normal: Phaser.Scene, Phaser.AUTO, Phaser.Physics.Arcade.Sprite
+```
+
+Alternativa (menos usada, mais verboso): `import { Scene, Game, AUTO } from 'phaser';`. O scaffold padroniza o namespace import — siga ele.
+
 ### 4.1 Cena
 ```ts
 export class MenuScene extends Phaser.Scene {
