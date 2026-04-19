@@ -13,6 +13,12 @@ Arquivos que vão para o build. Toda linha precisa de autor, licença compatíve
 | `public/favicon.ico` | Ícone (multi-size 16/32/48) | Derivado de `favicon.svg` | Próprio | — | Gerado via `npm run favicon` |
 | `public/favicon-192.png` | Ícone PWA / Apple touch | Derivado de `favicon.svg` | Próprio | — | Idem |
 | `public/favicon-512.png` | Ícone PWA | Derivado de `favicon.svg` | Próprio | — | Idem |
+| `public/assets/sprites/player.{png,json}` | Sprite + atlas (32×32, 3 frames) | Visual Designer / 2026-04-19 | Próprio | `scripts/art/svg/player.svg` | Galo da Madrugada, animação idle de voo |
+| `public/assets/sprites/enemy-passista.{png,json}` | Sprite + atlas (32×32, 2 frames) | Visual Designer / 2026-04-19 | Próprio | `scripts/art/svg/enemy-passista.svg` | Passista de Frevo com sombrinha |
+| `public/assets/sprites/enemy-caboclinho.{png,json}` | Sprite + atlas (28×28, 2 frames) | Visual Designer / 2026-04-19 | Próprio | `scripts/art/svg/enemy-caboclinho.svg` | Caboclinho com penacho e arco |
+| `public/assets/sprites/enemy-mosca.{png,json}` | Sprite + atlas (14×14, 2 frames) | Visual Designer / 2026-04-19 | Próprio | `scripts/art/svg/enemy-mosca.svg` | Mosca-da-Manga (enxame) |
+| `public/assets/sprites/boss-maracatu.{png,json}` | Sprite + atlas (256×256, 1 frame hero) | Visual Designer / 2026-04-19 | Próprio | `scripts/art/svg/boss-maracatu.svg` | Maracatu Nação: Calunga + Rei + Rainha |
+| `public/assets/sprites/@2x/*.png` | Variantes HiDPI | Derivadas dos SVGs | Próprio | `scripts/art/generate-sprites.mjs` | Mobile/Retina futuro |
 
 ### Licenças aceitas para assets finais
 

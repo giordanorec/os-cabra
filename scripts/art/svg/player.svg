@@ -1,0 +1,52 @@
+<!-- Player — Galo da Madrugada, vista top-down, 3 frames de voo.
+     viewBox: 96×32 (3 frames de 32×32).
+     Palette: preto pergaminho #1a0f08, papel antigo #f4e4c1, vermelho tijolo #b84a2e, ocre #d4a04c.
+     Frame 0: asas abertas. Frame 1: asas meio. Frame 2: asas batendo. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 32" shape-rendering="geometricPrecision">
+  <defs>
+    <g id="galo-base">
+      <!-- tail fan (bottom) -->
+      <path d="M 16 26 L 10 31 L 13 27 L 16 31 L 19 27 L 22 31 Z" fill="#1a0f08"/>
+      <!-- body -->
+      <ellipse cx="16" cy="19" rx="7" ry="9" fill="#1a0f08"/>
+      <!-- head -->
+      <circle cx="16" cy="8" r="4.5" fill="#1a0f08"/>
+      <!-- comb (3 points) -->
+      <path d="M 13 5 L 14 1 L 15.5 4 L 17 1 L 18.5 4 L 19 6 Z" fill="#b84a2e"/>
+      <!-- beak (pointing up) -->
+      <path d="M 15 3 L 16 0 L 17 3 Z" fill="#b84a2e"/>
+      <!-- eye glint -->
+      <circle cx="14" cy="8" r="0.8" fill="#f4e4c1"/>
+      <circle cx="18" cy="8" r="0.8" fill="#f4e4c1"/>
+      <!-- body center highlight (wing fold) -->
+      <path d="M 13 18 Q 16 17 19 18 L 19 22 Q 16 21 13 22 Z" fill="#d4a04c"/>
+    </g>
+  </defs>
+
+  <!-- Frame 0: asas abertas (pouso / idle) -->
+  <g transform="translate(0,0)">
+    <use href="#galo-base"/>
+    <!-- asa esquerda aberta -->
+    <path d="M 9 16 Q 1 14 2 22 Q 6 22 10 20 Z" fill="#1a0f08"/>
+    <!-- asa direita aberta -->
+    <path d="M 23 16 Q 31 14 30 22 Q 26 22 22 20 Z" fill="#1a0f08"/>
+  </g>
+
+  <!-- Frame 1: asas meio -->
+  <g transform="translate(32,0)">
+    <use href="#galo-base"/>
+    <!-- asa esquerda meia -->
+    <path d="M 9 17 Q 4 15 5 21 Q 8 21 10 20 Z" fill="#1a0f08"/>
+    <!-- asa direita meia -->
+    <path d="M 23 17 Q 28 15 27 21 Q 24 21 22 20 Z" fill="#1a0f08"/>
+  </g>
+
+  <!-- Frame 2: asas batendo (para cima) -->
+  <g transform="translate(64,0)">
+    <use href="#galo-base"/>
+    <!-- asa esquerda pra cima -->
+    <path d="M 9 17 Q 5 11 2 13 Q 6 17 10 18 Z" fill="#1a0f08"/>
+    <!-- asa direita pra cima -->
+    <path d="M 23 17 Q 27 11 30 13 Q 26 17 22 18 Z" fill="#1a0f08"/>
+  </g>
+</svg>

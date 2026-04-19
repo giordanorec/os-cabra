@@ -50,4 +50,67 @@ Pré-requisitos: chave Gemini configurada + pelo menos 5-10 imagens de referênc
 
 ---
 
+## Milestone 2 — Concept art + sprites Fase 1 + boss Fase 1 (2026-04-19)
+
+### Entregáveis
+
+| Asset | Formato | Frames | Caminho |
+|---|---|---|---|
+| Player (Galo da Madrugada) | atlas PNG + JSON | 3 (voo idle) | `public/assets/sprites/player.{png,json}` |
+| Inimigo: Passista de Frevo | atlas | 2 (sway) | `public/assets/sprites/enemy-passista.{png,json}` |
+| Inimigo: Caboclinho | atlas | 2 (idle / arco esticado) | `public/assets/sprites/enemy-caboclinho.{png,json}` |
+| Inimigo: Mosca-da-Manga | atlas | 2 (asas) | `public/assets/sprites/enemy-mosca.{png,json}` |
+| Boss: Maracatu Nação | atlas | 1 (hero, trio Calunga+Rei+Rainha) | `public/assets/sprites/boss-maracatu.{png,json}` |
+| Variantes HiDPI @2× | PNG | todos | `public/assets/sprites/@2x/*.png` |
+| SVG fonte | SVG | 1 por personagem | `scripts/art/svg/*.svg` |
+| Pipeline | Node/sharp | — | `scripts/art/generate-sprites.mjs` (`npm run sprites`) |
+| Guia de integração | MD | — | `public/assets/sprites/README.md` |
+
+### Pipeline escolhido — SVG hand-drawn, não IA
+
+Gemini API ainda não configurada. Ao invés de bloquear M2, produzi os sprites via **SVG hand-drawn com disciplina de paleta**, renderizados por `sharp` em PNG + atlas JSON Phaser-compat.
+
+**Prós:**
+- Determinístico, regenerável (`npm run sprites` refaz tudo)
+- Paleta estritamente respeitada (sem pós-processamento manual)
+- Fonte versionada em git (SVG é diff-friendly)
+- Zero custo de API
+- Tamanhos batem exatamente com os placeholders do Gameplay Dev — swap 1:1 em M8
+
+**Contras:**
+- Estilo é **xilogravura-inspired** mais do que xilogravura autêntica — faltam as imperfeições de entalhe que só IA ou hand-drawn real produzem
+- Boss Maracatu tem só hero frame (sem estados de HP ou frames de ataque ainda)
+- Textura de madeira ausente — sprites têm áreas chapadas sem grain
+
+Se o orquestrador avaliar que o look "não é xilogravura suficiente", o caminho é configurar Gemini API e rerodar M2 com IA. Os SVGs entregues funcionam como **baseline jogável** enquanto isso.
+
+### Decisões de direção tomadas
+
+1. **Tamanho = placeholder atual** (32/32/28/14 px). Gameplay Dev não precisa ajustar nada em `src/config.ts` — hitbox, scale, colisão permanecem.
+2. **Atlas JSON Hash format** (não spritesheet uniforme) — permite futuro trim e variação por frame sem quebrar o API.
+3. **Frame naming `<key>-<index>`** — compatível com `this.anims.generateFrameNames()` nativo.
+4. **Variantes @2×** geradas mas não usadas ainda. Guardadas em `@2x/` para o caso de mobile/Retina v2.
+5. **Player top-down** (jogador olhando a nave por cima) — coerente com shoot 'em up vertical. Asas visíveis nos lados, bico/crista apontando pra cima.
+6. **Boss trio com hierarquia visual**: Rei central maior com coroa mais alta e manto vermelho, Rainha à direita com manto rosa, Calunga menor à esquerda — legível mesmo em 128×128.
+
+### Pendências (M3+)
+
+- [ ] **Boss Maracatu: variações de HP e ataques** — atualmente só hero. Solicitar ao Gameplay Dev se vão precisar de 3 estados (100%/66%/33%) ou se o efeito vai vir via tint
+- [ ] **Frames de morte/dano** — todos os inimigos ganham tint branco 80ms via `EffectsManager`. Se quiser frame dedicado de morte (dissolução em fragmentos xilográficos), é M7 (polish pass)
+- [ ] **Tiros e projéteis** — `bullet-player`, `enemy-bullet-flecha`, `enemy-bullet-bombinha` ainda placeholders. Pequeno escopo, cai em M3
+- [ ] **Power-ups** — 5 ícones (sombrinha, cachaça, tapioca, fogo de artifício, calunga). Requisito quando Gameplay Dev ativar sistema de drop
+- [ ] **Parallax backgrounds** — 2-3 camadas da Fase 1 (Marco Zero). Não incluídos em M2 por escopo
+
+### Para o orquestrador
+
+Gameplay Dev (em `feat/milestone-3-boss-maracatu`) pode começar a integrar **agora** via:
+
+```ts
+this.load.atlas('boss-maracatu', 'assets/sprites/boss-maracatu.png', 'assets/sprites/boss-maracatu.json')
+```
+
+Instruções completas em `public/assets/sprites/README.md`. Não precisam esperar M8 — os 5 assets de Fase 1 já estão prontos pra consumo, e a troca de placeholder é 1:1.
+
+---
+
 _Próximas entradas abaixo conforme milestones avançam._

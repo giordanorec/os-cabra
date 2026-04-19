@@ -1,0 +1,106 @@
+<!-- Maracatu Nação — boss Fase 1. Hero frame único para M2.
+     Trio: Calunga (esq), Rei (centro), Rainha (dir). 256×256.
+     Palette: preto pergaminho, vermelho tijolo, ocre, rosa fosco, papel antigo. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" shape-rendering="geometricPrecision">
+
+  <!-- === CALUNGA (boneca, esquerda) === -->
+  <g transform="translate(0,0)">
+    <!-- cabeça -->
+    <circle cx="42" cy="110" r="16" fill="#1a0f08"/>
+    <!-- olhos pontuais (fixos, sem expressão) -->
+    <circle cx="36" cy="108" r="1.8" fill="#f4e4c1"/>
+    <circle cx="48" cy="108" r="1.8" fill="#f4e4c1"/>
+    <!-- boca tensa -->
+    <rect x="38" y="116" width="8" height="1.5" fill="#f4e4c1"/>
+    <!-- cabelo/lenço -->
+    <path d="M 26 105 Q 26 90 42 88 Q 58 90 58 105 Q 58 96 42 94 Q 26 96 26 105 Z" fill="#b84a2e"/>
+    <!-- corpo vestido -->
+    <path d="M 24 130 L 60 130 L 66 220 L 18 220 Z" fill="#1a0f08"/>
+    <!-- saia com listra -->
+    <rect x="20" y="175" width="44" height="6" fill="#d66b7a"/>
+    <rect x="20" y="195" width="44" height="6" fill="#d4a04c"/>
+    <!-- braços rígidos ao lado -->
+    <rect x="14" y="132" width="8" height="50" fill="#1a0f08"/>
+    <rect x="62" y="132" width="8" height="50" fill="#1a0f08"/>
+    <!-- mão direita segura bastão/pena -->
+    <rect x="65" y="100" width="2" height="40" fill="#d4a04c"/>
+    <circle cx="66" cy="98" r="4" fill="#b84a2e"/>
+  </g>
+
+  <!-- === REI (centro, maior) === -->
+  <g transform="translate(0,0)">
+    <!-- coroa: 5 pontas + jóias -->
+    <path d="M 98 38 L 106 10 L 114 30 L 128 4 L 142 30 L 150 10 L 158 38 Z" fill="#d4a04c"/>
+    <!-- jóias da coroa -->
+    <circle cx="114" cy="22" r="2.5" fill="#b84a2e"/>
+    <circle cx="128" cy="14" r="3" fill="#d66b7a"/>
+    <circle cx="142" cy="22" r="2.5" fill="#b84a2e"/>
+    <!-- base da coroa -->
+    <rect x="96" y="38" width="64" height="8" fill="#d4a04c"/>
+    <rect x="96" y="42" width="64" height="2" fill="#1a0f08"/>
+    <!-- cabeça -->
+    <circle cx="128" cy="68" r="22" fill="#1a0f08"/>
+    <!-- barba bipartida -->
+    <path d="M 118 80 L 112 100 L 122 92 Z M 138 80 L 144 100 L 134 92 Z" fill="#f4e4c1"/>
+    <!-- olhos -->
+    <circle cx="120" cy="66" r="2.5" fill="#f4e4c1"/>
+    <circle cx="136" cy="66" r="2.5" fill="#f4e4c1"/>
+    <circle cx="120" cy="66" r="1" fill="#1a0f08"/>
+    <circle cx="136" cy="66" r="1" fill="#1a0f08"/>
+    <!-- bigode curvado -->
+    <path d="M 118 78 Q 128 82 138 78" stroke="#f4e4c1" stroke-width="1.8" fill="none"/>
+    <!-- manto (cape) vermelho, grande -->
+    <path d="M 100 88 Q 60 140 72 230 L 184 230 Q 196 140 156 88 Q 140 96 128 96 Q 116 96 100 88 Z" fill="#b84a2e"/>
+    <!-- ombreira ocre -->
+    <path d="M 100 88 Q 106 84 128 84 Q 150 84 156 88 L 152 96 Q 140 92 128 92 Q 116 92 104 96 Z" fill="#d4a04c"/>
+    <!-- tronco preto central (por dentro do manto) -->
+    <path d="M 110 96 L 146 96 L 146 180 L 110 180 Z" fill="#1a0f08"/>
+    <!-- medalhão centro -->
+    <circle cx="128" cy="130" r="10" fill="#d4a04c"/>
+    <circle cx="128" cy="130" r="5" fill="#b84a2e"/>
+    <!-- faixas do manto (bordado) -->
+    <path d="M 78 200 L 178 200" stroke="#d4a04c" stroke-width="2"/>
+    <path d="M 75 215 L 181 215" stroke="#d4a04c" stroke-width="2"/>
+    <!-- cetro na mão esquerda -->
+    <rect x="70" y="110" width="3" height="80" fill="#d4a04c"/>
+    <circle cx="71" cy="108" r="6" fill="#b84a2e"/>
+    <path d="M 66 104 L 71 98 L 76 104 L 74 110 L 68 110 Z" fill="#d4a04c"/>
+    <!-- braço segurando cetro -->
+    <path d="M 108 120 L 75 130 L 78 140 L 112 135 Z" fill="#1a0f08"/>
+  </g>
+
+  <!-- === RAINHA (direita) === -->
+  <g transform="translate(0,0)">
+    <!-- coroa menor -->
+    <path d="M 196 62 L 202 44 L 208 58 L 216 40 L 224 58 L 230 44 L 236 62 Z" fill="#d4a04c"/>
+    <rect x="196" y="62" width="40" height="5" fill="#d4a04c"/>
+    <rect x="196" y="65" width="40" height="1.5" fill="#1a0f08"/>
+    <circle cx="216" cy="50" r="2.5" fill="#d66b7a"/>
+    <!-- cabeça -->
+    <circle cx="216" cy="82" r="16" fill="#1a0f08"/>
+    <!-- olhos -->
+    <circle cx="210" cy="80" r="2" fill="#f4e4c1"/>
+    <circle cx="222" cy="80" r="2" fill="#f4e4c1"/>
+    <!-- boca -->
+    <path d="M 210 90 Q 216 92 222 90" stroke="#b84a2e" stroke-width="1.5" fill="none"/>
+    <!-- manto rosa -->
+    <path d="M 198 98 Q 178 150 186 230 L 246 230 Q 254 150 234 98 Q 226 104 216 104 Q 206 104 198 98 Z" fill="#d66b7a"/>
+    <!-- ombreira ocre -->
+    <path d="M 198 98 Q 204 94 216 94 Q 228 94 234 98 L 230 105 Q 220 100 216 100 Q 212 100 202 105 Z" fill="#d4a04c"/>
+    <!-- corpo preto -->
+    <path d="M 204 106 L 228 106 L 228 180 L 204 180 Z" fill="#1a0f08"/>
+    <!-- cinturão com detalhe -->
+    <rect x="202" y="155" width="28" height="4" fill="#d4a04c"/>
+    <!-- faixas do manto -->
+    <path d="M 188 205 L 244 205" stroke="#d4a04c" stroke-width="1.5"/>
+    <path d="M 185 218 L 247 218" stroke="#d4a04c" stroke-width="1.5"/>
+    <!-- braços -->
+    <rect x="194" y="108" width="8" height="40" fill="#1a0f08"/>
+    <rect x="230" y="108" width="8" height="40" fill="#1a0f08"/>
+  </g>
+
+  <!-- chão (sombra arqueada embaixo, xilográfica) -->
+  <path d="M 10 236 Q 128 242 246 236 L 246 246 L 10 246 Z" fill="#1a0f08"/>
+  <!-- detalhe: 3 hachuras de chão -->
+  <path d="M 30 240 L 40 240 M 120 242 L 140 242 M 210 240 L 220 240" stroke="#f4e4c1" stroke-width="0.8"/>
+</svg>

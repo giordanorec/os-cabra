@@ -1,0 +1,69 @@
+<!-- Caboclinho — dançarino indígena com penacho e arco. 2 frames.
+     viewBox: 56×28 (2 frames de 28×28).
+     Palette: preto pergaminho, vermelho tijolo, ocre, verde folha. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 28" shape-rendering="geometricPrecision">
+  <defs>
+    <g id="caboclinho-base">
+      <!-- penacho: leque de penas sobre a cabeça -->
+      <path d="M 14 4 L 11 0 L 12 5 Z" fill="#b84a2e"/>
+      <path d="M 14 4 L 14 0 L 15 5 Z" fill="#d4a04c"/>
+      <path d="M 14 4 L 17 0 L 16 5 Z" fill="#5a7a3a"/>
+      <path d="M 14 4 L 10 1 L 11 5 Z" fill="#d4a04c"/>
+      <path d="M 14 4 L 18 1 L 17 5 Z" fill="#b84a2e"/>
+      <!-- faixa do penacho -->
+      <rect x="10" y="5" width="8" height="1.5" fill="#b84a2e"/>
+      <!-- cabeça -->
+      <circle cx="14" cy="9" r="2.5" fill="#1a0f08"/>
+      <!-- olhos (negativo) -->
+      <circle cx="13" cy="9" r="0.5" fill="#f4e4c1"/>
+      <circle cx="15" cy="9" r="0.5" fill="#f4e4c1"/>
+      <!-- tronco -->
+      <path d="M 11 11 L 17 11 L 16 18 L 12 18 Z" fill="#1a0f08"/>
+      <!-- colar/fitas cruzadas -->
+      <path d="M 11 12 L 17 16" stroke="#d4a04c" stroke-width="0.8"/>
+      <path d="M 17 12 L 11 16" stroke="#d4a04c" stroke-width="0.8"/>
+    </g>
+  </defs>
+
+  <!-- Frame 0: parado, arco em repouso -->
+  <g transform="translate(0,0)">
+    <use href="#caboclinho-base"/>
+    <!-- arco em repouso ao lado -->
+    <path d="M 20 10 Q 23 13 20 18" stroke="#d4a04c" stroke-width="1" fill="none"/>
+    <path d="M 20 10 L 20 18" stroke="#1a0f08" stroke-width="0.6"/>
+    <!-- braço esquerdo -->
+    <path d="M 11 11 L 9 15 L 10 16 L 13 12 Z" fill="#1a0f08"/>
+    <!-- braço direito segurando arco -->
+    <path d="M 17 12 L 20 13 L 20 14 L 17 14 Z" fill="#1a0f08"/>
+    <!-- perna esquerda -->
+    <path d="M 12 18 L 11 24 L 13 24 L 14 18 Z" fill="#1a0f08"/>
+    <!-- perna direita -->
+    <path d="M 14 18 L 15 24 L 17 24 L 16 18 Z" fill="#1a0f08"/>
+    <!-- pés -->
+    <ellipse cx="12" cy="25" rx="1.5" ry="0.8" fill="#1a0f08"/>
+    <ellipse cx="16" cy="25" rx="1.5" ry="0.8" fill="#1a0f08"/>
+  </g>
+
+  <!-- Frame 1: arco esticado, flecha pronta -->
+  <g transform="translate(28,0)">
+    <use href="#caboclinho-base"/>
+    <!-- arco esticado à frente -->
+    <path d="M 20 8 Q 24 14 20 20" stroke="#d4a04c" stroke-width="1.2" fill="none"/>
+    <!-- corda do arco esticada -->
+    <path d="M 20 8 L 18 14 L 20 20" stroke="#1a0f08" stroke-width="0.5" fill="none"/>
+    <!-- flecha -->
+    <path d="M 18 14 L 26 14" stroke="#1a0f08" stroke-width="0.8"/>
+    <path d="M 26 14 L 25 13 L 25 15 Z" fill="#b84a2e"/>
+    <!-- braço esquerdo puxando corda -->
+    <path d="M 11 11 L 17 13 L 17 14 L 11 13 Z" fill="#1a0f08"/>
+    <!-- braço direito segurando arco -->
+    <path d="M 17 11 L 21 12 L 20 13 L 17 13 Z" fill="#1a0f08"/>
+    <!-- perna esquerda avançada -->
+    <path d="M 12 18 L 10 24 L 12 24 L 14 18 Z" fill="#1a0f08"/>
+    <!-- perna direita firme -->
+    <path d="M 14 18 L 16 24 L 18 24 L 16 18 Z" fill="#1a0f08"/>
+    <!-- pés -->
+    <ellipse cx="11" cy="25" rx="1.5" ry="0.8" fill="#1a0f08"/>
+    <ellipse cx="17" cy="25" rx="1.5" ry="0.8" fill="#1a0f08"/>
+  </g>
+</svg>
