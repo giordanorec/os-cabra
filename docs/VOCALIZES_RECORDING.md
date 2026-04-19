@@ -1,6 +1,10 @@
 # Guia de gravação — Vocalizes Pernambucanos
 
-> **Para quem**: você (e qualquer amigo cabra disposto a gritar pra microfone). Sem isso, vamos cair em TTS distorcido — funciona, mas perde 80% da graça.
+> **Status v1**: usuário optou por **NÃO gravar**; v1 usa TTS via eSpeak NG pt-br + ffmpeg. Os 9 vocalizes estão instalados em `public/assets/sfx/voc_*.ogg`. Pipeline reproduzível em `/tmp/audio_acquisition/build_voc.sh` (recriar o script se rodar de novo).
+>
+> **Este documento permanece** como guia caso você (ou alguém) decida gravar versões humanas no futuro — qualidade vai ser **drasticamente** superior à TTS, então fica como upgrade altamente recomendado pós-v1.
+
+> **Para quem (se gravar)**: você (e qualquer amigo cabra disposto a gritar pra microfone).
 > **Tempo estimado**: 30-60 minutos para gravar todos os 9 vocalizes da lista (`SOUND_LIST.md §8`).
 
 ## 1. Por que vale a pena
@@ -125,3 +129,44 @@ Em `docs/AUDIO_LICENSES.md §4`, registrar como:
 - Licença: `Original — cedida ao projeto Os Cabra (uso interno)`
 - Link: —
 - Notas: data da gravação + qual take
+
+---
+
+## 10. Pipeline TTS atual (v1)
+
+Caso queira regenerar/ajustar os vocalizes TTS sem gravar:
+
+```bash
+# Pré-requisitos: espeak (ou espeak-ng) com voz pt-br + ffmpeg
+# Rodar: bash /tmp/audio_acquisition/build_voc.sh (script é descartável; ver conteúdo abaixo)
+
+# Por vocalize, o pipeline faz:
+# 1) espeak -v pt-br -s <speed> -p <pitch> -a <amp> "texto" -w out.wav
+# 2) ffmpeg -i out.wav -af "highpass=f=80, asetrate=22050*<pshift>, aresample=44100,
+#                          compand=...:gain=<dist>,
+#                          aecho=0.8:<rev>:60|130|220:0.4|0.3|0.2,
+#                          afade=t=in:st=0:d=0.02,
+#                          loudnorm=I=<lufs>:TP=-1.5:LRA=11" \
+#         -ac 2 -ar 44100 -c:a vorbis -strict -2 -q:a 3 voc_<nome>.ogg
+```
+
+Parâmetros usados por vocalize (ajustar se quiser variar):
+
+| Vocalize | Texto eSpeak | Speed | Pitch | Amp | Pshift | Reverb | Distort | LUFS |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| voc_oxe | `oxêêh!` | 115 | 70 | 220 | 1.05 | 0.45 | 1.5 | -10 |
+| voc_egua | `êêgua!` | 120 | 75 | 220 | 1.10 | 0.40 | 1.4 | -10 |
+| voc_arretado | `arretadôô!` | 130 | 65 | 220 | 1.02 | 0.50 | 1.6 | -10 |
+| voc_visse | `vissêê?!` | 135 | 70 | 210 | 1.08 | 0.40 | 1.3 | -11 |
+| voc_ai_viu | `ai, viu?!` | 110 | 55 | 210 | 0.95 | 0.50 | 1.4 | -11 |
+| voc_se_lascou | `se lascôô!` | 100 | 45 | 220 | 0.90 | 0.55 | 1.5 | -10 |
+| voc_pai_degua | `pai d'éguah!` | 125 | 65 | 220 | 1.05 | 0.45 | 1.4 | -10 |
+| voc_bora | `bôraa!` | 130 | 60 | 210 | 1.00 | 0.40 | 1.3 | -11 |
+| voc_ta_com_tudo | `tá com tudooo!` | 125 | 65 | 220 | 1.02 | 0.45 | 1.4 | -11 |
+
+**Limitações conhecidas do TTS**:
+- Soa "sintético", inevitável. eSpeak é dos motores mais robóticos disponíveis em CC0 / GPL.
+- Sotaque pt-br do eSpeak é genérico (não pernambucano). O charme regional vem da escolha de palavras + processamento (pitch + reverb), não da pronúncia.
+- Para upgrade real: **piper-tts** com modelo brasileiro neural, **Coqui TTS**, ou (melhor) gravação humana (este doc).
+
+**Direitos da saída TTS**: a saída de TTS não é considerada obra autoral protegida em quase nenhuma jurisdição — é resultado mecânico de algoritmo. eSpeak NG é GPLv3, mas isso aplica ao binário, não à saída. Para o jogo: trate como CC0 efetivamente. Documentado em `AUDIO_LICENSES.md §4`.

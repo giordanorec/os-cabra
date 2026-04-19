@@ -15,7 +15,11 @@ O projeto usa **topologia orquestrador + especialistas**: uma sessão Claude rai
 | [`TECH_SPEC.md`](TECH_SPEC.md) | Gameplay Dev, DevOps | Stack, folder structure, cenas, padrões |
 | [`ART_BIBLE.md`](ART_BIBLE.md) | Visual Designer, UI/UX | Estilo, paleta, lista de assets, pipeline de geração |
 | [`UX_SPEC.md`](UX_SPEC.md) | UI/UX Designer, Gameplay Dev | Telas, HUD, feedback, textos PT-BR com regionalismo |
-| [`SOUND_SPEC.md`](SOUND_SPEC.md) | Sound Designer, Gameplay Dev | SFX, música, mixagem, curadoria |
+| [`SOUND_SPEC.md`](SOUND_SPEC.md) | Sound Designer, Gameplay Dev | SFX, música, mixagem, curadoria (spec original) |
+| [`SOUND_LIST.md`](SOUND_LIST.md) | Sound Designer, Gameplay Dev | Inventário completo, prioridades, mapeamento eventos→SFX |
+| [`AUDIO_LICENSES.md`](AUDIO_LICENSES.md) | Sound Designer, DevOps, UI | Política + tabela completa de licenças por arquivo |
+| [`MIX_LEVELS.md`](MIX_LEVELS.md) | Sound Designer, Gameplay Dev | Volumes, ducking, sliders, LUFS |
+| [`VOCALIZES_RECORDING.md`](VOCALIZES_RECORDING.md) | Sound Designer, opcional | Guia gravação caseira + pipeline TTS atual |
 | [`QA_PLAN.md`](QA_PLAN.md) | QA/Tester | Estratégia de teste, casos, bug template |
 | [`DEVOPS.md`](DEVOPS.md) | DevOps | Build, deploy, versionamento, CI |
 

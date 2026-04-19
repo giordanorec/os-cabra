@@ -92,41 +92,158 @@ A estratégia mais eficiente é **adotar 2-3 pacotes CC0 grandes** e cobrir 70%+
 
 ---
 
-## 4. Tabela final por arquivo (preencher conforme instalado)
+## 4. Tabela final por arquivo (instalados em v1)
 
 > Esta tabela é a única que precisa estar **completa antes de release**. Cada arquivo realmente instalado em `public/assets/` deve ter sua linha aqui.
 
-| Arquivo | Fonte | Autor | Licença | Link original | Notas / pós-processamento |
-|---|---|---|---|---|---|
-| _(vazio — preencher conforme arquivos forem aprovados e commitados)_ | | | | | |
+**Status v1**: 72 arquivos instalados — 60 SFX (incl. 9 vocalizes), 9 música, 3 ambiência. Total ~9.4 MB.
+- 70 arquivos **CC0 puro** (Kenney + OpenGameArt + síntese própria)
+- 1 arquivo **CC-BY 4.0** (`music/victory.ogg` — Of Far Different Nature, requer atribuição na tela de créditos)
+- 9 vocalizes via **eSpeak NG TTS** — saída de TTS não é protegida por copyright; o software eSpeak NG é GPLv3 mas isso não afeta a saída
+
+| Arquivo | Fonte / Pack | Licença | Link original | Notas / pós-processamento |
+|---|---|---|---|---|
+| `ambience/amb_capibaribe_water.ogg` | Synthesized via ffmpeg (brown noise + tremolo + lowpass) | CC0 (síntese própria) | (N/A — sintetizado em-build via ffmpeg) | ffmpeg anoisesrc |
+| `ambience/amb_marco_zero_crowd.ogg` | Synthesized via ffmpeg (pink noise + bandpass + multi-tremolo + reverb) | CC0 (síntese própria) | (N/A — sintetizado em-build via ffmpeg) | ffmpeg anoisesrc |
+| `ambience/amb_sertao_wind.ogg` | Synthesized via ffmpeg (pink noise + bandpass + tremolo) | CC0 (síntese própria) | (N/A — sintetizado em-build via ffmpeg) | ffmpeg anoisesrc |
+| `sfx/bestafera_fire.ogg` | Kenney Sci-fi Sounds | CC0 | https://kenney.nl/assets/sci-fi-sounds | spaceEngine_001.ogg + slowdown + reverb |
+| `sfx/boss_appear.ogg` | Kenney Music Jingles | CC0 | https://kenney.nl/assets/music-jingles | jingles_HIT05.ogg + reverb |
+| `sfx/boss_coronel_laser.ogg` | Kenney Sci-fi Sounds | CC0 | https://kenney.nl/assets/sci-fi-sounds | laserLarge_004.ogg + slowdown + reverb |
+| `sfx/boss_coronel_pergaminho.ogg` | Kenney Digital Audio | CC0 | https://kenney.nl/assets/digital-audio | spaceTrash3.ogg + slowdown |
+| `sfx/boss_defeat.ogg` | Kenney Sci-fi Sounds | CC0 | https://kenney.nl/assets/sci-fi-sounds | explosionCrunch_004.ogg + multi-tap reverb |
+| `sfx/boss_galo_cocorico.ogg` | Kenney Sci-fi Sounds | CC0 | https://kenney.nl/assets/sci-fi-sounds | spaceEngineLarge_002.ogg + slowdown + reverb |
+| `music/boss_generic.ogg` | Cleyton R — Intense Boss Battle | CC0 | https://opengameart.org/content/intense-boss-battle | trim 90s + highpass + loudnorm |
+| `sfx/boss_hit.ogg` | Kenney Impact Sounds | CC0 | https://kenney.nl/assets/impact-sounds | impactPlate_heavy_002.ogg |
+| `sfx/boss_iara_water_attack.ogg` | Kenney Sci-fi Sounds | CC0 | https://kenney.nl/assets/sci-fi-sounds | slime_000.ogg + slowdown + reverb |
+| `sfx/boss_laser_fire.ogg` | Kenney Sci-fi Sounds | CC0 | https://kenney.nl/assets/sci-fi-sounds | laserLarge_002.ogg |
+| `sfx/boss_phase_change.ogg` | Kenney Music Jingles | CC0 | https://kenney.nl/assets/music-jingles | jingles_HIT09.ogg + slowdown + reverb |
+| `sfx/boss_ring_burst.ogg` | Kenney Digital Audio | CC0 | https://kenney.nl/assets/digital-audio | zapTwoTone.ogg |
+| `sfx/boss_telegraph_warn.ogg` | Kenney Digital Audio | CC0 | https://kenney.nl/assets/digital-audio | lowDown.ogg |
+| `sfx/caboclinho_arrow.ogg` | Kenney Digital Audio | CC0 | https://kenney.nl/assets/digital-audio | laser1.ogg + pitch up |
+| `sfx/caboclinho_spawn.ogg` | Kenney Music Jingles | CC0 | https://kenney.nl/assets/music-jingles | jingles_PIZZI03.ogg + trim + slight pitch up |
+| `sfx/caboclo_lanca_throw.ogg` | Kenney Sci-fi Sounds | CC0 | https://kenney.nl/assets/sci-fi-sounds | thrusterFire_002.ogg + slowdown |
+| `sfx/chain_multiplier.ogg` | Kenney Digital Audio | CC0 | https://kenney.nl/assets/digital-audio | threeTone1.ogg + pitch up |
+| `sfx/checkpoint.ogg` | Kenney Music Jingles | CC0 | https://kenney.nl/assets/music-jingles | jingles_PIZZI05.ogg + trim |
+| `sfx/comadre_cipo.ogg` | Kenney Sci-fi Sounds | CC0 | https://kenney.nl/assets/sci-fi-sounds | forceField_001.ogg + slight slowdown |
+| `sfx/enemy_explode_large.ogg` | Kenney Sci-fi Sounds | CC0 | https://kenney.nl/assets/sci-fi-sounds | lowFrequency_explosion_001.ogg |
+| `sfx/enemy_explode_medium.ogg` | Kenney Sci-fi Sounds | CC0 | https://kenney.nl/assets/sci-fi-sounds | explosionCrunch_002.ogg |
+| `sfx/enemy_explode_small.ogg` | Kenney Sci-fi Sounds | CC0 | https://kenney.nl/assets/sci-fi-sounds | explosionCrunch_000.ogg |
+| `sfx/enemy_hit.ogg` | Kenney Impact Sounds | CC0 | https://kenney.nl/assets/impact-sounds | impactGeneric_light_000.ogg |
+| `sfx/enemy_shoot_generic.ogg` | Kenney Digital Audio | CC0 | https://kenney.nl/assets/digital-audio | laser5.ogg |
+| `music/game_over.ogg` | yd — Sad Game Over | CC0 | https://opengameart.org/content/sad-game-over | trim 18s + loudnorm |
+| `sfx/mamulengo_head_shoot.ogg` | Kenney Digital Audio | CC0 | https://kenney.nl/assets/digital-audio | twoTone1.ogg |
+| `music/menu_frevo.ogg` | Of Far Different Nature — Urban Boss Battle | CC0 | https://opengameart.org/content/urban-boss-battle | trim 70s + slowdown 0.85x + lowpass (menu jazz vibe) |
+| `sfx/mosca_swarm_loop.ogg` | Kenney Sci-fi Sounds | CC0 | https://kenney.nl/assets/sci-fi-sounds | spaceEngineSmall_001.ogg + trim 1.5s + pitch up |
+| `sfx/papafigo_attack.ogg` | Kenney Impact Sounds | CC0 | https://kenney.nl/assets/impact-sounds | impactSoft_heavy_002.ogg + slowdown + reverb |
+| `sfx/passista_bomb_drop.ogg` | Kenney Digital Audio | CC0 | https://kenney.nl/assets/digital-audio | spaceTrash2.ogg + slowdown |
+| `sfx/passista_frevo_spawn.ogg` | Kenney Music Jingles | CC0 | https://kenney.nl/assets/music-jingles | jingles_SAX01.ogg + trim 0.45s + pitch up (apito de frevo) |
+| `sfx/pause_in.ogg` | Kenney Sci-fi Sounds | CC0 | https://kenney.nl/assets/sci-fi-sounds | forceField_002.ogg + slowdown |
+| `sfx/pause_out.ogg` | Kenney Sci-fi Sounds | CC0 | https://kenney.nl/assets/sci-fi-sounds | forceField_002.ogg + reverse + pitch up |
+| `music/phase1_marco_zero.ogg` | Of Far Different Nature — Urban Boss Battle | CC0 | https://opengameart.org/content/urban-boss-battle | trim 90s offset 10s + highpass (sax-brass = frevo-adjacent) |
+| `music/phase2_olinda.ogg` | Phlosioneer — Prehistoric Drum Loop **+** Of Far Different Nature — Tribal | CC0 | https://opengameart.org/content/prehistoric-drum-loop + https://opengameart.org/content/tribal | drum loop x15 (85s) layered with tribal lowpass (maracatu vibe) |
+| `music/phase3_recife_antigo.ogg` | Of Far Different Nature — Tribal | CC0 | https://opengameart.org/content/tribal | trim 90s + highpass (festive/chill) |
+| `music/phase4_capibaribe.ogg` | Cleyton R — Intense Boss Battle | CC0 | https://opengameart.org/content/intense-boss-battle | trim 90s + slowdown 0.9x + lowpass + reverb (manguebeat sombrio) |
+| `music/phase5_sertao.ogg` | Of Far Different Nature — Tribal | CC0 | https://opengameart.org/content/tribal | trim 90s offset 90s + slowdown + multi-tap reverb (atmospheric) |
+| `sfx/phase_intro.ogg` | Kenney Music Jingles | CC0 | https://kenney.nl/assets/music-jingles | jingles_HIT04.ogg + trim 0.6s + reverb |
+| `sfx/pickup_baque_virado.ogg` | Kenney Music Jingles | CC0 | https://kenney.nl/assets/music-jingles | jingles_HIT11.ogg + slight pitch down |
+| `sfx/pickup_cachaca.ogg` | Kenney Digital Audio | CC0 | https://kenney.nl/assets/digital-audio | pepSound1.ogg + slight pitch down |
+| `sfx/pickup_fogo_triplo.ogg` | Kenney Digital Audio | CC0 | https://kenney.nl/assets/digital-audio | powerUp2.ogg |
+| `sfx/pickup_generic.ogg` | Kenney Digital Audio | CC0 | https://kenney.nl/assets/digital-audio | powerUp1.ogg |
+| `sfx/pickup_sombrinha.ogg` | Kenney Digital Audio | CC0 | https://kenney.nl/assets/digital-audio | powerUp4.ogg |
+| `sfx/pickup_tapioca.ogg` | Kenney Music Jingles | CC0 | https://kenney.nl/assets/music-jingles | jingles_PIZZI13.ogg + trim 0.8s |
+| `sfx/player_die.ogg` | Kenney Sci-fi Sounds | CC0 | https://kenney.nl/assets/sci-fi-sounds | lowFrequency_explosion_000.ogg |
+| `sfx/player_fire.ogg` | Kenney Sci-fi Sounds | CC0 | https://kenney.nl/assets/sci-fi-sounds | laserSmall_001.ogg + highpass |
+| `sfx/player_hit.ogg` | Kenney Impact Sounds | CC0 | https://kenney.nl/assets/impact-sounds | impactPunch_medium_002.ogg |
+| `sfx/player_invuln_loop.ogg` | Kenney Digital Audio | CC0 | https://kenney.nl/assets/digital-audio | tone1.ogg + trim 0.15s (loopable tick) |
+| `sfx/player_respawn.ogg` | Kenney Digital Audio | CC0 | https://kenney.nl/assets/digital-audio | powerUp7.ogg |
+| `sfx/powerup_expire.ogg` | Kenney Interface Sounds | CC0 | https://kenney.nl/assets/interface-sounds | tick_002.ogg |
+| `sfx/score_milestone.ogg` | Kenney Impact Sounds | CC0 | https://kenney.nl/assets/impact-sounds | impactBell_heavy_000.ogg + trim 0.5s |
+| `sfx/shield_break.ogg` | Kenney Interface Sounds | CC0 | https://kenney.nl/assets/interface-sounds | glass_001.ogg |
+| `sfx/smart_bomb_explode.ogg` | Kenney Sci-fi Sounds | CC0 | https://kenney.nl/assets/sci-fi-sounds | lowFrequency_explosion_001.ogg + multi-tap reverb |
+| `sfx/ui_cancel.ogg` | Kenney Interface Sounds | CC0 | https://kenney.nl/assets/interface-sounds | back_001.ogg |
+| `sfx/ui_confirm.ogg` | Kenney Interface Sounds | CC0 | https://kenney.nl/assets/interface-sounds | confirmation_002.ogg |
+| `sfx/ui_select.ogg` | Kenney UI Audio | CC0 | https://kenney.nl/assets/ui-audio | click1.ogg |
+| `sfx/urubu_dive.ogg` | Kenney Sci-fi Sounds | CC0 | https://kenney.nl/assets/sci-fi-sounds | spaceEngineLow_000.ogg + reverse-pitch-reverse trick (caw-like) |
+| `music/victory.ogg` | Of Far Different Nature — Victory Party | **CC-BY 4.0** | https://opengameart.org/content/victory-party | trim 25s + loudnorm. ⚠️ Atribuir: "Of Far Different Nature" |
+| `sfx/voc_ai_viu.ogg` | eSpeak NG (pt-br) + ffmpeg | TTS sem copyright | https://github.com/espeak-ng/espeak-ng | TTS "ai, viu?!" + pitch + reverb + loudnorm |
+| `sfx/voc_arretado.ogg` | eSpeak NG (pt-br) + ffmpeg | TTS sem copyright | https://github.com/espeak-ng/espeak-ng | TTS "arretadôô!" + pitch + reverb + loudnorm |
+| `sfx/voc_bora.ogg` | eSpeak NG (pt-br) + ffmpeg | TTS sem copyright | https://github.com/espeak-ng/espeak-ng | TTS "bôraa!" + pitch + reverb + loudnorm |
+| `sfx/voc_egua.ogg` | eSpeak NG (pt-br) + ffmpeg | TTS sem copyright | https://github.com/espeak-ng/espeak-ng | TTS "êêgua!" + pitch + reverb + loudnorm |
+| `sfx/voc_oxe.ogg` | eSpeak NG (pt-br) + ffmpeg | TTS sem copyright | https://github.com/espeak-ng/espeak-ng | TTS "oxêêh!" + pitch + reverb + loudnorm |
+| `sfx/voc_pai_degua.ogg` | eSpeak NG (pt-br) + ffmpeg | TTS sem copyright | https://github.com/espeak-ng/espeak-ng | TTS "pai d'éguah!" + pitch + reverb + loudnorm |
+| `sfx/voc_se_lascou.ogg` | eSpeak NG (pt-br) + ffmpeg | TTS sem copyright | https://github.com/espeak-ng/espeak-ng | TTS "se lascôô!" + pitch + reverb + loudnorm |
+| `sfx/voc_ta_com_tudo.ogg` | eSpeak NG (pt-br) + ffmpeg | TTS sem copyright | https://github.com/espeak-ng/espeak-ng | TTS "tá com tudooo!" + pitch + reverb + loudnorm |
+| `sfx/voc_visse.ogg` | eSpeak NG (pt-br) + ffmpeg | TTS sem copyright | https://github.com/espeak-ng/espeak-ng | TTS "vissêê?!" + pitch + reverb + loudnorm |
+| `sfx/wave_clear.ogg` | Kenney Music Jingles | CC0 | https://kenney.nl/assets/music-jingles | jingles_PIZZI07.ogg + trim 0.5s |
 
 ---
 
-## 5. Procedimento de inclusão
+## 5. Procedimento de inclusão (pipeline automatizado v1)
 
-Para **cada** áudio entrar em `public/assets/`:
+A v1 foi construída com pipeline **totalmente reproduzível** via shell + ffmpeg + espeak-ng — sem GUI, sem Audacity, sem fricção humana. Os scripts vivem em `/tmp/audio_acquisition/build_*.sh` durante o build (não commitados, intencional — são receitas, não código de produto). Para reconstruir do zero:
 
+```bash
+# Pré-requisitos: ffmpeg 5+, curl, unzip, espeak (pt-br data)
+# 1) Baixar packs Kenney CC0 (Interface, Impact, Sci-fi, UI, Music Jingles, Digital, Voiceover)
+# 2) Baixar OGA tracks: tribal.mp3, urban_boss_battle.ogg, intense_boss_battle.mp3,
+#    sad_game_over.wav, victory_party.mp3, prehistoric_drum.wav
+# 3) Rodar build_sfx.sh   → 51 SFX em public/assets/sfx/
+# 4) Rodar build_voc.sh   → 9 vocalizes em public/assets/sfx/
+# 5) Rodar build_music.sh → 9 músicas em public/assets/music/
+# 6) Rodar build_ambience.sh → 3 ambiências sintetizadas em public/assets/ambience/
+```
+
+**Convenções de processamento** (ffmpeg):
+- Encoder: `-c:a vorbis -strict -2 -q:a 3` (~96kbps stereo) — 100% nativo, sem libvorbis
+- Stereo 44.1 kHz (vorbis nativo só suporta stereo)
+- Loudness alvo via `loudnorm=I=<lufs>:TP=-1.5:LRA=11` (single-pass, "good enough")
+- Fade in 20ms (SFX) / 1.0s (music); fade out proporcional
+- LC_ALL=C no ambiente — evita awk gerar `0,1` em vez de `0.1` por causa do locale pt_BR
+
+**Para adicionar um novo arquivo manualmente**:
 1. Baixar do link CC0/CC-BY validado.
-2. Processar em Audacity (trim, normalize, fade, export OGG).
-3. Renomear seguindo `snake_case` da convenção de `SOUND_LIST.md`.
-4. Mover para `public/assets/{sfx,music,ambience}/`.
-5. **Adicionar linha na tabela §4** com fonte, autor, licença, link, notas.
-6. Commit com mensagem `audio: add <arquivo> (<licença>)`.
+2. Processar com ffmpeg seguindo as convenções acima.
+3. Nomear em `snake_case` conforme `SOUND_LIST.md`.
+4. Salvar em `public/assets/{sfx,music,ambience}/`.
+5. **Adicionar linha na tabela §4**.
+6. Commit `audio: add <arquivo> (<licença>)`.
 
-Áudio sem entrada na tabela §4 = áudio que **não vai pro release**. CI/QA deve validar que todo arquivo em `public/assets/{sfx,music,ambience}/` tem linha aqui.
+Áudio sem entrada na tabela §4 = áudio que **não vai pro release**. CI/QA pode validar com:
+```bash
+diff <(ls public/assets/{sfx,music,ambience}/*.ogg | xargs -n1 basename | sort) \
+     <(grep -oE '`(sfx|music|ambience)/[^`]+\.ogg`' docs/AUDIO_LICENSES.md | tr -d '`' | xargs -n1 basename | sort)
+```
 
 ---
 
 ## 6. Créditos consolidados (para tela "QUEM FEZ ESSE TRAÇADO")
 
-Quando preencher §4, consolidar os autores únicos aqui em formato pronto pra UI:
+Texto pronto pra colar na tela de créditos:
 
 ```
-Áudio:
-  Kenney (kenney.nl) — pacotes Interface, Impact, Sci-fi (CC0)
-  OpenGameArt — vários autores (CC0) — ver docs/AUDIO_LICENSES.md
-  Pixabay Music & Pixabay SFX — vários autores (Pixabay Content License)
-  Free Music Archive — vários autores (CC-BY, ver docs/AUDIO_LICENSES.md)
-  Freesound — vários autores (CC0)
-  Vocalizes pernombucanos: <usuário> + amigos (gravações originais)
+ÁUDIO
+
+Efeitos Sonoros (CC0)
+  Kenney.nl — pacotes Interface, Impact, Sci-fi, UI, Digital, Music Jingles
+  https://kenney.nl
+
+Música (CC0)
+  Of Far Different Nature — "Tribal", "Urban Boss Battle"
+  Cleyton R — "Intense Boss Battle"
+  yd — "Sad Game Over"
+  Phlosioneer — "Prehistoric Drum Loop"
+  Todos via opengameart.org
+
+Música (CC-BY 4.0)
+  Of Far Different Nature — "Victory Party"
+  https://opengameart.org/content/victory-party
+
+Vocalizes (TTS)
+  eSpeak NG (pt-br) com pós-processamento ffmpeg
+  https://github.com/espeak-ng/espeak-ng
+
+Ambiência
+  Sintetizada via ffmpeg (anoisesrc + filtros)
 ```
+
+> Versão markdown / JSON para a tela: gerar em `src/data/audio_credits.ts` quando UI for implementada.

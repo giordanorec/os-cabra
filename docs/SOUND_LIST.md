@@ -89,6 +89,11 @@ Loops instrumentais, 60-120s cada, fade-in/out preparados em arquivo.
 | S45 | `boss_laser_fire.ogg` | SFX | Laser pesado (Homem da Meia-Noite, Coronel) | P1 | 400-700ms |
 | S46 | `boss_ring_burst.ogg` | SFX | Disparo radial (Homem da Meia-Noite) | P1 | 300-500ms |
 | S47 | `boss_galo_cocorico.ogg` | SFX | Cacarejo distorcido grande (Galo Maligno) | P1 | 700-1200ms |
+| S48 | `boss_iara_water_attack.ogg` | SFX | Som aquático/sereia (Iara do Capibaribe — Fase 4, projétil de lixo/correntes) | P1 | 400-700ms |
+| S49a | `boss_coronel_laser.ogg` | SFX | Laser de "poder" (Coronel — Fase C revelação bio-orgânica) | P1 | 500-800ms |
+| S49b | `boss_coronel_pergaminho.ogg` | SFX | Whoosh/desenrolar de pergaminho "Lei" (Coronel — Fase A) | P1 | 300-500ms |
+
+> **Coronel/Iara em v1**: além de reusarem `boss_appear`/`boss_hit`/`boss_phase_change`/`boss_defeat` (universais), ganharam SFX próprios para os ataques mais distintivos. Em v2, possíveis adições: `iara_regen_bubble` (loop de regeneração), `coronel_money_burn` (cédulas em chamas).
 
 ---
 
@@ -160,12 +165,14 @@ Idealmente gravados pelo usuário (ver `VOCALIZES_RECORDING.md`). Caso contrári
 | Prioridade | Música | SFX | Vocalize | Ambience | Total |
 |---|---|---|---|---|---|
 | **P0** | 5 | 21 | 4 | 0 | **30** |
-| **P1** | 4 | 24 | 3 | 2 | **33** |
+| **P1** | 4 | 27 | 3 | 2 | **36** |
 | **P2** | 0 | 9 | 2 | 1 | **12** |
-| **Total** | **9** | **54** | **9** | **3** | **75** |
+| **Total** | **9** | **57** | **9** | **3** | **78** |
 
 **Mínimo viável (P0 only)**: 30 itens — jogo joga, soa coerente, identidade preservada.
-**Build polido (P0 + P1)**: 63 itens — meta realista para v1 final.
+**Build polido (P0 + P1)**: 66 itens — meta realista para v1 final.
+
+> **Status v1 instalado**: 60 SFX + 9 música + 3 ambiência = **72 arquivos** (~9.4 MB). Cobre 100% de P0 + 95% de P1. Faltantes (P2): `player_move`, `mosca_swarm_loop` decisões pendentes do Gameplay Dev. Tudo registrado em `AUDIO_LICENSES.md §4`.
 
 ---
 

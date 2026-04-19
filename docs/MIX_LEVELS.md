@@ -12,13 +12,15 @@
 
 ## 2. Volumes relativos por categoria (multiplicadores 0.0–1.0)
 
-| Categoria | Volume default | Faixa típica | Exposto ao usuário? |
+**Decisão**: 4 sliders na tela de Opções (master + music + sfx + vocalize). Ambience herda de `sfx` (volume baixo demais pra justificar slider próprio).
+
+| Categoria | Volume default | Faixa típica | Slider em Opções |
 |---|---|---|---|
-| `master` | 1.0 | 0.0–1.0 | ✅ slider em Opções |
-| `music` | 0.50 | 0.0–1.0 | ✅ slider em Opções |
-| `sfx` | 0.70 | 0.0–1.0 | ✅ slider em Opções |
-| `vocalize` | 0.85 | 0.0–1.0 | (segue `sfx` mas com bump) |
-| `ambience` | 0.30 | 0.0–1.0 | (segue `sfx`, sem slider próprio) |
+| `master` | 1.0 | 0.0–1.0 | ✅ "Volume Geral" |
+| `music` | 0.50 | 0.0–1.0 | ✅ "Música" |
+| `sfx` | 0.70 | 0.0–1.0 | ✅ "Efeitos" |
+| `vocalize` | 0.85 | 0.0–1.0 | ✅ "Vozes" |
+| `ambience` | 0.30 | 0.0–1.0 | herdada de `sfx` (sem slider próprio) |
 
 > Volume final por som = `master * categoria * override_se_houver`.
 
@@ -99,8 +101,9 @@ class AudioManager {
 
 Sliders de Opções alteram `master`/`music`/`sfx` em runtime; persistir em `localStorage` chave `os_cabra_audio_settings`.
 
-## 8. Open questions
+## 8. Decisões fechadas (v1)
 
-- [ ] Slider separado pra `vocalize` ou herdar de `sfx`? Default: herdar.
-- [ ] Persistir `master` ou começar sempre em 1.0? Default: persistir.
-- [ ] Ducking durante pausa precisa fade ou pode ser corte? Default: fade 200ms.
+- ✅ **4 sliders** (master + music + sfx + vocalize). Ambience herda de `sfx`.
+- ✅ Persistir todos os 4 sliders em `localStorage` (chave `os_cabra_audio_settings`).
+- ✅ Ducking sempre com fade — corte seco fica desconfortável.
+- ✅ Vocalizes via TTS (espeak-ng pt-br + ffmpeg) em v1; gravação humana fica como upgrade pós-v1.

@@ -1,6 +1,12 @@
 {
   "$schema": "./audio_config.schema.json",
-  "version": 1,
+  "version": 2,
+  "sliders": [
+    { "key": "master",   "label": "Volume Geral",  "default": 1.0, "persist": true },
+    { "key": "music",    "label": "Música",        "default": 0.5, "persist": true },
+    { "key": "sfx",      "label": "Efeitos",       "default": 0.7, "persist": true },
+    { "key": "vocalize", "label": "Vozes",         "default": 0.85, "persist": true }
+  ],
   "categories": {
     "master": 1.0,
     "music": 0.5,
@@ -8,6 +14,7 @@
     "vocalize": 0.85,
     "ambience": 0.3
   },
+  "ambienceFollowsSlider": "sfx",
   "overrides": {
     "boss_defeat": 0.95,
     "smart_bomb_explode": 0.95,
@@ -20,7 +27,10 @@
     "enemy_hit": 0.55,
     "ui_select": 0.45,
     "mosca_swarm_loop": 0.35,
-    "player_invuln_loop": 0.4
+    "player_invuln_loop": 0.4,
+    "boss_iara_water_attack": 0.85,
+    "boss_coronel_laser": 0.9,
+    "boss_coronel_pergaminho": 0.7
   },
   "categoryOf": {
     "vocalize_prefix": "voc_",
@@ -69,5 +79,9 @@
     "any_to_game_over": 500,
     "any_to_victory": 1000,
     "default": 600
+  },
+  "persist": {
+    "localStorageKey": "os_cabra_audio_settings",
+    "version": 1
   }
 }
