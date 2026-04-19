@@ -2,7 +2,10 @@ import * as Phaser from 'phaser';
 import { GAME_WIDTH, GAME_HEIGHT, BACKGROUND_COLOR } from './config';
 import { BootScene } from './scenes/BootScene';
 import { PreloadScene } from './scenes/PreloadScene';
+import { MenuScene } from './scenes/MenuScene';
 import { GameScene } from './scenes/GameScene';
+import { HUDScene } from './scenes/HUDScene';
+import { GameOverScene } from './scenes/GameOverScene';
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -17,7 +20,7 @@ const config: Phaser.Types.Core.GameConfig = {
       debug: false
     }
   },
-  scene: [BootScene, PreloadScene, GameScene]
+  scene: [BootScene, PreloadScene, MenuScene, GameScene, HUDScene, GameOverScene]
 };
 
 const game = new Phaser.Game(config);

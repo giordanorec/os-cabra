@@ -1,8 +1,21 @@
 import * as Phaser from 'phaser';
 
-const PLAYER_KEY = 'player';
-const BULLET_PLAYER_KEY = 'bullet-player';
-const ENEMY_STATIC_KEY = 'enemy-static';
+interface Placeholder {
+  key: string;
+  w: number;
+  h: number;
+  color: number;
+}
+
+const PLACEHOLDERS: Placeholder[] = [
+  { key: 'player', w: 32, h: 32, color: 0xd4a04c },
+  { key: 'bullet-player', w: 6, h: 14, color: 0xf4e4c1 },
+  { key: 'enemy-caboclinho', w: 28, h: 28, color: 0xb84a2e },
+  { key: 'enemy-passista', w: 32, h: 32, color: 0xe87a3e },
+  { key: 'enemy-mosca', w: 14, h: 14, color: 0x7a6850 },
+  { key: 'enemy-bullet-flecha', w: 6, h: 18, color: 0xb84a2e },
+  { key: 'enemy-bullet-bombinha', w: 10, h: 10, color: 0xd4a04c }
+];
 
 export class PreloadScene extends Phaser.Scene {
   constructor() {
@@ -10,20 +23,20 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   preload() {
-    this.generatePlaceholder(PLAYER_KEY, 32, 32, 0xd4a04c);
-    this.generatePlaceholder(BULLET_PLAYER_KEY, 6, 14, 0xf4e4c1);
-    this.generatePlaceholder(ENEMY_STATIC_KEY, 36, 36, 0xb84a2e);
+    for (const p of PLACEHOLDERS) {
+      this.generatePlaceholder(p);
+    }
   }
 
   create() {
-    this.scene.start('GameScene');
+    this.scene.start('MenuScene');
   }
 
-  private generatePlaceholder(key: string, width: number, height: number, color: number) {
+  private generatePlaceholder(p: Placeholder) {
     const g = this.add.graphics({ x: 0, y: 0 });
-    g.fillStyle(color, 1);
-    g.fillRect(0, 0, width, height);
-    g.generateTexture(key, width, height);
+    g.fillStyle(p.color, 1);
+    g.fillRect(0, 0, p.w, p.h);
+    g.generateTexture(p.key, p.w, p.h);
     g.destroy();
   }
 }
