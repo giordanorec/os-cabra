@@ -136,6 +136,12 @@ export const fase1Waves: Wave[] = [
 - Sem gravidade (`gravity: { x: 0, y: 0 }`)
 - Colisões: grupo `playerBullets` × grupo `enemies`, grupo `enemyBullets` × `player`, grupo `enemies` × `player`
 
+### 5.1 Gotcha em `physics.add.overlap(a, b, cb)` — Phaser 4
+
+Quando `a` é `Sprite` e `b` é `Group` (ou vice-versa), a callback é chamada com **`(sprite, bulletFromGroup)`** independente da ordem em que `a` e `b` foram passados — internamente o Phaser 4 normaliza pra `collideSpriteVsGroup(sprite, group, cb)`. Descoberto no M1 (`TypeError: e.takeHit is not a function` quando passaram `group, sprite`).
+
+**Padrão do projeto**: sempre **sprite primeiro, group depois** na chamada, e a callback assume `(sprite, bullet)`. Para `group × group`, a ordem não importa mas recomenda-se manter consistência.
+
 ## 6. Input
 
 Centralizar em `InputManager`:
