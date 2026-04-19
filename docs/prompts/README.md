@@ -10,6 +10,21 @@ Esta pasta contém **prompts prontos** pra colar em sessões Claude Code novas, 
 4. Cole como primeira mensagem pro Claude
 5. O Claude vai ler os docs indicados e começar a trabalhar
 
+## Pré-requisitos — instale antes de acionar Gameplay Dev e QA
+
+Ver [`../TOOLS.md`](../TOOLS.md) para detalhes:
+
+1. **Plugin `phaser4-gamedev`** (no Claude Code):
+   ```
+   /plugin marketplace add Yakoub-ai/phaser4-gamedev
+   /plugin install phaser4-gamedev@phaser4-gamedev
+   ```
+2. **Playwright MCP** (no terminal):
+   ```bash
+   claude mcp add playwright -- npx @playwright/mcp@latest
+   ```
+3. Reinicie a sessão Claude Code se necessário. Verifique com `/plugin list`.
+
 ## Ordem sugerida de acionamento
 
 | # | Agente | Quando acionar | Depende de |

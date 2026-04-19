@@ -11,6 +11,13 @@
 - **npm** — package manager
 - **Node 22+** — runtime de dev
 
+### Ferramentas de IA no loop de desenvolvimento
+
+Ver [`TOOLS.md`](TOOLS.md) para instalação e uso detalhado.
+
+- **Plugin `phaser4-gamedev`** (Claude Code) — 4 agentes (`phaser-architect`, `phaser-coder`, `phaser-debugger`, `phaser-asset-advisor`), 14 skills, hook anti-API-depreciada. **Use os agentes ativamente** durante a implementação — `phaser-debugger` é particularmente útil quando sprite aparece preto, física se comporta estranho, cena não transiciona
+- **Playwright MCP** — permite que o agente abra o jogo no browser, teste a mecânica implementada e veja o resultado antes de devolver o controle. **Validar cada milestone no Playwright antes de abrir PR**
+
 ## 2. Estrutura de pastas
 
 ```

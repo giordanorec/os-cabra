@@ -21,10 +21,19 @@ Estratégia de teste, execução manual, relatório de bugs, validação de game
 
 ## Ferramentas que vai precisar
 
-### Browser automation (opcional mas poderoso)
-Sua sessão tem acesso a uma skill **dev-browser** que pode navegar, clicar, tirar screenshots do jogo rodando. Use quando fizer sentido para smoke tests repetitivos. Para playtest de fun factor, jogar de verdade é melhor.
+### Playwright MCP (central)
+Ver `docs/TOOLS.md`. **Deve estar instalado antes de você começar.** Use Playwright pra:
+- **Automatizar smoke tests** (checklist de 5 min que roda a cada build) — navegar menu, iniciar jogo, atirar, pausar, game over, e screenshots de cada etapa
+- **Capturar screenshots consistentes** pra `docs/qa_screenshots/milestone_N/` — serve de referência visual pra comparar entre milestones
+- **Ler console errors** automaticamente
+- **Reproduzir bugs** — quando encontrar um bug, escreva um script Playwright que reproduz e anexe ao issue
 
-### Ambiente de teste manual
+Salve os scripts em `tests/smoke/` (criar pasta) como arquivos `.ts` ou `.js`.
+
+### Browser automation (alternativa leve)
+Skill built-in **dev-browser** serve pra exploração rápida sem precisar estruturar script Playwright.
+
+### Ambiente de teste manual (ainda necessário pra playtest de fun)
 - Chrome/Chromium (principal)
 - Firefox
 - Safari (em Mac, se disponível)
@@ -53,6 +62,9 @@ Além disso, recrute **3-5 playtesters externos** quando possível (amigos do us
 - Tirar screenshots/gravações pra mostrar progresso
 
 ## Entregáveis
+
+### 0. Scripts Playwright de smoke test
+Em `tests/smoke/`: um script por fluxo principal (menu → jogo → pause → game over). Rodam via `npx playwright test` (configurar playwright.config depois de instalar). Serve pra CI também.
 
 ### 1. Matriz de compatibilidade (`docs/QA_COMPAT_MATRIX.md`)
 Tabela browsers × OS × resoluções × milestone, marcar pass/fail:

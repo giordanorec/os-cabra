@@ -5,7 +5,9 @@
 
 ## 1. Escopo
 
-Jogo roda em browser desktop. Testamos 4 navegadores, 2 resoluções de janela, 1 fluxo principal de jogo, edge cases comuns. Não há testes automatizados no MVP — tudo manual/playtest. Se o projeto crescer, considerar Vitest pros sistemas puros (ScoreManager, etc.).
+Jogo roda em browser desktop. Testamos 4 navegadores, 2 resoluções de janela, 1 fluxo principal de jogo, edge cases comuns.
+
+**Testes automatizados via Playwright MCP** — ver [`TOOLS.md`](TOOLS.md). O QA usa Playwright pra automatizar smoke tests repetitivos (navegar menu, iniciar jogo, atirar, screenshots) e liberar tempo humano pra playtest de fun factor. Vitest pros sistemas puros (ScoreManager etc.) fica pra v2 se o projeto crescer.
 
 ## 2. Ambiente de teste
 
@@ -20,16 +22,18 @@ Jogo roda em browser desktop. Testamos 4 navegadores, 2 resoluções de janela, 
 ## 3. Categorias de teste
 
 ### 3.1 Smoke (a cada build)
-Checklist rápido (~5 min) pra garantir que nada óbvio quebrou:
+Checklist rápido (~5 min) pra garantir que nada óbvio quebrou. **Automatizar via Playwright MCP** sempre que possível:
 
-- [ ] `npm run dev` abre e carrega sem erros no console
-- [ ] Menu aparece corretamente
-- [ ] Enter inicia jogo
-- [ ] Player se move nas 2 direções
+- [ ] `npm run dev` abre e carrega sem erros no console (Playwright verifica `page.on('pageerror')`)
+- [ ] Menu aparece corretamente (screenshot + inspeção visual)
+- [ ] Enter inicia jogo (Playwright `page.keyboard.press('Enter')` + screenshot)
+- [ ] Player se move nas 2 direções (arrows via Playwright + screenshots)
 - [ ] Tiro sai e destrói pelo menos 1 inimigo
 - [ ] ESC pausa e retoma
 - [ ] Game Over funciona
 - [ ] `npm run build` produz `dist/` sem erro
+
+Salvar screenshots em `docs/qa_screenshots/milestone_N/` pra comparação visual entre milestones.
 
 ### 3.2 Regression (a cada milestone)
 Checklist completa, ~45 min. Percorre todo o jogo fim a fim:

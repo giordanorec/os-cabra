@@ -10,6 +10,7 @@ O projeto usa **topologia orquestrador + especialistas**: uma sessão Claude rai
 
 | Doc | Para quem | Sobre |
 |---|---|---|
+| [`TOOLS.md`](TOOLS.md) | **Todos** | Plugin Claude Code + Playwright MCP — **leia antes de acionar Gameplay Dev e QA** |
 | [`GDD.md`](GDD.md) | Game Designer, Gameplay Dev, QA | Mecânicas, inimigos, bosses, dificuldade, loops |
 | [`TECH_SPEC.md`](TECH_SPEC.md) | Gameplay Dev, DevOps | Stack, folder structure, cenas, padrões |
 | [`ART_BIBLE.md`](ART_BIBLE.md) | Visual Designer, UI/UX | Estilo, paleta, lista de assets, pipeline de geração |
@@ -40,6 +41,7 @@ Os [`prompts/`](prompts/) contêm um prompt pronto por especialista — você co
 - **Score**: localStorage + compartilhamento por código (sem backend)
 - **Idioma**: PT-BR com regionalismo pernambucano
 - **Resolução**: 800×600 (padrão arcade clássico)
+- **Ferramentas de IA**: plugin `phaser4-gamedev` (Claude Code) + Playwright MCP (loop visual fechado) — ver [`TOOLS.md`](TOOLS.md)
 
 ## Rodando localmente
 
