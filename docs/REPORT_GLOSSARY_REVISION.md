@@ -143,3 +143,19 @@ Dois vocalizes ficaram "órfãos" por causa da revisão:
 - Playtest com 2-3 pernambucanos diferentes validando a lista "mantidos" em contexto (não só palavra por palavra).
 - Revisar `docs/REPORT_UX_DESIGNER.md` só se for reabrir o relatório original (não recomendo — deixar como registro histórico).
 - Validar com dono PE se "BORA, CABRA" ou "OXE, BORA" soa mais natural como CTA primário (troca de 1 linha se mudar).
+
+## Nota operacional: stash deixado pro arquiteto avaliar
+
+Durante o recommit cirúrgico (o primeiro commit desta branch saiu contaminado com 50 arquivos de outras sessões por corrida na working tree compartilhada — foi resetado via `git reset --mixed HEAD~1` com autorização explícita do arquiteto), foi criado:
+
+```
+stash@{0}: On main: salvaguarda-ux-reset
+```
+
+**Não descartar sem conferir.** Pode conter WIP legítimo de outra sessão (Visual Designer, pipeline de arte) que estava na working tree compartilhada no momento do reset. Inspecionar com:
+
+```
+git stash show -p stash@{0}
+```
+
+Existe também um `stash@{1}: On main: WIP from milestone-3-boss-maracatu session` pré-existente — não foi tocado nesta operação.
