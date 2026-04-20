@@ -1,5 +1,6 @@
 import * as Phaser from 'phaser';
 import {
+  DEPTH,
   PLAYER_SPEED,
   PLAYER_FIRE_COOLDOWN_MS,
   PLAYER_LIVES,
@@ -23,13 +24,17 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   onFire?: (x: number, y: number) => void;
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
-    super(scene, x, y, 'player');
+    // O spritesheet `player.png` tem 17 frames mas vários são vazios (atlas pipeline
+    // do Visual Designer gerou placeholders). Frame 10 mostra o galo colorido.
+    // Substituir pelo frame correto quando art/milestone-4 padronizar as poses.
+    super(scene, x, y, 'player', 10);
     scene.add.existing(this);
     scene.physics.add.existing(this);
     this.setCollideWorldBounds(true);
     // Sprite base 32×32 → 64×64 (≈10.7% da altura do game). Voltar pra 1x
     // quando Visual Designer empurrar assets já no tamanho 64-96px.
     this.setScale(2);
+    this.setDepth(DEPTH.PLAYER);
     this.baseY = y;
     this.startBob();
   }

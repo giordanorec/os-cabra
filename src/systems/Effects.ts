@@ -1,4 +1,5 @@
 import * as Phaser from 'phaser';
+import { DEPTH } from '../config';
 
 // Wrapper de efeitos visuais conforme UX_SPEC §6 (tabela de feedback).
 
@@ -66,6 +67,7 @@ export class Effects {
       alpha: { start: 1, end: 0 },
       blendMode: 'ADD'
     });
+    emitter.setDepth(DEPTH.VFX);
     this.scene.time.delayedCall(lifespan + 50, () => emitter.destroy());
   }
 }

@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import { GAME_HEIGHT, GAME_WIDTH } from '../config';
+import { DEPTH, GAME_HEIGHT, GAME_WIDTH } from '../config';
 import { getString } from '../strings';
 import { Action, InputManager } from '../systems/InputManager';
 import { AudioManager } from '../systems/AudioManager';
@@ -21,7 +21,7 @@ export class PauseScene extends Phaser.Scene {
     this.justOpenedAt = this.time.now;
 
     const dim = this.add.rectangle(GAME_WIDTH / 2, GAME_HEIGHT / 2, GAME_WIDTH, GAME_HEIGHT, 0x2a2540, 0.55);
-    dim.setDepth(1000);
+    dim.setDepth(DEPTH.PAUSE);
 
     const title = this.add.text(GAME_WIDTH / 2, GAME_HEIGHT / 2 - 60, getString('pause.title'), {
       fontFamily: FONTS.DISPLAY,
@@ -29,7 +29,7 @@ export class PauseScene extends Phaser.Scene {
       color: '#fff2cc',
       stroke: '#2a2540',
       strokeThickness: 4
-    }).setOrigin(0.5).setDepth(1001).setScale(0.5);
+    }).setOrigin(0.5).setDepth(DEPTH.PAUSE + 1).setScale(0.5);
     this.tweens.add({
       targets: title,
       scale: { from: 0.5, to: 1 },
@@ -41,13 +41,13 @@ export class PauseScene extends Phaser.Scene {
       fontFamily: FONTS.DISPLAY,
       fontSize: '36px',
       color: '#f0c840'
-    }).setOrigin(0.5).setDepth(1001);
+    }).setOrigin(0.5).setDepth(DEPTH.PAUSE + 1);
 
     this.add.text(GAME_WIDTH / 2, GAME_HEIGHT / 2 + 90, getString('pause.controls_hint'), {
       fontFamily: FONTS.MONO,
       fontSize: '14px',
       color: '#fff2cc'
-    }).setOrigin(0.5).setDepth(1001).setAlpha(0.8);
+    }).setOrigin(0.5).setDepth(DEPTH.PAUSE + 1).setAlpha(0.8);
   }
 
   override update() {

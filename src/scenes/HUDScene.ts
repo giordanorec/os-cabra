@@ -1,10 +1,10 @@
 import * as Phaser from 'phaser';
-import { GAME_WIDTH, PLAYER_LIVES } from '../config';
+import { DEPTH, GAME_WIDTH, PLAYER_LIVES } from '../config';
 import { getString } from '../strings';
 import { FONTS } from '../fonts';
 
-const HUD_DEPTH = 100;
-const OVERLAY_DEPTH = 2000;
+const HUD_DEPTH = DEPTH.HUD;
+const OVERLAY_DEPTH = DEPTH.HUD_OVERLAY;
 
 export class HUDScene extends Phaser.Scene {
   private lifeIcons: Phaser.GameObjects.Image[] = [];

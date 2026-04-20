@@ -1,4 +1,5 @@
 import * as Phaser from 'phaser';
+import { DEPTH } from '../config';
 
 export class BossMember extends Phaser.Physics.Arcade.Sprite {
   onHit?: () => void;
@@ -10,6 +11,7 @@ export class BossMember extends Phaser.Physics.Arcade.Sprite {
     const body = this.body as Phaser.Physics.Arcade.Body;
     body.setAllowGravity(false);
     body.setImmovable(true);
+    this.setDepth(DEPTH.ENEMY);
   }
 
   flash() {

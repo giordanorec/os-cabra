@@ -1,4 +1,5 @@
 import * as Phaser from 'phaser';
+import { DEPTH } from '../config';
 
 // Attach a keyboard shortcut `[F]` to toggle browser fullscreen.
 // Phaser.Scale exige user gesture — teclado conta, touch/click conta.
@@ -25,6 +26,7 @@ export function addFullscreenButton(
   redraw(g, size);
   container.add(g);
   container.setSize(size, size);
+  container.setDepth(DEPTH.FULLSCREEN_BTN);
   container.setInteractive(new Phaser.Geom.Rectangle(-size / 2, -size / 2, size, size), Phaser.Geom.Rectangle.Contains);
   container.on('pointerover', () => {
     g.clear();

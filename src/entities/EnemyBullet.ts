@@ -1,9 +1,10 @@
 import * as Phaser from 'phaser';
-import { GAME_HEIGHT, GAME_WIDTH } from '../config';
+import { DEPTH, GAME_HEIGHT, GAME_WIDTH } from '../config';
 
 export class EnemyBullet extends Phaser.Physics.Arcade.Sprite {
   constructor(scene: Phaser.Scene, x: number, y: number, texture: string) {
     super(scene, x, y, texture);
+    this.setDepth(DEPTH.ENEMY_BULLET);
   }
 
   fire(x: number, y: number, vx: number, vy: number, gravityY = 0) {

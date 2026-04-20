@@ -47,6 +47,23 @@ export const FASE1 = {
   CHECKPOINT_AFTER_WAVE: 3
 } as const;
 
+// Z-ordenação de camadas — mantém render consistente entre cenas.
+// Referência: briefing pós-hotfix 2026-04-19 (bug do parallax cobrindo player).
+export const DEPTH = {
+  PARALLAX_BACK:   -300,
+  PARALLAX_MID:    -200,
+  PARALLAX_FORE:   -100,
+  ENEMY_BULLET:    0,
+  ENEMY:           10,
+  PLAYER_BULLET:   15,
+  PLAYER:          20,
+  VFX:             50,
+  HUD:             1000,
+  HUD_OVERLAY:     1100,
+  PAUSE:           2000,
+  FULLSCREEN_BTN:  3000
+} as const;
+
 // Paleta suplementar (acentos UI — pivot)
 export const PALETTE = {
   CREAM:  0xfff2cc,
