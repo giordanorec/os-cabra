@@ -47,14 +47,23 @@ const AMBIENCE_TRACKS = [
   { key: 'amb_marco_zero', file: 'assets/ambience/amb_marco_zero_crowd.ogg' }
 ];
 
-// Backgrounds de parallax — Visual Designer entrega em art/milestone-3.
+// Backgrounds de parallax — Visual Designer entrega em art/milestone-3+.
 // `load.image` silenciosamente falha se o arquivo não existir; Parallax.ts
 // detecta `textures.exists(key)` e cai pro fallback procedural nesse caso.
+//
+// NOTA 2026-04-20: PNGs frontais da fase 1 DESATIVADOS temporariamente.
+// - back.png: vista frontal de cidade → tila como parede de casas.
+// - fore.png: faixa de casarios de Olinda → mesmo problema, fila contínua
+//   cobrindo o gameplay inteiro (confirmado por smoke screenshot 2026-04-20).
+// Visual Designer está regerando em vista aérea em
+// `art/milestone-5-backgrounds-aerea`. Reativar quando novo asset chegar.
+// Mid.png (balões/pipas/nuvens) permanece ativo — é decorativo com bastante
+// alpha e não bloqueia o jogador.
 const BACKGROUND_IMAGES = [
   { key: 'bg-menu-back',  file: 'assets/backgrounds/menu.png' },
-  { key: 'bg-fase1-back', file: 'assets/backgrounds/fase1/back.png' },
-  { key: 'bg-fase1-mid',  file: 'assets/backgrounds/fase1/mid.png' },
-  { key: 'bg-fase1-fore', file: 'assets/backgrounds/fase1/fore.png' }
+  // { key: 'bg-fase1-back', file: 'assets/backgrounds/fase1/back.png' }, // DESATIVADO — vista frontal
+  { key: 'bg-fase1-mid',  file: 'assets/backgrounds/fase1/mid.png' }
+  // { key: 'bg-fase1-fore', file: 'assets/backgrounds/fase1/fore.png' }  // DESATIVADO — faixa frontal de casarios
 ];
 
 export class PreloadScene extends Phaser.Scene {

@@ -44,8 +44,18 @@ export const FASE1 = {
   BREATHER_BEFORE_BOSS_MS: 3_000,
   SWARM_MOSCA_COUNT: 10,
   SPEED_MULTIPLIER: 1.0,
-  CHECKPOINT_AFTER_WAVE: 3
+  CHECKPOINT_AFTER_WAVE: 3,
+  // Duração estimada da fase (waves + breather + boss) — alimenta o cálculo
+  // de velocidade do parallax no modo scroll pra imagem percorrer uma vez.
+  DURATION_MS: 140_000
 } as const;
+
+// Parallax mode:
+// 'scroll'  — backgrounds altos (ex: 800×2400) percorrem verticalmente
+// 'postal'  — backgrounds estáticos trocam com crossfade a cada POSTAL_INTERVAL_MS
+export const PARALLAX_MODE: 'scroll' | 'postal' = 'scroll';
+export const PARALLAX_POSTAL_INTERVAL_MS = 8_000;
+export const PARALLAX_CROSSFADE_MS = 600;
 
 // Z-ordenação de camadas — mantém render consistente entre cenas.
 // Referência: briefing pós-hotfix 2026-04-19 (bug do parallax cobrindo player).
