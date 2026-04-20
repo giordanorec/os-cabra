@@ -5,7 +5,7 @@ description: Menu principal com 4 opções navegáveis por setas + Enter
 
 # 02 — Menu Principal
 
-**Propósito**: Hub de entrada. Máximo 2 cliques do menu ao jogo ("ARROCHA AÍ" → jogando).
+**Propósito**: Hub de entrada. Máximo 2 cliques do menu ao jogo ("BORA, CABRA" → jogando).
 
 **Input**: ↑/↓ navega, Enter/Espaço confirma, ESC não faz nada aqui (sem retorno).
 
@@ -21,7 +21,7 @@ description: Menu principal com 4 opções navegáveis por setas + Enter
 │                                                            │
 │                                                            │
 │              ┌──────────────────────────┐                  │
-│              │      [ARROCHA AÍ]  ◀     │                  │   y≈260  (botão selecionado)
+│              │     [BORA, CABRA]  ◀     │                  │   y≈260  (botão selecionado)
 │              └──────────────────────────┘                  │
 │                                                            │
 │              ┌──────────────────────────┐                  │
@@ -33,7 +33,7 @@ description: Menu principal com 4 opções navegáveis por setas + Enter
 │              └──────────────────────────┘                  │
 │                                                            │
 │              ┌──────────────────────────┐                  │
-│              │         [VAZAR]          │                  │   y≈440
+│              │         [SAIR]           │                  │   y≈440
 │              └──────────────────────────┘                  │
 │                                                            │
 │                                                            │
@@ -44,7 +44,7 @@ description: Menu principal com 4 opções navegáveis por setas + Enter
 ## Hierarquia
 
 1. **Logo** — âncora de marca
-2. **ARROCHA AÍ** — CTA primário, destaque sempre por padrão
+2. **BORA, CABRA** — CTA primário, destaque sempre por padrão
 3. Outros botões em ordem de frequência
 4. Rodapé com highscore (seduz volta) + versão (dev info)
 
@@ -74,5 +74,5 @@ description: Menu principal com 4 opções navegáveis por setas + Enter
 ## Notas
 
 - Fundo com parallax sutil (nuvem + Torre Malakoff ao longe) — dá profundidade sem competir com UI
-- "VAZAR" pede confirmação ("BORA MESMO?" yes/no) — evita saída acidental
+- "SAIR" pede confirmação ("SAIR MESMO?" yes/no) — evita saída acidental
 - Highscore só aparece se existir no localStorage

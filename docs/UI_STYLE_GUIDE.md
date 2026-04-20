@@ -67,7 +67,7 @@ Em 800×600. Todos múltiplos de 2 (ou 3) para evitar subpixel.
 
 ### 2.4 Regras de caixa
 
-- **Títulos, botões, display em geral**: UPPERCASE sempre (ex: "ARROCHA AÍ")
+- **Títulos, botões, display em geral**: UPPERCASE sempre (ex: "BORA, CABRA")
 - **Corpo longo (poema, créditos, dicas de loading)**: caixa mista natural ("tudo volta ao normal, mas o mangue guarda segredo")
 - **Mono (códigos, stats)**: uppercase
 - **Placeholder em input**: uppercase + 40% alpha

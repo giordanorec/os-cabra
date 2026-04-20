@@ -62,15 +62,17 @@ Layout em 800×600:
 
 Todas as strings do jogo — ~120 entradas cobrindo menus, feedbacks, fases, bosses, game over, dicas de loading, créditos, erros — estão em [`GLOSSARY_PT_BR.md`](GLOSSARY_PT_BR.md).
 
-**Chaves hierárquicas** (`menu.play`, `boss.1.name`, `feedback.chain5`) prontas pra um módulo `Strings.ts` futuro. Nenhuma string hardcoded em TS — `StringService.get('menu.play')` retorna "ARROCHA AÍ".
+**Chaves hierárquicas** (`menu.play`, `boss.1.name`, `feedback.chain5`) prontas pra um módulo `Strings.ts` futuro. Nenhuma string hardcoded em TS — `StringService.get('menu.play')` retorna "BORA, CABRA".
+
+> **Nota de revisão (2026-04-19)**: o glossário passou por purga de gírias não-pernambucanas (ver `REPORT_GLOSSARY_REVISION.md`). "ARROCHA AÍ" era gíria baiana; substituído por "BORA, CABRA". Qualquer string nova passa por validação PE antes de mergear.
 
 **Samples** (amostra — ver glossário completo):
 
-- Menu: `ARROCHA AÍ` · `CÓDIGOS DOS CABRA` · `QUEM FEZ ESSE TRAÇADO` · `VAZAR`
-- Feedbacks: `PAI D'ÉGUA` · `VAI, MENINO` · `ARRETADO!` · `AÍ, VIU?` · `TÁ COM TUDO` · `ENGATADO` · `É BRABO MESMO`
+- Menu: `BORA, CABRA` · `CÓDIGOS DOS CABRA` · `QUEM FEZ ESSE TRAÇADO` · `SAIR`
+- Feedbacks: `PAI D'ÉGUA` · `VAI, MENINO` · `ARRETADO!` · `EITA!` · `NOVA VIDA` · `ENGATADO` · `É BRABO MESMO`
 - Boss appear: `OXE!`
 - Pausa: `PAREI` · `BORA`
-- Game Over (variações): `SE LASCOU` · `RAPAZ...` · `NÃO DEU NÃO` · `VOLTA ESSA FITA` · `FOI BRABO MESMO`
+- Game Over (variações): `SE LASCOU` · `RAPAZ...` · `NÃO DEU NÃO` · `DANOU-SE` · `FOI BRABO MESMO`
 - Checkpoint: `ONDE EU TAVA`
 
 ## 5. Tipografia
@@ -101,7 +103,7 @@ Duração, easing e componentes de cada feedback. Todos os valores em `anim.*` s
 | Boss atingido (hit letal) | 150ms | Back.easeOut | Tint + freeze 150ms + flash branco tela 40% + SFX mais alto |
 | Player leva dano | 1500ms total | — | Red flash tela `#b84a2e` @ 30% 120ms + shake médio (6px, 250ms) + SFX `sfx_player_hit` + i-frames 1500ms com blink 15Hz |
 | Power-up pego | 600ms | Quad.easeOut | Flash cor do powerup (120ms) + SFX `sfx_pickup` + texto flutuante aleatório do glossário (`pickup.*`) sobe 40px em 600ms |
-| Vida extra (Tapioca) | 700ms | Back.easeOut | Flash `#5a7a3a` + SFX `sfx_1up` + "TÁ COM TUDO" scale 1.2→1.0 + ícone galo preenche slot vazio no HUD |
+| Vida extra (Tapioca) | 700ms | Back.easeOut | Flash `#5a7a3a` + SFX `sfx_1up` + "NOVA VIDA" scale 1.2→1.0 + ícone galo preenche slot vazio no HUD |
 | Checkpoint | 2000ms total | — | Ver [`wireframes/09-checkpoint.md`](wireframes/09-checkpoint.md); linhas entram, texto "ONDE EU TAVA" entra, tudo fade out — sem pausar gameplay |
 | Boss aparece | 1500ms | — | Ver [`wireframes/10-boss-intro.md`](wireframes/10-boss-intro.md); freeze, OXE!, nome, barra HP entra; input bloqueado |
 | Boss transição fase | 400ms | Cubic.easeOut | Freeze 400ms + flash branco + label "EITA, MUDOU" / "DANOU-SE AGORA" (ver glossário `boss.phase2/3`) |
@@ -112,7 +114,7 @@ Duração, easing e componentes de cada feedback. Todos os valores em `anim.*` s
 | Novo recorde (em Game Over/Vitória) | 600ms + loop | Back.easeOut | "NOVO RECORDE!" scale 1.2→1.0, depois pulse 1s loop em `#d4a04c` |
 | Chain ×1.5 ativa | 300ms | Quad.easeOut | Multiplicador aparece no HUD com scale 1.4→1.0 |
 | Chain expira | 300ms | Cubic.easeIn | Multiplicador pisca 3× em 300ms e some |
-| Chain milestone 5/10/20 | 500ms | Back.easeOut | Texto flutuante "ENGATADO" / "TÁ ARRASANDO" / "É BRABO MESMO" |
+| Chain milestone 5/10/20 | 500ms | Back.easeOut | Texto flutuante "ENGATADO" / "TÁ DOIDO!" / "É BRABO MESMO" |
 | Última vida | 400ms + loop | — | Texto flutuante "É A ÚLTIMA!" + barra inferior de HUD pulsa vermelho sutil |
 | Near-miss (projétil passa raspando) | 200ms | Linear | Pequeno slow-mo 90% por 150ms + flash amarelo na hitbox — **opcional v2** |
 
@@ -138,7 +140,7 @@ Tabela completa. Durações em ms, easings nomeados como em Phaser (`Cubic.easeO
 | De → Para | Trigger | Duração | Easing | Descrição |
 |---|---|---|---|---|
 | Splash → Menu | auto (1.5s) ou tecla | 400 | Cubic.easeOut | Wipe horizontal E→D (tipo vira-página de cordel); áudio de tambor abafa |
-| Menu → Preload | Enter em "ARROCHA AÍ" | 300 | Cubic.easeIn | Botão flash branco 80ms + fade to `#1a0f08`; Preload aparece com fade 200ms |
+| Menu → Preload | Enter em "BORA, CABRA" | 300 | Cubic.easeIn | Botão flash branco 80ms + fade to `#1a0f08`; Preload aparece com fade 200ms |
 | Menu → Códigos | Enter em "CÓDIGOS" | 250 | Cubic.easeOut | Slide horizontal D→E (tela empurra pra esquerda) |
 | Menu → Créditos | Enter em "CRÉDITOS" | 250 | Cubic.easeOut | Slide vertical de baixo pra cima |
 | Códigos/Créditos → Menu | ESC | 250 | Cubic.easeIn | Slide inverso da entrada |
@@ -146,7 +148,7 @@ Tabela completa. Durações em ms, easings nomeados como em Phaser (`Cubic.easeO
 | Intro Fase → Gameplay | auto (2s) ou tecla | 400 | Cubic.easeIn | Texto da fase some em scale+fade, dissolve tela; HUD entra em cascata 150ms stagger |
 | Gameplay → Pausa | ESC | 250 | Cubic.easeOut | Snapshot do gameplay + blur 8px + dimmer 50% + "PAREI" scale 1.3→1.0 + botões cascata |
 | Pausa → Gameplay | ESC ou "BORA" | 180 | Cubic.easeIn | Reverte: botões saem, "PAREI" some, blur e dimmer clareiam; gameplay retoma sem contagem |
-| Pausa → Menu | "VAZAR" + confirm | 400 | Cubic.easeIn | Fade to black 400ms + fade in do menu 400ms |
+| Pausa → Menu | "VOLTAR PRO MENU" + confirm | 400 | Cubic.easeIn | Fade to black 400ms + fade in do menu 400ms |
 | Gameplay → Checkpoint overlay | 50% das ondas | 300 in + 300 out | Cubic.easeOut / Cubic.easeIn | Linhas e texto entram e saem; gameplay segue — ver [`wireframes/09`](wireframes/09-checkpoint.md) |
 | Gameplay → Boss Intro | HP da onda final zerada | 1500 cinematic | — | Freeze + slow zoom 1.0→1.05 no player 800ms + boss desce 600ms + OXE! 300ms + barra HP sobe 300ms — ver [`wireframes/10`](wireframes/10-boss-intro.md) |
 | Boss Intro → Boss Fight | auto (1.5s) ou tecla | 300 | Cubic.easeIn | OXE! e linhas dissolvem; HP do boss permanece; player recebe input de volta |

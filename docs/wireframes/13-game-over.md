@@ -68,7 +68,7 @@ Selecionar aleatoriamente entre (ver glossário):
 - "SE LASCOU"
 - "RAPAZ..."
 - "NÃO DEU NÃO"
-- "VOLTA ESSA FITA"
+- "DANOU-SE"
 - "FOI BRABO MESMO"
 
 ## Novo recorde

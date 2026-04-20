@@ -28,7 +28,7 @@ description: Overlay de pausa sobre gameplay congelado, com 3 opções
 │         │    [RECOMEÇA A FASE]     │                       │   y≈350
 │         └──────────────────────────┘                       │
 │         ┌──────────────────────────┐                       │
-│         │     [VAZAR PRO MENU]     │                       │   y≈410
+│         │    [VOLTAR PRO MENU]     │                       │   y≈410
 │         └──────────────────────────┘                       │
 │                                                            │
 │                                                            │
