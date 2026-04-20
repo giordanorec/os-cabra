@@ -147,3 +147,37 @@ Dois pontos adicionais do arquiteto pós-PR inicial.
 - [`vp-08-gameplay-enemies-scaled.png`](milestone-reports/visual-pivot/vp-08-gameplay-enemies-scaled.png) — wave 2 em ação: **3 Passistas com sombrinha vermelha + 1 Caboclinho amarelo com arco**, silhuetas totalmente reconhecíveis, não mais pontinhos
 
 Limitação: Playwright não consegue simular browser fullscreen do SO (chama a API mas não ativa F11-like). A integração está validada via: tecla F disparando no keyboard plugin + botão clicável existe + hint visível. Confirmação final requer teste manual no browser desktop.
+
+---
+
+## Adendo 2: bugfix pós-deploy (2026-04-19 tarde)
+
+Quatro bugs reportados pelo usuário testando a branch antes de mergear. Todos corrigidos no mesmo PR.
+
+### Bug 1: Nave invisível fora do fullscreen
+**Root cause**: `#game { display:flex; align-items:center; justify-content:center }` no CSS conflitava com `Phaser.Scale.FIT + CENTER_BOTH` (Phaser posiciona canvas via `position:absolute` — flex layout no parent confundia o cálculo).
+**Fix**: remover `display:flex` do `#game`, deixar só `width/height:100vw/100vh; position:relative`. Phaser agora gerencia posicionamento sozinho via CENTER_BOTH.
+Validado em 800×600, 1024×768 e 1920×1080 (`fx-01`, `fx-04`, `fx-06`) — player sempre visível.
+
+### Bug 2: BOB idle da nave
+`Player.startBob()` tween `y: baseY - 8 → baseY + 8` em 600ms (metade de 1200ms), `Sine.easeInOut`, `yoyo: true`, `repeat: -1`.
+Em `takeDamage`: `bobTween.pause()` e reseta `y = baseY` pra blink rodar clean. Em fim de i-frames: `bobTween.resume()`. Playwright confirma `player.y = 535` (baseY=540, bobando).
+
+### Bug 3: Tiro "Recife" placeholder
+`PreloadScene.generateDiamondBullet()` cria textura 12×18 de bandeirinha/diamante (triângulo superior rosa `#f06aa8` + inferior amarelo `#f0c840` + outline roxo). Substitui o retângulo cream. Troca pra sprite real quando Visual Designer entregar pena/milho/confete — só mudar `generateDiamondBullet` por `load.image('bullet-player', '...').`.
+
+### Bug 4: Parallax PNGs carregados
+`PreloadScene.BACKGROUND_IMAGES` agora faz `load.image('bg-menu-back', 'assets/backgrounds/menu.png')` e `bg-fase1-{back,mid,fore}` apontando pra `public/assets/backgrounds/fase1/*.png`. `loaderror` handler silencia os logs quando o arquivo não existe (Parallax detecta `textures.exists` e cai pro procedural).
+
+**Dependência art/milestone-3**: os PNGs vivem na branch `art/milestone-3` (ainda não mergeada em main). Pra validar localmente, copiei da origem com `git checkout origin/art/milestone-3 -- public/assets/backgrounds/` + `git reset HEAD` (untracked no meu worktree, não vão no PR pra evitar conflito quando art/m3 mergear). **Quando `art/milestone-3` entrar em main + rebase deste PR**, o Preload pega os PNGs e console fica zero errors. Enquanto isso, o Vite dev server loga 404 (esperado — tem `loaderror` handler mas o log é do Vite, não do Phaser).
+
+### Evidências (viewports + FS)
+
+- [`fx-01-game-800x600.png`](milestone-reports/visual-pivot/fx-01-game-800x600.png) — 800×600, nave no bottom center, ainda com parallax procedural (antes de copiar PNGs)
+- [`fx-02-menu-with-bg.png`](milestone-reports/visual-pivot/fx-02-menu-with-bg.png) — menu com `menu.png` real: galo gigante + bandeirinhas + coqueiros
+- [`fx-03-game-800x600-bg.png`](milestone-reports/visual-pivot/fx-03-game-800x600-bg.png) — gameplay Marco Zero (farol + casas + rio) em 800×600
+- [`fx-04-game-1024x768.png`](milestone-reports/visual-pivot/fx-04-game-1024x768.png) — 1024×768, scroll parallax em posição avançada
+- [`fx-05-game-1920x1080.png`](milestone-reports/visual-pivot/fx-05-game-1920x1080.png) — game over "VOLTA ESSA FITA" (variante sorteada) em roxo, zero errors
+- [`fx-06-game-1920-full.png`](milestone-reports/visual-pivot/fx-06-game-1920-full.png) — gameplay em 1920×1080 ocupando viewport, Marco Zero cordel colorido, HUD + hint [F] tela cheia
+
+Console final: **0 errors** (com PNGs locais). Warnings continuam só do AudioContext pré-gesture.

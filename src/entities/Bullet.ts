@@ -1,9 +1,10 @@
 import * as Phaser from 'phaser';
-import { BULLET_SPEED } from '../config';
+import { BULLET_SPEED, DEPTH } from '../config';
 
 export class Bullet extends Phaser.Physics.Arcade.Sprite {
   constructor(scene: Phaser.Scene, x: number, y: number, texture: string) {
     super(scene, x, y, texture);
+    this.setDepth(DEPTH.PLAYER_BULLET);
   }
 
   fire(x: number, y: number, directionY: number) {

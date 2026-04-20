@@ -1,5 +1,6 @@
 import * as Phaser from 'phaser';
 import {
+  DEPTH,
   PLAYER_SPEED,
   PLAYER_FIRE_COOLDOWN_MS,
   PLAYER_LIVES,
@@ -9,22 +10,45 @@ import {
 import { Action, InputManager } from '../systems/InputManager';
 import { BulletGroup } from './Bullet';
 
+const BOB_AMP = 8;
+const BOB_PERIOD_MS = 1200;
+
 export class Player extends Phaser.Physics.Arcade.Sprite {
   private lastFireMs = 0;
   private invulnUntilMs = 0;
+  private readonly baseY: number;
+  private bobTween?: Phaser.Tweens.Tween;
   lives = PLAYER_LIVES;
   onDeath?: () => void;
   onDamage?: (livesLeft: number) => void;
   onFire?: (x: number, y: number) => void;
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
-    super(scene, x, y, 'player');
+    // O spritesheet `player.png` tem 17 frames mas vários são vazios (atlas pipeline
+    // do Visual Designer gerou placeholders). Frame 10 mostra o galo colorido.
+    // Substituir pelo frame correto quando art/milestone-4 padronizar as poses.
+    super(scene, x, y, 'player', 10);
     scene.add.existing(this);
     scene.physics.add.existing(this);
     this.setCollideWorldBounds(true);
     // Sprite base 32×32 → 64×64 (≈10.7% da altura do game). Voltar pra 1x
     // quando Visual Designer empurrar assets já no tamanho 64-96px.
     this.setScale(2);
+    this.setDepth(DEPTH.PLAYER);
+    this.baseY = y;
+    this.startBob();
+  }
+
+  private startBob() {
+    this.bobTween?.stop();
+    this.bobTween = this.scene.tweens.add({
+      targets: this,
+      y: { from: this.baseY - BOB_AMP, to: this.baseY + BOB_AMP },
+      duration: BOB_PERIOD_MS / 2,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut'
+    });
   }
 
   tick(time: number, input: InputManager, bullets: BulletGroup) {
@@ -46,6 +70,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       if (time >= this.invulnUntilMs) {
         this.invulnUntilMs = 0;
         this.setAlpha(1);
+        if (this.bobTween && this.bobTween.isPaused()) this.bobTween.resume();
       } else {
         const blinkPeriodMs = 1000 / PLAYER_BLINK_HZ;
         const phase = Math.floor((this.invulnUntilMs - time) / (blinkPeriodMs / 2)) % 2;
@@ -62,6 +87,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     if (this.isInvulnerable(time)) return false;
     this.lives -= 1;
     this.invulnUntilMs = time + PLAYER_INVULN_MS;
+    // Trava o bob durante i-frames pra não conflitar com blink
+    if (this.bobTween && !this.bobTween.isPaused()) {
+      this.bobTween.pause();
+      this.y = this.baseY;
+    }
     this.onDamage?.(this.lives);
     if (this.lives <= 0) {
       this.onDeath?.();

@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import { GAME_HEIGHT, GAME_WIDTH, PALETTE } from '../config';
+import { DEPTH, GAME_HEIGHT, GAME_WIDTH, PALETTE } from '../config';
 
 // Parallax de 3 camadas em velocidades 0.2x (back) / 0.5x (mid) / 1.0x (fore).
 // Consome PNGs `bg-<scene>-{back,mid,fore}` se carregados no Preload.
@@ -22,9 +22,9 @@ interface Layer {
 }
 
 const LAYER_CONFIGS: Array<{ suffix: LayerSuffix; speed: number; depth: number }> = [
-  { suffix: 'back', speed: 0.2, depth: -30 },
-  { suffix: 'mid',  speed: 0.5, depth: -20 },
-  { suffix: 'fore', speed: 1.0, depth: -10 }
+  { suffix: 'back', speed: 0.2, depth: DEPTH.PARALLAX_BACK },
+  { suffix: 'mid',  speed: 0.5, depth: DEPTH.PARALLAX_MID },
+  { suffix: 'fore', speed: 1.0, depth: DEPTH.PARALLAX_FORE }
 ];
 
 const PROCEDURAL_COLORS: Record<LayerSuffix, number[]> = {

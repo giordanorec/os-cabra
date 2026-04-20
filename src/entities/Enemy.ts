@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import { GAME_HEIGHT, GAME_WIDTH } from '../config';
+import { DEPTH, GAME_HEIGHT, GAME_WIDTH } from '../config';
 
 export interface EnemyConfig {
   hp: number;
@@ -25,6 +25,7 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
     this.hp = cfg.hp;
     this.points = cfg.points;
     this.onDeath = cfg.onDeath;
+    this.setDepth(DEPTH.ENEMY);
     // Sprites de origem 14-32px são pequenos pra visibilidade desejada
     // (enemies ~7-10% da altura = 42-60px). Escala via opção, até sprites
     // finais do Visual Designer já virem em 80-96px.
