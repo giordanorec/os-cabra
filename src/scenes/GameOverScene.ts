@@ -4,6 +4,7 @@ import { getString, getGameOverTitle } from '../strings';
 import { InputManager, Action } from '../systems/InputManager';
 import { AudioManager } from '../systems/AudioManager';
 import { Parallax } from '../systems/Parallax';
+import { attachFullscreenToggle } from '../systems/Fullscreen';
 import { FONTS } from '../fonts';
 
 export interface GameOverData {
@@ -29,6 +30,7 @@ export class GameOverScene extends Phaser.Scene {
     this.parallax = new Parallax(this);
     this.inputManager = new InputManager(this);
     this.audio = new AudioManager(this);
+    attachFullscreenToggle(this);
 
     const isVictory = this.overData.victory;
     const titleText = isVictory ? getString('stage.complete') : getGameOverTitle();

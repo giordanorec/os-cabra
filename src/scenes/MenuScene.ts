@@ -5,6 +5,7 @@ import { ScoreManager } from '../systems/ScoreManager';
 import { InputManager, Action } from '../systems/InputManager';
 import { AudioManager } from '../systems/AudioManager';
 import { Parallax } from '../systems/Parallax';
+import { attachFullscreenToggle, addFullscreenButton } from '../systems/Fullscreen';
 import { FONTS } from '../fonts';
 
 export class MenuScene extends Phaser.Scene {
@@ -24,6 +25,7 @@ export class MenuScene extends Phaser.Scene {
     this.inputManager = new InputManager(this);
     this.audio = new AudioManager(this);
     this.audio.playMusic('music_menu', 800);
+    attachFullscreenToggle(this);
 
     const cx = GAME_WIDTH / 2;
     const cy = GAME_HEIGHT / 2;
@@ -72,6 +74,14 @@ export class MenuScene extends Phaser.Scene {
       fontSize: '14px',
       color: '#fff2cc'
     }).setOrigin(0.5).setAlpha(0.8);
+
+    // Fullscreen: ícone clicável + hint textual
+    addFullscreenButton(this, GAME_WIDTH - 24, 24);
+    this.add.text(GAME_WIDTH - 44, 46, getString('controls.fullscreen_hint'), {
+      fontFamily: FONTS.MONO,
+      fontSize: '11px',
+      color: '#fff2cc'
+    }).setOrigin(1, 0).setAlpha(0.75);
 
     const hs = ScoreManager.loadHighscore();
     if (hs > 0) {

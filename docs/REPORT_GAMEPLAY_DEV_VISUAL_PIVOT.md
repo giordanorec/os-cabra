@@ -117,3 +117,33 @@ Console limpo em todas (0 errors). Warnings esperados de AudioContext (Chrome us
 - Aguardar revisão e merge deste PR.
 - Rebasear `feat/milestone-3-boss-maracatu` (PR #14) em cima da main pós-merge — não deve ter conflito porque eu não toquei em `src/bosses/`.
 - Quando Visual Designer empurrar `art/milestone-3`, integrar via `PreloadScene` e trocar os 3 boss placeholders pelos sprites reais do trio.
+
+---
+
+## Adendo: fullscreen + sprite sizing (2026-04-19, append)
+
+Dois pontos adicionais do arquiteto pós-PR inicial.
+
+### 5. Browser fullscreen real (F)
+
+- **`src/systems/Fullscreen.ts`** novo: `attachFullscreenToggle(scene)` adiciona `keydown-F` → `scene.scale.toggleFullscreen()`. Função `addFullscreenButton(scene, x, y, size?)` retorna um `Container` interativo com ícone de 4-corners (hover → fill amarelo, click → toggle) — requer user gesture (Chrome), teclado + clique ambos contam.
+- Integrado em `MenuScene`, `GameScene`, `GameOverScene`.
+- HUD hint `"[F] tela cheia"` adicionado ao final de `controls.hint` (strings).
+- **`MenuScene`**: botão clicável em `(GAME_WIDTH - 24, 24)` com texto `[F] TELA CHEIA` logo abaixo.
+- Documentado em `docs/UX_SPEC.md §4.1` (nova subseção "Mapa de teclas").
+
+### 6. Sprite sizing — 8-12% da altura
+
+- **`Player`**: `setScale(2)` no construtor (32×32 → 64×64 ≈ 10.7% de 600). `body.setSize(32, 32).setOffset(0, 0)` mantém hitbox proporcional.
+- **`Enemy`** base: novo campo `scale?: number` no `EnemyConfig` (default 2). Aplica em todas subclasses sem duplicar código.
+- **`MoscaManga`**: override `scale: 3` (14×14 → 42×42, ~7% altura — suficiente pro swarm ainda parecer nuvem sem dominar).
+- Caboclinho e Passista herdam default scale 2 → 56×56 e 64×64 respectivamente.
+- Boss members continuam nos tamanhos originais (Rei/Rainha 48×56, Calunga 36×44) porque já estão na faixa visível. Vão ser substituídos quando atlas boss-maracatu for separado.
+
+### Validação (Playwright 1920×1080)
+
+- [`vp-06-menu-with-fs-btn.png`](milestone-reports/visual-pivot/vp-06-menu-with-fs-btn.png) — botão FS top-right + "[F] TELA CHEIA" hint
+- [`vp-07-gameplay-scaled.png`](milestone-reports/visual-pivot/vp-07-gameplay-scaled.png) — player escalado (64×64 visível no canto inferior), hint do HUD com "[F] tela cheia"
+- [`vp-08-gameplay-enemies-scaled.png`](milestone-reports/visual-pivot/vp-08-gameplay-enemies-scaled.png) — wave 2 em ação: **3 Passistas com sombrinha vermelha + 1 Caboclinho amarelo com arco**, silhuetas totalmente reconhecíveis, não mais pontinhos
+
+Limitação: Playwright não consegue simular browser fullscreen do SO (chama a API mas não ativa F11-like). A integração está validada via: tecla F disparando no keyboard plugin + botão clicável existe + hint visível. Confirmação final requer teste manual no browser desktop.

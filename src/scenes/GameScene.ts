@@ -10,6 +10,7 @@ import { ScoreManager, ScoreSnapshot } from '../systems/ScoreManager';
 import { AudioManager } from '../systems/AudioManager';
 import { Parallax } from '../systems/Parallax';
 import { Effects } from '../systems/Effects';
+import { attachFullscreenToggle } from '../systems/Fullscreen';
 import { getString } from '../strings';
 import { MaracatuNacao } from '../bosses/MaracatuNacao';
 
@@ -53,6 +54,7 @@ export class GameScene extends Phaser.Scene {
     this.scoreManager = new ScoreManager();
     this.audio = new AudioManager(this);
     this.fx = new Effects(this);
+    attachFullscreenToggle(this);
 
     this.audio.playMusic('music_phase1', 800);
 

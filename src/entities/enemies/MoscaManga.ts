@@ -21,7 +21,8 @@ export class MoscaManga extends Enemy {
     params: MoscaParams,
     onDeath: (enemy: Enemy) => void
   ) {
-    super(scene, x, y, { hp: 1, points: 10, texture: 'enemy-mosca', onDeath });
+    // Mosca é 14×14 — scale 3x → 42px (~7% altura, suficiente pro swarm ainda parecer nuvem)
+    super(scene, x, y, { hp: 1, points: 10, texture: 'enemy-mosca', scale: 3, onDeath });
     this.centerX = x;
     this.centerStartY = y;
     this.orbitOffset = params.orbitOffsetRad ?? 0;
