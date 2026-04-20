@@ -184,10 +184,23 @@ transparent/plain background for easy extraction, no text.
 
 ## 6. Resolução e escala
 
-- Jogo roda em 800×600
-- Sprites projetados em 2× (renderiza mais nítido em telas HiDPI): ex. inimigo pequeno em 128×128 no arquivo, exibido 64×64
-- `imageSmoothingEnabled: false` em canvas (já via CSS `image-rendering: pixelated`)
-- Importante: **manter proporção consistente** — passista e caboclinho não podem ter alturas muito diferentes entre si sem propósito
+- Jogo roda em **800×600**
+- Regra de legibilidade: **silhueta tem que ser identificável em 60-80px na tela do jogador**. Isso implica arquivos maiores que o display size; em M3.1 (2026-04-19) corrigido o erro anterior de 32×32 (ilegível) pra:
+
+| Entidade | Arquivo 1× | Arquivo @2× | Display típico em jogo |
+|---|---|---|---|
+| Player (Galo) | 128×128 | 256×256 | 80-100px (setScale ~0.7) |
+| Inimigos regulares (passista, caboclinho, mamulengo) | 96×96 | 192×192 | 60-80px |
+| Mosca-da-manga (enxame) | 64×64 | 128×128 | 40-50px |
+| Boss Maracatu (cada figura) | 256×256 | 512×512 | 180-220px |
+| Bullets player | 32×32 | 64×64 | ~24px |
+| Bullets inimigos | 32×32–48×48 | 64×64–96×96 | dependendo do tipo |
+| VFX partículas | 128×128 | — | 64-96px com scale |
+
+- Arquivo @2× fica em `public/assets/sprites/@2x/` — Gameplay Dev escolhe qual carregar baseado em DPR
+- **Densidade visual obrigatória**: em cada sprite dá pra ver rosto/expressão (olho, bico, boca), detalhes característicos (sombrinha, penacho, peso da Calunga) e silhueta reconhecível de longe
+- `imageSmoothingEnabled: true` em canvas (arte IA é raster, não pixel art — smoothing ajuda no downscale)
+- **Manter proporção consistente** entre personagens da mesma categoria — passista e caboclinho devem ter alturas parecidas (96×96 no arquivo, ~70px em tela)
 
 ## 7. Animação
 

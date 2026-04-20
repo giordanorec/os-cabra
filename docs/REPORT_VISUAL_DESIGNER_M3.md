@@ -95,6 +95,24 @@ Imagens finais copiadas em `docs/milestone-reports/visual-m3/`:
 - `evidence-05-boss-rei.png` — Rei Maracatu 256×256 com manto pink
 - `evidence-06-logo.png` — logo OS CABRA colorido
 
+## Atualização M3.1 (mesmo commit/PR) — sprites maiores
+
+Após o commit inicial, Arquiteto apontou que os sprites em 32×32 (player, inimigos) ficavam ilegíveis em tela 800×600 — viravam um ponto. **Re-postprocessamento** (não foram novas gerações; os raws do Gemini já eram 1024×1024) produziu a grade abaixo:
+
+| Entidade | Antes (M3) | Depois (M3.1) | @2× |
+|---|---|---|---|
+| Player Galo | 32×32 | **128×128** | 256×256 |
+| enemy-passista | 32×32 | **96×96** | 192×192 |
+| enemy-caboclinho | 28×28 | **96×96** | 192×192 |
+| enemy-mamulengo | 32×32 | **96×96** | 192×192 |
+| enemy-mosca | 16×16 | **64×64** | 128×128 |
+| boss-{rei,rainha,calunga} | 256×256 (sem @2×) | 256×256 | **+ 512×512** |
+| bullet-player | 16×16 | **32×32** | 64×64 |
+
+Critério: silhueta identificável em 60-80px no display. `docs/ART_BIBLE.md §6` atualizado com a tabela definitiva.
+
+Custo adicional: **$0** (zero novas gens — só re-postprocess).
+
 ## Próximo passo
 
 - **Arquiteto integra** via `PreloadScene` (carregar menu.png, backgrounds/fase1/*, ícones, VFX) e `MenuScene` (trocar texto pelo `logo-os-cabra.png`), `GameScene` (adicionar 3 camadas de parallax da Fase 1 e velocidades diferentes pra cada).

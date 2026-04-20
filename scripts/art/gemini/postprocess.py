@@ -171,15 +171,17 @@ def process_ui():
 # -----------------------------
 SPRITE_MAP = [
     # (raw_name, target_size 1x, dst_name, also_2x)
-    ("player-galo-hero.png",  (32, 32),  "player.png",          True),
-    ("enemy-passista-hero.png", (32, 32), "enemy-passista.png", True),
-    ("enemy-caboclinho.png",  (28, 28),  "enemy-caboclinho.png", True),
-    ("enemy-mamulengo.png",   (32, 32),  "enemy-mamulengo.png",  True),
-    ("enemy-mosca.png",       (16, 16),  "enemy-mosca.png",      True),
-    ("boss-rei.png",          (256, 256),"boss-rei.png",         False),
-    ("boss-rainha.png",       (256, 256),"boss-rainha.png",      False),
-    ("boss-calunga.png",      (256, 256),"boss-calunga.png",     False),
-    ("bullet-player.png",     (16, 16),  "bullet-player.png",    True),
+    # Tamanhos maiores a partir do M3.1 — sprites precisam ser identificáveis
+    # em 60-80px na tela do jogador (800×600). @2x = dobro pra HiDPI.
+    ("player-galo-hero.png",    (128, 128), "player.png",           True),
+    ("enemy-passista-hero.png", (96, 96),   "enemy-passista.png",   True),
+    ("enemy-caboclinho.png",    (96, 96),   "enemy-caboclinho.png", True),
+    ("enemy-mamulengo.png",     (96, 96),   "enemy-mamulengo.png",  True),
+    ("enemy-mosca.png",         (64, 64),   "enemy-mosca.png",      True),
+    ("boss-rei.png",            (256, 256), "boss-rei.png",         True),
+    ("boss-rainha.png",         (256, 256), "boss-rainha.png",      True),
+    ("boss-calunga.png",        (256, 256), "boss-calunga.png",     True),
+    ("bullet-player.png",       (32, 32),   "bullet-player.png",    True),
 ]
 
 
