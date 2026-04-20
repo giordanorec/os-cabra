@@ -38,7 +38,7 @@ description: Tela final após derrotar último boss — créditos + highscore + 
 ```
 ┌────────────────────────────────────────────────────────────┐
 │                                                            │
-│             [[SE AJEITOU DIREITO]]                         │   y≈60
+│             [[ACABOU TUDO BEM]]                            │   y≈60
 │                                                            │
 │          ──────────────────────                            │
 │                                                            │
@@ -96,4 +96,4 @@ description: Tela final após derrotar último boss — créditos + highscore + 
 - Música: versão ampliada da theme, triunfal
 - Créditos podem ser editados diretamente em `GLOSSARY_PT_BR.md` seção `credits`
 - Se recorde foi batido, SCORE FINAL tem sparkle vfx ao aparecer
-- "SE AJEITOU DIREITO" é opcional; alternativa "ACABOU TUDO BEM" (default) — decidir em playtest
+- "ACABOU TUDO BEM" é o default (após revisão do glossário em 2026-04-19). Alternativa "SE AJEITOU DIREITO" foi descartada (borderline nacional, não-PE).

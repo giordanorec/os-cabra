@@ -2,14 +2,25 @@
 
 > **Responsável**: UI/UX Designer. **Lê também**: Gameplay Developer, QA.
 > **Depende de**: `UX_SPEC.md` §4.
+> **Última revisão**: 2026-04-19 (purga de gírias não-PE) — ver `REPORT_GLOSSARY_REVISION.md`.
 
-Todas as strings de texto do jogo em PT-BR com regionalismo pernambucano. Cada string tem **chave** (identificador no código), **versão exibida** (o que aparece na tela) e quando aplicável uma **nota** explicando escolha ou uso.
+Todas as strings de texto do jogo em PT-BR. Cada string tem **chave** (identificador no código), **versão exibida** (o que aparece na tela) e quando aplicável uma **nota** explicando escolha ou uso.
 
-**Regras**:
+## Filtro de regionalismo (regra principal)
+
+> **Ou usa gíria real de Recife/Pernambuco, ou deixa neutro direto. Forçar piada regional sem conhecimento fica pior que não ter nada.**
+
+- **Gírias PE confirmadas** (pode usar à vontade): OXENTE, OXE, ÉGUA, ARRETADO, VISSE, MERMO, PAI D'ÉGUA, BICHO, SE LASCOU, TÁ ARREDADO, OIA, É BRABO, DANOU-SE, VAPO, MINHA FIA/FIO, CABRA, TÁ DOIDO, É MASSA, NÃO DEU NÃO, VAI MENINO, HOMI, DE MENOR.
+- **Gírias NÃO-PE** (não usar): ARROCHA (Bahia), TRETA (SP/RJ), MANEIRO (RJ), IRADO (SP), SINISTRO (SP), MASSA solto (rolou nacional), PARTIU (nacional).
+- **Em dúvida**: marca `(TODO validar PE)` ao lado da chave em vez de chutar. Dono do projeto (pernambucano) valida no playtest.
+- **Neutro é OK**: botão "SAIR" é melhor que gíria forçada.
+
+## Outras regras
+
 - **Legibilidade > charme**. Se o regionalismo atrapalha o entendimento, versão mais sóbria ganha.
 - **Caixa alta** em títulos, display e botões — funciona com xilogravura. Corpo em caixa mista.
-- **Idade do regionalismo**: misturar clássico ("arretado", "oxe") com coisa mais boca de favela/viso recente ("se lascou", "é brabo") — evitar só arcaico.
-- Absurdo é permitido. Projeto é pessoal.
+- **Idade do regionalismo**: clássico ("arretado", "oxe") convive com mais recente ("se lascou", "é brabo") — evitar só arcaico.
+- Absurdo é permitido quando vem de referência PE (bosses do folclore, nomes de lugar, inspirações). Absurdo genérico fica falso.
 - Strings com `%s`, `%n`, `%code` são interpolações (ex: `%s` = nome, `%n` = número).
 
 ## Índice
@@ -47,10 +58,10 @@ Todas as strings de texto do jogo em PT-BR com regionalismo pernambucano. Cada s
 
 | Chave | String | Nota |
 |---|---|---|
-| `menu.play` | ARROCHA AÍ | equivalente a "começar / jogar" |
+| `menu.play` | BORA, CABRA | equivalente a "começar / jogar" — usa "cabra" (identidade do jogo) |
 | `menu.codes` | CÓDIGOS DOS CABRA | tela de códigos |
-| `menu.credits` | QUEM FEZ ESSE TRAÇADO | créditos |
-| `menu.quit` | VAZAR | sair |
+| `menu.credits` | QUEM FEZ ESSE TRAÇADO | créditos ("traçado" tem uso local em arte/cordel) |
+| `menu.quit` | SAIR | neutro; "vazar" é nacional, evitado |
 | `menu.highscore` | RECORDE: %n | rodapé, só se houver |
 | `menu.version` | v%s · %n | rodapé |
 
@@ -58,11 +69,11 @@ Todas as strings de texto do jogo em PT-BR com regionalismo pernambucano. Cada s
 
 | Chave | String | Nota |
 |---|---|---|
-| `dialog.yes` | VISSE | yes em modais |
+| `dialog.yes` | VISSE | yes em modais (PE) |
 | `dialog.no` | DEIXA PRA LÁ | no em modais |
 | `dialog.back` | VOLTAR | genérico |
 | `dialog.ok` | BORA | OK genérico |
-| `dialog.quit_confirm` | VAZAR MESMO? PERDE TUDO. | confirmação de sair durante partida |
+| `dialog.quit_confirm` | SAIR MESMO? PERDE TUDO. | confirmação de sair durante partida |
 | `dialog.restart_confirm` | RECOMEÇA A FASE INTEIRA? | confirmação de restart |
 
 ## 4. Tela de Códigos
@@ -77,7 +88,7 @@ Todas as strings de texto do jogo em PT-BR com regionalismo pernambucano. Cada s
 | `codes.share_hint` | copia e manda pros cabra | |
 | `codes.copy` | [C] copia | atalho |
 | `codes.new_game` | [N] jogo novo | atalho |
-| `codes.invalid` | ESSE CÓDIGO NÃO COLA | erro de validação |
+| `codes.invalid` | ESSE CÓDIGO NÃO COLA | erro de validação ("não cola" = nacional coloquial, neutro) |
 | `codes.copied` | COPIEI AÍ | toast após copy |
 | `codes.empty` | AINDA NÃO TEM | se não há código salvo |
 
@@ -133,15 +144,15 @@ Pequenos textos flutuantes ou overlays:
 | `feedback.go` | VAI, MENINO | começa o gameplay |
 | `feedback.first_blood` | PRIMEIRO DO DIA | primeira kill da run |
 | `feedback.chain5` | ENGATADO | chain 5 inimigos |
-| `feedback.chain10` | TÁ ARRASANDO | chain 10 |
+| `feedback.chain10` | TÁ DOIDO! | chain 10 (PE: "tá doido") |
 | `feedback.chain20` | É BRABO MESMO | chain 20 |
 | `feedback.milestone_10k` | ÉGUA! 10 MIL | score 10.000 |
 | `feedback.milestone_50k` | MEIO CENTO, CABRA! | score 50.000 |
 | `feedback.milestone_100k` | CEM MIL ARRETADO | score 100.000 |
-| `feedback.damage` | AÍ, VIU? | quando player leva dano |
+| `feedback.damage` | EITA! | quando player leva dano (PE: interjeição genuína) |
 | `feedback.last_life` | É A ÚLTIMA! | quando fica com 1 vida só |
 | `feedback.invulnerable` | — | apenas VFX, sem texto |
-| `feedback.life_up` | TÁ COM TUDO | +1 vida (tapioca) |
+| `feedback.life_up` | NOVA VIDA | +1 vida (tapioca) — neutro, texto curto legível |
 | `feedback.near_miss` | QUASE | projétil passou raspando (opcional) |
 | `feedback.perfect_wave` | LIMPOU TUDO | limpou onda sem dano |
 | `feedback.wave_complete` | ONDA %n VAI | nova onda começa |
@@ -155,9 +166,12 @@ Alterna entre estes ao pegar power-up (variedade):
 | `pickup.arretado` | ARRETADO! |
 | `pickup.visse` | VISSE?! |
 | `pickup.egua` | ÉGUA! |
-| `pickup.massa` | TÁ MASSA |
 | `pickup.paidegua` | PAI D'ÉGUA |
 | `pickup.oxente` | OXENTE! |
+| `pickup.danou` | DANOU-SE! |
+| `pickup.bicho` | BICHO! |
+
+> Removido: `pickup.massa` ("TÁ MASSA") — "massa" sozinho virou gíria nacional; a expressão PE específica é "É MASSA" em fala, mas como botão curto fica ambíguo. Preferível usar as 7 acima, todas inequivocamente PE.
 
 ## 9. Power-ups
 
@@ -176,7 +190,7 @@ Alterna entre estes ao pegar power-up (variedade):
 | `pause.title` | PAREI |
 | `pause.resume` | BORA |
 | `pause.restart_stage` | RECOMEÇA A FASE |
-| `pause.quit` | VAZAR PRO MENU |
+| `pause.quit` | VOLTAR PRO MENU |
 | `pause.controls_hint` | ESC retoma · ↑↓ escolhe · ENTER confirma |
 
 ## 11. Checkpoint
@@ -229,7 +243,7 @@ Alterna entre estes ao pegar power-up (variedade):
 | `stage_end.stat_lives` | VIDAS RESTANTES | |
 | `stage_end.total` | SCORE TOTAL | |
 | `stage_end.continue` | BORA PRA PRÓXIMA | CTA |
-| `stage_end.quit` | VAZAR | |
+| `stage_end.quit` | SAIR | neutro; antes "vazar" (nacional) |
 
 ## 14. Game Over
 
@@ -240,10 +254,12 @@ Variações aleatórias — sorteia uma no início da tela:
 | `gameover.1` | SE LASCOU |
 | `gameover.2` | RAPAZ... |
 | `gameover.3` | NÃO DEU NÃO |
-| `gameover.4` | VOLTA ESSA FITA |
+| `gameover.4` | DANOU-SE |
 | `gameover.5` | FOI BRABO MESMO |
 | `gameover.6` | PAGOU O PREÇO |
 | `gameover.7` | FICA PRA OUTRO DIA |
+
+> Substituído: `gameover.4` era "VOLTA ESSA FITA" (idiom nacional, não-PE). Trocado por "DANOU-SE" (PE confirmado).
 
 Labels fixos:
 
@@ -272,13 +288,13 @@ Labels fixos:
 
 ### Parte 2 — stats + créditos
 
-| Chave | String |
-|---|---|
-| `victory.stats_title` | SE AJEITOU DIREITO |
-| `victory.score_final` | SCORE FINAL |
-| `victory.record` | RECORDE |
-| `victory.code_label` | SEU CÓDIGO |
-| `victory.credits_shortcut` | [ENTER] menu · [C] copia código |
+| Chave | String | Nota |
+|---|---|---|
+| `victory.stats_title` | ACABOU TUDO BEM | antes "SE AJEITOU DIREITO" (borderline nacional) — trocado por forma neutra |
+| `victory.score_final` | SCORE FINAL | |
+| `victory.record` | RECORDE | |
+| `victory.code_label` | SEU CÓDIGO | |
+| `victory.credits_shortcut` | [ENTER] menu · [C] copia código | |
 
 ## 16. Créditos
 
@@ -350,3 +366,13 @@ Mesmo sendo single-language (PT-BR regional), estruture chaves assim pra prepara
 - Nenhuma string hardcoded em TS; passa tudo por um `Strings.ts` que lê deste glossário (stub pode virar JSON mais tarde)
 
 **Meta de contagem**: ~120 strings totais neste doc. Suficiente pra cobrir todo o conteúdo visível do v1.
+
+## Processo de novas entradas
+
+Se você (Game Designer, Gameplay Dev, Sound Designer) precisa de nova string:
+
+1. Proponha a chave em PR ou mensagem pro UI/UX.
+2. **Não invente pernambuquês**. Se não sabe se é PE, deixa neutro e marca pra UI/UX validar.
+3. UI/UX confirma com dono do projeto (pernambucano) antes de mergear.
+
+Inventar gíria "que parece nordestina" sem conhecer localmente é o erro que essa revisão existiu pra corrigir (ver `REPORT_GLOSSARY_REVISION.md`, caso ARROCHA).
