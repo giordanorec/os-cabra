@@ -23,6 +23,7 @@ export class MenuScene extends Phaser.Scene {
     this.cameras.main.setBackgroundColor(SCENE_BG.MENU);
     this.parallax = new Parallax(this, 'menu');
     this.inputManager = new InputManager(this);
+    this.inputManager.registerAnyTapAsConfirm(this);
     this.audio = new AudioManager(this);
     this.audio.playMusic('music_menu', 800);
     attachFullscreenToggle(this);

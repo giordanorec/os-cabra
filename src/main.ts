@@ -27,6 +27,11 @@ const config: Phaser.Types.Core.GameConfig = {
       debug: false
     }
   },
+  input: {
+    // Mobile: joystick + botão de tiro + eventual terceiro toque (pause double-tap) = 3 ponteiros
+    activePointers: 3,
+    touch: { capture: true }
+  },
   scene: [BootScene, PreloadScene, MenuScene, GameScene, HUDScene, GameOverScene, PauseScene]
 };
 

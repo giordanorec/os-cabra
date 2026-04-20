@@ -29,6 +29,7 @@ export class GameOverScene extends Phaser.Scene {
   create() {
     this.parallax = new Parallax(this);
     this.inputManager = new InputManager(this);
+    this.inputManager.registerAnyTapAsConfirm(this);
     this.audio = new AudioManager(this);
     attachFullscreenToggle(this);
 
