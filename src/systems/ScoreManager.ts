@@ -21,14 +21,18 @@ export class ScoreManager {
   private chainCount = 0;
   private lastKillAt = 0;
   onChange?: (score: number, multiplierActive: boolean) => void;
+  onChainStart?: () => void;
 
   registerKill(points: number, now: number) {
     if (now - this.lastKillAt > CHAIN_RESET_MS) {
       this.chainCount = 0;
     }
+    const wasActive = this.chainCount >= CHAIN_THRESHOLD;
     this.chainCount += 1;
     this.lastKillAt = now;
-    const mult = this.chainCount >= CHAIN_THRESHOLD ? CHAIN_MULTIPLIER : 1;
+    const isActive = this.chainCount >= CHAIN_THRESHOLD;
+    if (!wasActive && isActive) this.onChainStart?.();
+    const mult = isActive ? CHAIN_MULTIPLIER : 1;
     this.score += Math.round(points * mult);
     this.onChange?.(this.score, mult > 1);
   }
