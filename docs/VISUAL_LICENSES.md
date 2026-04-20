@@ -18,7 +18,24 @@ Arquivos que vão para o build. Toda linha precisa de autor, licença compatíve
 | `public/assets/sprites/enemy-caboclinho.{png,json}` | Sprite + atlas (28×28, 2 frames) | Visual Designer / 2026-04-19 | Próprio | `scripts/art/svg/enemy-caboclinho.svg` | Caboclinho com penacho e arco |
 | `public/assets/sprites/enemy-mosca.{png,json}` | Sprite + atlas (14×14, 2 frames) | Visual Designer / 2026-04-19 | Próprio | `scripts/art/svg/enemy-mosca.svg` | Mosca-da-Manga (enxame) |
 | `public/assets/sprites/boss-maracatu.{png,json}` | Sprite + atlas (256×256, 1 frame hero) | Visual Designer / 2026-04-19 | Próprio | `scripts/art/svg/boss-maracatu.svg` | Maracatu Nação: Calunga + Rei + Rainha |
-| `public/assets/sprites/@2x/*.png` | Variantes HiDPI | Derivadas dos SVGs | Próprio | `scripts/art/generate-sprites.mjs` | Mobile/Retina futuro |
+| `public/assets/sprites/@2x/*.png` | Variantes HiDPI | Derivadas dos SVGs (M2) ou Gemini (M3) | Próprio | `scripts/art/generate-sprites.mjs` ou `postprocess.py` | Mobile/Retina |
+| `public/assets/sprites/player.png` | Galo chubby Angry-Birds style (32×32 + @2x) | Gemini 2.5 Flash Image / 2026-04-19 (M3 pivô) | Próprio (IA) | `scripts/art/gemini/out/raw/player-galo-hero.png` | Substitui o SVG do M2 |
+| `public/assets/sprites/enemy-passista.png` | Passista paraquedista (32×32 + @2x) | Gemini / 2026-04-19 (M3) | Próprio (IA) | raw | Substitui M2 |
+| `public/assets/sprites/enemy-caboclinho.png` | Caboclinho em corda de seda (28×28 + @2x) | Gemini / 2026-04-19 (M3) | Próprio (IA) | raw | Substitui M2 |
+| `public/assets/sprites/enemy-mamulengo.png` | Mamulengo marionete em cordas (32×32 + @2x) | Gemini / 2026-04-19 (M3) | Próprio (IA) | raw | Inimigo novo |
+| `public/assets/sprites/enemy-mosca.png` | Mosca-da-manga chunky (16×16 + @2x) | Gemini / 2026-04-19 (M3) | Próprio (IA) | raw | Substitui M2 |
+| `public/assets/sprites/boss-{rei,rainha,calunga}.png` | Trio Maracatu 256×256 | Gemini / 2026-04-19 (M3) | Próprio (IA) | raw (`--reference=boss-rei.png` pra Rainha/Calunga) | Paleta frevo |
+| `public/assets/sprites/bullet-player.png` | Grão de milho dourado (16×16 + @2x) | Gemini / 2026-04-19 (M3) | Próprio (IA) | raw | Tiro do player |
+| `public/assets/backgrounds/menu.png` | Capa: Galo gigante em mangue radiante (800×600) | Gemini / 2026-04-19 (M3) | Próprio (IA) | raw | Splash screen |
+| `public/assets/backgrounds/fase1/{back,mid,fore}.png` | Marco Zero carnaval, 3 camadas parallax | Gemini / 2026-04-19 (M3) | Próprio (IA) | raw | Paleta frevo, mid/fore com alpha |
+| `public/assets/backgrounds/fase2/{back,mid,fore}.png` | Ladeiras de Olinda, 3 camadas parallax | Gemini / 2026-04-19 (M3) | Próprio (IA) | raw | Paleta frevo, mid/fore com alpha |
+| `public/assets/backgrounds/fase4/{back,mid,fore}.png` | Capibaribe entardecer, 3 camadas parallax | Gemini / 2026-04-19 (M3) | Próprio (IA) | raw | Paleta frevo, mid/fore com alpha |
+| `public/assets/ui/logo-os-cabra.png` | Logo colorido lettering xilografado (700×620) | Gemini / 2026-04-19 (M3) | Próprio (IA) | raw | Pra MenuScene |
+| `public/assets/ui/moldura-cordel.png` | Frame decorativo colorido (600×450) | Gemini / 2026-04-19 (M3) | Próprio (IA) | raw | Center transparente |
+| `public/assets/ui/icon-vida.png`, `icon-bomba.png` | HUD galinho + garrafinha (64×64) | Gemini / 2026-04-19 (M3) | Próprio (IA) | raw | |
+| `public/assets/vfx/vfx-explosao.png` | Confete explosão (128×128) | Gemini / 2026-04-19 (M3) | Próprio (IA) | raw | |
+| `public/assets/vfx/vfx-muzzle-penas.png` | Muzzle flash de penas (128×128) | Gemini / 2026-04-19 (M3) | Próprio (IA) | raw | |
+| `public/assets/vfx/vfx-hit-flash.png` | Hit flash estrela impacto (128×128) | Gemini / 2026-04-19 (M3) | Próprio (IA) | raw | |
 
 ### Licenças aceitas para assets finais
 

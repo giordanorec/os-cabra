@@ -30,3 +30,10 @@ playwright-report/
 .venv-art/
 __pycache__/
 *.pyc
+
+# Raw outputs do Gemini (gitignored)
+scripts/art/gemini/out/
+
+# symlinks locais de worktree
+.env
+.venv-art

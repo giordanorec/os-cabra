@@ -20,21 +20,33 @@
 
 > **Sempre coletar 5-10 imagens de referência antes de gerar qualquer sprite com IA.** Feed a IA com style references.
 
-## 3. Paleta
+## 3. Paleta — Bloco de Frevo
 
-Base (xilogravura tradicional tem paleta restrita):
+**Xilogravura é TRAÇO, não paleta restrita.** O que define o estilo é a linha preta grossa, a textura de madeira entalhada, a silhueta forte, a composição folclórica. Os cordéis de Bezerros pós-1970 (J. Borges colorido, Derlon muralista recifense) são EXPLOSIVAMENTE coloridos — nada de sépia dominante, nada de fundo preto vazio.
+
+Paleta base — inspirada em blocos de frevo, bandeirinhas de São João, tapetes de Maracatu, Galo da Madrugada real (a estátua):
 
 | Cor | Hex | Uso |
 |---|---|---|
-| Preto pergaminho | `#1a0f08` | Background base, outlines |
-| Papel antigo | `#f4e4c1` | Base de "canvas" |
-| Vermelho tijolo | `#b84a2e` | Sangue, fogo, acentos quentes |
-| Ocre | `#d4a04c` | Madeira, pele, dourado |
-| Índigo | `#2a4a6e` | Noite, água do Capibaribe |
-| Verde folha | `#5a7a3a` | Vegetação, Comadre Fulozinha |
-| Rosa fosco | `#d66b7a` | Frevo, carnaval |
+| Preto entalhado | `#1a1a1a` | **Só linhas** — outlines grossos, hachura de madeira. Nunca fundo. |
+| Rosa pink frevo | `#ff4d8f` | Sombrinhas, frente de blocos, carnaval, acentos quentes |
+| Amarelo canário | `#ffd93d` | Sol, bandeirinhas, fitas, roupa de Calunga |
+| Azul turquesa | `#3ec5e0` | Céu diurno, rio espelhado, detalhes frios |
+| Verde mangue | `#3ea65a` | Vegetação, mangue, palmeiras, Comadre Fulozinha |
+| Laranja abóbora | `#ff8b3d` | Pôr-do-sol, fogueira de São João, acento intermediário |
+| Vermelho fogo | `#e63946` | Cabo de cordel, manto do Rei, bandeirinhas vermelhas |
+| Roxo berinjela | `#7b3fa8` | Anoitecer, sombra quente, detalhes místicos |
+| Creme claro | `#fff4d6` | Luz, destaque de lettering, highlight |
 
-Paletas auxiliares por fase — o Visual Designer define. Manter sempre 5-7 cores no máximo por tela.
+Regra de ouro: **saturação alta, contraste alto, traço preto forte**. Mínimo 4 cores por tela (monocromia é proibida exceto em dano/morte como freeze frame). Máximo 7 cores por tela pra manter legibilidade.
+
+**Referências específicas**:
+- J. Borges COLORIDO (pós-1970) — cordéis vermelho+azul+amarelo
+- **Derlon** (muralista recifense) — paleta explosiva, Maracatu moderno
+- Galo da Madrugada (estátua real, Recife) — rosa, azul, amarelo, vermelho
+- Blocos de frevo — fitas multicoloridas
+- Bandeirinhas de São João — confete visual
+- Tapetes de Maracatu — detalhe bordado em cores cruas
 
 ## 4. Asset list (completo)
 
@@ -83,13 +95,35 @@ Cada boss precisa de:
 
 ### Cenários (fundos)
 
-Fundo em parallax de 2-3 camadas por fase:
+Cada fase é um **BIOMA FÍSICO DE RECIFE**, não um painel de pano de fundo. Parallax de 3 camadas obrigatórias (back/mid/fore), PNGs separados em `public/assets/backgrounds/fase<N>/{back,mid,fore}.png`. Nunca céu preto vazio.
 
-1. **Marco Zero** — Recife Antigo com a Torre Malakoff à distância, cais, embarcações
-2. **Ladeiras de Olinda** — casas coloridas em perspectiva, ladeiras descendo
-3. **Recife Antigo / Carnaval** — Rua da Moeda, Igreja do Espinheiro, confete caindo
-4. **Capibaribe** — rio com pontes (Pte Maurício de Nassau), mangue
-5. **Fazenda / Sertão** — opcional, última fase
+**Fase 1 — Céu do Marco Zero em Carnaval** (mundo ao sol):
+- `back.png`: azul turquesa vibrante, sol grande amarelo canário, nuvens em traço preto grosso
+- `mid.png`: balões de festa (rosa/amarelo/roxo), bandeirinhas estendidas, pipas, fumaça de fogueira
+- `fore.png`: casario colorido do Recife Antigo (fachadas rosa/amarelo/verde), Torre Malakoff, rio azul em primeiro plano
+
+**Fase 2 — Ladeiras de Olinda subindo** (parallax vertical, mundo ensolarado):
+- `back.png`: céu azul com igrejas brancas no alto (Igreja da Sé, Igreja do Carmo)
+- `mid.png`: casarões amarelos/rosa/verdes/azuis em perspectiva descendo a ladeira
+- `fore.png`: rua de pedra com pessoinhas pequenas dançando frevo, sombrinhas coloridas
+
+**Fase 3 — Rua da Moeda à noite em carnaval** (não-preto, noite elétrica):
+- `back.png`: céu roxo berinjela com fogos de artifício amarelos
+- `mid.png`: prédios eclécticos de Recife Antigo, Igreja do Espinheiro iluminada
+- `fore.png`: multidão de foliões com sombrinhas, confete caindo
+
+**Fase 4 — Capibaribe ao Entardecer** (mundo onírico):
+- `back.png`: céu pôr-do-sol laranja + rosa + roxo gradiente de cores vibrantes
+- `mid.png`: palafitas em silhueta verde-escuro, garças voando, pontes
+- `fore.png`: mangue verde com rio espelhado dourado, reflexos coloridos
+
+**Fase 5 — Sertão ao meio-dia** (opcional, última fase):
+- `back.png`: céu amarelo+laranja com sol rachado, vultos de serras
+- `mid.png`: mandacaru e xique-xique em silhueta, caveira de boi
+- `fore.png`: chão avermelhado, lagarto, pequenas plantas
+
+**Menu** — único PNG `public/assets/backgrounds/menu.png` (não é layered, é arte de capa):
+- Galo da Madrugada gigante ao amanhecer, mangue colorido, céu rosa/laranja, composição de capa de cordel
 
 ### UI
 - Logo do jogo "OS CABRA"

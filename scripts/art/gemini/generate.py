@@ -38,15 +38,20 @@ DEFAULT_OUT_DIR = HERE / "out"
 
 
 STYLE_PREAMBLE = (
-    "Style: traditional Northeastern Brazilian woodcut print (xilogravura de cordel), "
-    "heavy black outlines, limited color palette of cream paper, brick red, ochre, "
-    "indigo, visible wood grain texture in solid areas, expressive rough carved lines, "
-    "sacred/folkloric composition inspired by J. Borges and Gilvan Samico. "
+    "Style: modern colorful Northeastern Brazilian woodcut (xilogravura de cordel COLORIDO), "
+    "in the vibrant tradition of J. Borges' post-1970 colored prints and Derlon's Recife murals. "
+    "Heavy expressive hand-carved BLACK outlines, visible wood-grain hatching texture inside flat color fills. "
+    "VIBRANT saturated 'bloco de frevo' palette: hot pink (#ff4d8f), canary yellow (#ffd93d), "
+    "turquoise blue (#3ec5e0), mangrove green (#3ea65a), pumpkin orange (#ff8b3d), "
+    "fire red (#e63946), eggplant purple (#7b3fa8), cream highlight (#fff4d6). "
+    "NEVER sepia, NEVER brown-dominant, NEVER black empty sky. "
+    "High saturation, high contrast, carnival of Pernambuco mood — bandeirinhas de São João, "
+    "Maracatu tapestry, Galo da Madrugada statue. "
 )
 
 COMPOSITION_SUFFIX = (
     " Composition: character centered, facing camera, full body, game sprite orientation, "
-    "transparent or plain cream background for easy extraction, no text, no signature."
+    "plain solid white background for easy extraction, no text, no signature, no framing border."
 )
 
 
