@@ -36,6 +36,21 @@ Arquivos que vão para o build. Toda linha precisa de autor, licença compatíve
 | `public/assets/vfx/vfx-explosao.png` | Confete explosão (128×128) | Gemini / 2026-04-19 (M3) | Próprio (IA) | raw | |
 | `public/assets/vfx/vfx-muzzle-penas.png` | Muzzle flash de penas (128×128) | Gemini / 2026-04-19 (M3) | Próprio (IA) | raw | |
 | `public/assets/vfx/vfx-hit-flash.png` | Hit flash estrela impacto (128×128) | Gemini / 2026-04-19 (M3) | Próprio (IA) | raw | |
+| `public/assets/sprites/pena-player.png` | Pena de galo rosa+amarela (32×32 + @2x) | Gemini / 2026-04-19 (M4) | Próprio (IA) | raw em `scripts/art/gemini/out/raw/` | Opção A tiro do player |
+| `public/assets/sprites/milho-player.png` | Grão de milho dourado (32×32 + @2x) | Gemini / 2026-04-19 (M4) | Próprio (IA) | raw | Opção B tiro do player |
+| `public/assets/sprites/enemy-capivara.png` | Capivara-querubim pacífica (96×96 + @2x) | Gemini / 2026-04-19 (M4) | Próprio (IA) | raw | Inimigo decorativo, vale pontos bônus |
+| `public/assets/sprites/enemy-caranguejo-saci.png` | Caranguejo-Saci perna única (96×96 + @2x) | Gemini / 2026-04-19 (M4) | Próprio (IA) | raw | Inimigo novo zigzag |
+| `public/assets/sprites/enemy-tribalistas.png` | Trio Arnaldo+Carlinhos+Marisa (128×96 + @2x) | Gemini / 2026-04-19 (M4) | Próprio (IA) | raw | Tributo cultural, evento decorativo |
+| `public/assets/sprites/enemy-mestre-salu.png` | Mestre maracatu com bumbo (128×128 + @2x) | Gemini / 2026-04-19 (M4) | Próprio (IA) | raw | Mini-boss potencial |
+| `public/assets/sprites/powerup-chico-science.png` | Tributo Chico Science Manguebeat (96×128 + @2x) | Gemini / 2026-04-19 (M4) | Próprio (IA) | raw | Power-up especial, efeito TBD |
+| `public/assets/sprites/boneco-{mulher-dia,menino-tarde}.png` | Bonecos gigantes Olinda (128×160 + @2x) | Gemini / 2026-04-19 (M4) | Próprio (IA) | raw | Mini-bosses Fase 2 potenciais |
+| `public/assets/sky/bandeirinha.png` | String longa São João (512×128) | Gemini / 2026-04-19 (M4) | Próprio (IA) | raw | Decorativo céu |
+| `public/assets/sky/balao-{rosa,amarelo,turquesa,laranja}.png` | 4 balões coloridos (128×128 cada) | Gemini / 2026-04-19 (M4) | Próprio (IA) | raw | Decorativo céu |
+| `public/assets/sky/pipa-{losango,arraia}.png` | 2 pipas recifenses (128×128 cada) | Gemini / 2026-04-19 (M4) | Próprio (IA) | raw | Decorativo céu |
+| `public/assets/sky/fogo-{rosa,amarelo,dourado}.png` | 3 fogos de artifício (128×128 cada) | Gemini / 2026-04-19 (M4) | Próprio (IA) | raw | Decorativo céu |
+| `public/assets/sky/passaro-{pequeno,grande}.png` | 2 pássaros voando (64×64 e 128×128) | Gemini / 2026-04-19 (M4) | Próprio (IA) | raw | Decorativo céu |
+| `public/assets/sky/nuvem-{galo,coracao,comum}.png` | 3 nuvens woodcut (128×96 cada) | Gemini / 2026-04-19 (M4) | Próprio (IA) | raw | Decorativo céu |
+| `public/assets/sky/sol-sorrindo.png` | Sol antropomórfico (128×128) | Gemini / 2026-04-19 (M4) | Próprio (IA) | raw | Decorativo céu |
 
 ### Licenças aceitas para assets finais
 
