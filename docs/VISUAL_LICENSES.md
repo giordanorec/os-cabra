@@ -19,6 +19,16 @@ Arquivos que vão para o build. Toda linha precisa de autor, licença compatíve
 | `public/assets/sprites/enemy-mosca.{png,json}` | Sprite + atlas (14×14, 2 frames) | Visual Designer / 2026-04-19 | Próprio | `scripts/art/svg/enemy-mosca.svg` | Mosca-da-Manga (enxame) |
 | `public/assets/sprites/boss-maracatu.{png,json}` | Sprite + atlas (256×256, 1 frame hero) | Visual Designer / 2026-04-19 | Próprio | `scripts/art/svg/boss-maracatu.svg` | Maracatu Nação: Calunga + Rei + Rainha |
 | `public/assets/sprites/@2x/*.png` | Variantes HiDPI | Derivadas dos SVGs | Próprio | `scripts/art/generate-sprites.mjs` | Mobile/Retina futuro |
+| `public/assets/sprites/boss-{rei,rainha,calunga}.png` | Trio Maracatu individualizado (256×256, alpha) | Gemini 2.5 Flash Image / 2026-04-19 | Próprio (IA) | raw em `scripts/art/gemini/out/raw/` | M3 — consistência via `--reference=boss-rei.png` |
+| `public/assets/sprites/bullet-*.png` | 6 projéteis 48×48 (flecha, bombinha, player, cipó, fígado, bola-fogo) | Gemini / 2026-04-19 | Próprio (IA) | `bullets-sheet.png` raw | M3 — sheet 3×2 splitado |
+| `public/assets/sprites/powerup-*.png` | 5 power-ups 64×64 (sombrinha, cachaça, tapioca, calunga, fogo-artifício) | Gemini / 2026-04-19 | Próprio (IA) | `powerups-sheet.png` raw | M3 |
+| `public/assets/backgrounds/*.png` | 18 imagens de parallax (3 camadas × 6 cenas: menu + fase1-5) | Gemini / 2026-04-19 | Próprio (IA) | raw em `scripts/art/gemini/out/raw/` | M3 — mid/fore com alpha flood-filled |
+| `public/assets/ui/logo-os-cabra.png` | Logo lettering com ornamentação (700×700) | Gemini / 2026-04-19 | Próprio (IA) | `logo-os-cabra.png` raw | M3 — splash screen |
+| `public/assets/ui/moldura-cordel.png` | Frame decorativo com buraco central (600×450) | Gemini / 2026-04-19 | Próprio (IA) | `ui-moldura.png` raw | M3 |
+| `public/assets/ui/boss-hp-bar.png` | Barra HP estilizada (512×64) | Gemini / 2026-04-19 | Próprio (IA) | `ui-boss-hp-bar.png` raw | M3 |
+| `public/assets/ui/icon-{vida,bomba}.png` | Ícones HUD galinho + garrafinha (64×64) | Gemini / 2026-04-19 | Próprio (IA) | `ui-icon-*.png` raw | M3 |
+| `public/assets/ui/{cursor-mao,seta-esquerda,seta-direita,selector-estrela}.png` | Cursor + navegação (64×64) | Gemini / 2026-04-19 | Próprio (IA) | `ui-cursor-setas.png` raw | M3 — sheet 2×2 splitado |
+| `public/assets/vfx/vfx-*.png` | 5 partículas 128×128 (explosão, muzzle, hit, pickup, fumaça) | Gemini / 2026-04-19 | Próprio (IA) | `vfx-sheet.png` raw | M3 |
 
 ### Licenças aceitas para assets finais
 

@@ -30,3 +30,6 @@ playwright-report/
 .venv-art/
 __pycache__/
 *.pyc
+
+# Raw outputs do Gemini (pasta de trabalho; PNGs finais vão em public/assets/)
+scripts/art/gemini/out/

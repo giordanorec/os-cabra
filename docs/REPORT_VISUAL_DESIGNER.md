@@ -113,4 +113,79 @@ Instruções completas em `public/assets/sprites/README.md`. Não precisam esper
 
 ---
 
+## Milestone 3 — Arte rica via Gemini Nano Banana (2026-04-19)
+
+### Contexto
+
+Feedback urgente do Arquiteto sobre v1 em os-cabra.vercel.app: **"muito minimalista, fundo preto, logo sans-serif"**. Vibe combinada era Angry Birds/Cuphead. Objetivo: preencher o jogo com arte xilogravura densa, agora que a pipeline Gemini (`scripts/art/gemini/`) está operacional e `GEMINI_API_KEY` configurada.
+
+### Entregáveis (30 gerações, ~$1.17)
+
+**Logo/splash (1)** — `public/assets/ui/logo-os-cabra.png`: lettering "OS CABRA" em xilogravura com árvore da vida, bodes cordelistas, cactos, lua, pássaros.
+
+**Parallax backgrounds (18, 3 camadas × 6 cenas)**
+- Menu: mangue ao amanhecer com Galo gigante
+- Fase 1 Marco Zero: Torre Malakoff, ponte, Capibaribe
+- Fase 2 Olinda: ladeiras coloridas, igrejas brancas
+- Fase 3 Recife Antigo: carnaval, confete, neon
+- Fase 4 Capibaribe noturno: rio poluído, mangue
+- Fase 5 Sertão: caatinga, mandacaru, sol rachado
+- Camadas `mid`/`fore` com alpha flood-filled para overlay real
+
+**Sprites (14)** — trio Maracatu individualizado (Rei/Rainha/Calunga 256×256 com consistência via `--reference`), 6 projéteis 48×48 (flecha, bombinha, tiro player, cipó, fígado, bola de fogo), 5 power-ups 64×64 (sombrinha, cachaça, tapioca, calunga wingman, fogo de artifício).
+
+**UI (9)** — moldura de cordel, ícone vida (galinho) e bomba (garrafinha), barra HP boss, cursor mão + 3 setas/selector (sheet 2×2 splitado).
+
+**VFX (5, 128×128)** — explosão, muzzle flash, hit flash, pickup flash, fumaça de cachaça.
+
+### Pipeline
+
+1. **Geração** — `scripts/art/gemini/generate.py` com style preamble xilogravura embutido. 30 chamadas em batches de 5 em paralelo via `run_in_background`. Consistência inter-geração por `--reference` (Rainha/Calunga → Rei, mid/fore → back da mesma cena).
+2. **Pós-processamento** — `scripts/art/gemini/postprocess.py`: backgrounds resize 800×600 center-crop (layers back sem alpha, mid/fore com flood-fill); sprites flood-fill + trim bbox + center-fit em canvas alvo; sheets split em grid com padding (5-8%) para remover bordas de célula.
+3. **Raw outputs** em `scripts/art/gemini/out/raw/` (gitignored; PNGs finais em `public/assets/`).
+
+### Decisões de direção
+
+1. Cream mantido nos backgrounds `back` — vira base do jogo (substitui `#0a0604` que o arquiteto criticou)
+2. Bullets/power-ups como PNG individuais após split — facilita pooling em Phaser
+3. Boss trio individualizado substitui o composto do M2 — Rainha/Calunga podem animar independente
+4. Logo mantém cream (é splash, design intencional)
+5. Textos do Gemini: aceitos quando viram design (logo), recortados no split quando legenda espúria
+
+### Budget
+
+30 × $0.039 = **$1.17** (target ~$1.60). Sobra pra ~10 retries/variações se QA humano achar alguma imagem ruim.
+
+### Pendências
+
+- [ ] QA visual humano das 49 imagens finais em contexto do jogo
+- [ ] Gameplay Dev integra em `PreloadScene` + MenuScene usa `logo-os-cabra` + parallax real por cena
+- [ ] Frames de ataque do boss (Rei braço levantado, Rainha tiro, Calunga virando projétil) — `--reference=boss-rei.png`
+- [ ] Estados de HP do boss (100/66/33%)
+- [ ] Frames de dano dos inimigos Fase 1 (re-render via Gemini no polish pass)
+
+### Para o orquestrador
+
+Assets em `public/assets/{backgrounds,sprites,ui,vfx}/`. Gameplay Dev integra via `load.image`:
+
+```ts
+// UI
+this.load.image('logo',     'assets/ui/logo-os-cabra.png')
+this.load.image('moldura',  'assets/ui/moldura-cordel.png')
+this.load.image('icon-vida','assets/ui/icon-vida.png')
+// Boss individual (substitui boss-maracatu composto)
+this.load.image('boss-rei',    'assets/sprites/boss-rei.png')
+this.load.image('boss-rainha', 'assets/sprites/boss-rainha.png')
+this.load.image('boss-calunga','assets/sprites/boss-calunga.png')
+// Parallax
+this.load.image('menu-bg-back', 'assets/backgrounds/menu-bg-back.png')
+this.load.image('menu-bg-mid',  'assets/backgrounds/menu-bg-mid.png')
+this.load.image('menu-bg-fore', 'assets/backgrounds/menu-bg-fore.png')
+// ... etc pra fase1-5 e bullets/power-ups/vfx
+```
+
+SVGs do M2 (`player`, `enemy-*`) continuam válidos — M3 adiciona conteúdo novo.
+
+---
+
 _Próximas entradas abaixo conforme milestones avançam._
