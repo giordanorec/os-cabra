@@ -15,6 +15,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   lives = PLAYER_LIVES;
   onDeath?: () => void;
   onDamage?: (livesLeft: number) => void;
+  onFire?: (x: number, y: number) => void;
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, 'player');
@@ -32,7 +33,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.setVelocityX(vx);
 
     if (input.isPressed(Action.FIRE) && time - this.lastFireMs >= PLAYER_FIRE_COOLDOWN_MS) {
-      bullets.fireFrom(this.x, this.y - this.height / 2, -1);
+      const by = this.y - this.height / 2;
+      bullets.fireFrom(this.x, by, -1);
+      this.onFire?.(this.x, by);
       this.lastFireMs = time;
     }
 
