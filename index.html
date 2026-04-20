@@ -17,14 +17,18 @@
         overflow: hidden;
         font-family: system-ui, sans-serif;
       }
+      /*
+        Não usamos display:flex aqui — o Phaser Scale.FIT+CENTER_BOTH já
+        posiciona o canvas via position:absolute. Flex layout no parent
+        conflita com o cálculo do Phaser e em alguns viewports o canvas
+        resultava em height=0 (nave ficava fora da tela).
+      */
       #game {
         width: 100vw;
         height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        position: relative;
       }
-      canvas {
+      #game canvas {
         display: block;
         image-rendering: pixelated;
       }
