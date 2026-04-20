@@ -156,12 +156,12 @@ export class TouchInput {
     }
   }
 
-  // Chamado toda frame pra:
-  //  1) atualizar o "fire" derivado (auto-fire = disparando enquanto se move)
-  //  2) limpar o pauseJustPressed após 1 frame (comportamento "JustDown")
+  // Chamado toda frame pra atualizar o "fire" derivado
+  // (auto-fire = disparando enquanto se move).
+  // Nota: pauseJustPressed é consumido por consumePauseJustPressed, nunca zerado aqui —
+  // zerar antes de justPressed(PAUSE) ler perderia o evento.
   update(_time: number) {
     if (!this.mounted) return;
-    this.state.pauseJustPressed = false; // sempre zera no começo do frame seguinte
     if (this.autoFire) {
       const moving = this.state.left || this.state.right;
       this.state.fire = moving || this.firePointerId !== null;
