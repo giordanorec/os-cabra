@@ -75,6 +75,19 @@ Todas as strings do jogo — ~120 entradas cobrindo menus, feedbacks, fases, bos
 - Game Over (variações): `SE LASCOU` · `RAPAZ...` · `NÃO DEU NÃO` · `DANOU-SE` · `FOI BRABO MESMO`
 - Checkpoint: `ONDE EU TAVA`
 
+### 4.1 Mapa de teclas
+
+| Tecla | Ação | Contexto | Exibido no HUD |
+|---|---|---|---|
+| ← → | Mover player | Gameplay | `[SETAS] move` |
+| Espaço | Atirar (hold = auto-fire com cooldown) | Gameplay | `[ESPAÇO] atira` |
+| Espaço / Enter | Confirmar | Menus / overlays | (contextual) |
+| ESC | Pause / resume / fechar overlay | Gameplay, menus secundários | `[ESC] pausa` |
+| **F** | **Toggle browser fullscreen** (não só FIT do canvas) | Qualquer cena | `[F] TELA CHEIA` (canto sup. direito no Menu, inline no HUD) |
+| X | Smart bomb (Cachaça Boa) — quando estocada | Gameplay | HUD condicional |
+
+Chave do glossário: `controls.hint` concatena `[SETAS] move · [ESPAÇO] atira · [ESC] pausa · [F] tela cheia`. Botão clicável de fullscreen no canto superior direito do MenuScene dispara `this.scale.toggleFullscreen()` via user gesture (requisito Chrome).
+
 ## 5. Tipografia
 
 Definição final: **Rye** (display) + **Inter** (corpo) + **JetBrains Mono** (mono/códigos).

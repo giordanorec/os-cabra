@@ -22,6 +22,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     scene.add.existing(this);
     scene.physics.add.existing(this);
     this.setCollideWorldBounds(true);
+    // Sprite base 32×32 → 64×64 (≈10.7% da altura do game). Voltar pra 1x
+    // quando Visual Designer empurrar assets já no tamanho 64-96px.
+    this.setScale(2);
   }
 
   tick(time: number, input: InputManager, bullets: BulletGroup) {

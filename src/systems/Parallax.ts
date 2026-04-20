@@ -1,79 +1,99 @@
 import * as Phaser from 'phaser';
-import { GAME_HEIGHT, GAME_WIDTH } from '../config';
+import { GAME_HEIGHT, GAME_WIDTH, PALETTE } from '../config';
 
-// Parallax procedural em 3 camadas com gradiente da paleta ART_BIBLE.
-// Substituir por texturas reais do Visual Designer quando backgrounds/* chegar.
+// Parallax de 3 camadas em velocidades 0.2x (back) / 0.5x (mid) / 1.0x (fore).
+// Consome PNGs `bg-<scene>-{back,mid,fore}` se carregados no Preload.
+// Senão, desenha placeholder vibrante com pontinhos flutuantes sobre a cor de cena
+// (setada via cameras.main.setBackgroundColor antes deste construtor).
+//
+// Quando art/milestone-3+ entregar public/assets/backgrounds/fase1/{back,mid,fore}.png,
+// PreloadScene vai carregar via `load.image('bg-fase1-back', ...)` e este módulo
+// detecta a textura existente e usa TileSprite automaticamente.
+
+type SceneId = 'menu' | 'fase1' | 'fase2' | 'fase3' | 'fase4' | 'fase5' | 'boss' | 'generic';
+
+type LayerSuffix = 'back' | 'mid' | 'fore';
 
 interface Layer {
-  graphics: Phaser.GameObjects.Graphics;
+  tile?: Phaser.GameObjects.TileSprite;
+  proceduralGraphics?: Phaser.GameObjects.Graphics;
+  proceduralDots?: Array<{ x: number; y: number; size: number; color: number }>;
   speed: number;
-  dotRows: Array<{ x: number; y: number; size: number; color: number }>;
 }
+
+const LAYER_CONFIGS: Array<{ suffix: LayerSuffix; speed: number; depth: number }> = [
+  { suffix: 'back', speed: 0.2, depth: -30 },
+  { suffix: 'mid',  speed: 0.5, depth: -20 },
+  { suffix: 'fore', speed: 1.0, depth: -10 }
+];
+
+const PROCEDURAL_COLORS: Record<LayerSuffix, number[]> = {
+  back: [PALETTE.CREAM, PALETTE.GOLD],
+  mid:  [PALETTE.PINK, PALETTE.GOLD, PALETTE.CREAM],
+  fore: [PALETTE.RED, PALETTE.GREEN, PALETTE.CREAM]
+};
+
+const BASE_SCROLL_PX_PER_SEC = 80;
 
 export class Parallax {
   private readonly layers: Layer[] = [];
   private elapsed = 0;
 
-  constructor(scene: Phaser.Scene) {
-    // Camada 0 — gradiente radial escuro (mais lento)
-    const far = scene.add.graphics();
-    far.fillGradientStyle(0x2a1810, 0x2a1810, 0x1a0f08, 0x1a0f08, 1);
-    far.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
-    far.setDepth(-30);
-    const farDots = this.makeDots(60, 0x7a6850, 0.4, 1.5);
-    const farG = scene.add.graphics();
-    farG.setDepth(-29);
-    this.drawDots(farG, farDots);
-    this.layers.push({ graphics: farG, speed: 8, dotRows: farDots });
-
-    // Camada 1 — tiras horizontais médias (beige texturado) — mais rápido
-    const midDots = this.makeDots(40, 0xb84a2e, 0.25, 2.5);
-    const midG = scene.add.graphics();
-    midG.setDepth(-20);
-    this.drawDots(midG, midDots);
-    this.layers.push({ graphics: midG, speed: 20, dotRows: midDots });
-
-    // Camada 2 — foreground marcas sutis — mais rápido
-    const nearDots = this.makeDots(24, 0xd4a04c, 0.2, 3);
-    const nearG = scene.add.graphics();
-    nearG.setDepth(-10);
-    this.drawDots(nearG, nearDots);
-    this.layers.push({ graphics: nearG, speed: 40, dotRows: nearDots });
-  }
-
-  tick(delta: number) {
-    this.elapsed += delta;
-    for (const layer of this.layers) {
-      const offset = (this.elapsed * layer.speed) / 1000;
-      layer.graphics.clear();
-      for (const d of layer.dotRows) {
-        const y = (d.y + offset) % (GAME_HEIGHT + 40);
-        layer.graphics.fillStyle(d.color, 1);
-        layer.graphics.fillCircle(d.x, y, d.size);
+  constructor(scene: Phaser.Scene, sceneId: SceneId = 'generic') {
+    for (const cfg of LAYER_CONFIGS) {
+      const key = `bg-${sceneId}-${cfg.suffix}`;
+      if (scene.textures.exists(key)) {
+        const tile = scene.add.tileSprite(0, 0, GAME_WIDTH, GAME_HEIGHT, key)
+          .setOrigin(0, 0)
+          .setDepth(cfg.depth);
+        this.layers.push({ tile, speed: cfg.speed });
+      } else {
+        const dots = this.makeDots(cfg.suffix);
+        const g = scene.add.graphics().setDepth(cfg.depth);
+        this.drawDots(g, dots, 0);
+        this.layers.push({ proceduralGraphics: g, proceduralDots: dots, speed: cfg.speed });
       }
     }
   }
 
-  private makeDots(count: number, color: number, alpha: number, maxSize: number) {
-    const result: Layer['dotRows'] = [];
+  tick(deltaMs: number) {
+    this.elapsed += deltaMs;
+    for (const layer of this.layers) {
+      const offset = (this.elapsed * BASE_SCROLL_PX_PER_SEC * layer.speed) / 1000;
+      if (layer.tile) {
+        layer.tile.tilePositionY = -offset;
+      } else if (layer.proceduralGraphics && layer.proceduralDots) {
+        this.drawDots(layer.proceduralGraphics, layer.proceduralDots, offset);
+      }
+    }
+  }
+
+  private makeDots(suffix: LayerSuffix) {
+    const count = suffix === 'back' ? 50 : suffix === 'mid' ? 30 : 18;
+    const maxSize = suffix === 'back' ? 2 : suffix === 'mid' ? 3 : 4;
+    const colors = PROCEDURAL_COLORS[suffix];
+    const result: NonNullable<Layer['proceduralDots']> = [];
     for (let i = 0; i < count; i++) {
       result.push({
         x: Phaser.Math.Between(0, GAME_WIDTH),
         y: Phaser.Math.Between(0, GAME_HEIGHT),
-        size: Phaser.Math.FloatBetween(0.5, maxSize),
-        color: Phaser.Display.Color.ValueToColor(color).darken(Phaser.Math.Between(0, 20)).color
+        size: Phaser.Math.FloatBetween(0.8, maxSize),
+        color: colors[i % colors.length]
       });
     }
-    // alpha aplicado indireto via graphics.alpha
-    result.forEach(() => {});
-    void alpha;
     return result;
   }
 
-  private drawDots(g: Phaser.GameObjects.Graphics, dots: Layer['dotRows']) {
+  private drawDots(
+    g: Phaser.GameObjects.Graphics,
+    dots: NonNullable<Layer['proceduralDots']>,
+    yOffset: number
+  ) {
+    g.clear();
     for (const d of dots) {
-      g.fillStyle(d.color, 1);
-      g.fillCircle(d.x, d.y, d.size);
+      const y = ((d.y + yOffset) % (GAME_HEIGHT + 20)) - 10;
+      g.fillStyle(d.color, 0.85);
+      g.fillCircle(d.x, y, d.size);
     }
   }
 }

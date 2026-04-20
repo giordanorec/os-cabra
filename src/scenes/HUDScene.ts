@@ -158,7 +158,7 @@ export class HUDScene extends Phaser.Scene {
       fontFamily: FONTS.DISPLAY,
       fontSize: '120px',
       color: '#b84a2e',
-      stroke: '#1a0f08',
+      stroke: '#2a2540',
       strokeThickness: 6
     }).setOrigin(0.5).setDepth(OVERLAY_DEPTH).setAlpha(0).setScale(2);
     const bar1 = this.add.rectangle(cx, 280, 400, 2, 0xb84a2e).setDepth(OVERLAY_DEPTH).setAlpha(0);
@@ -191,7 +191,7 @@ export class HUDScene extends Phaser.Scene {
 
   private showBossHp() {
     if (!this.bossHpBg) {
-      this.bossHpBg = this.add.rectangle(GAME_WIDTH / 2, 560, 600, 20, 0x1a0f08, 1)
+      this.bossHpBg = this.add.rectangle(GAME_WIDTH / 2, 560, 600, 20, 0x2a2540, 1)
         .setStrokeStyle(2, 0xf4e4c1)
         .setDepth(HUD_DEPTH);
       this.bossHpFill = this.add.rectangle(GAME_WIDTH / 2 - 298, 560, 596, 16, 0xb84a2e)
@@ -219,7 +219,7 @@ export class HUDScene extends Phaser.Scene {
       fontFamily: FONTS.DISPLAY,
       fontSize: '44px',
       color: '#d4a04c',
-      stroke: '#1a0f08',
+      stroke: '#2a2540',
       strokeThickness: 4
     }).setOrigin(0.5).setDepth(OVERLAY_DEPTH).setAlpha(0).setScale(1.3);
     this.tweens.add({
@@ -245,7 +245,7 @@ export class HUDScene extends Phaser.Scene {
       fontFamily: FONTS.DISPLAY,
       fontSize: '96px',
       color: '#5a7a3a',
-      stroke: '#1a0f08',
+      stroke: '#2a2540',
       strokeThickness: 6
     }).setOrigin(0.5).setDepth(OVERLAY_DEPTH).setAlpha(0).setScale(0);
     const bonusLine = this.add.text(cx, 320, `${getString('boss.bonus_label')}:  +${bonus}`, {

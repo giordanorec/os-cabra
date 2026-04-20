@@ -5,6 +5,7 @@ export interface EnemyConfig {
   hp: number;
   points: number;
   texture: string;
+  scale?: number;
   onDeath?: (enemy: Enemy) => void;
 }
 
@@ -24,6 +25,11 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
     this.hp = cfg.hp;
     this.points = cfg.points;
     this.onDeath = cfg.onDeath;
+    // Sprites de origem 14-32px são pequenos pra visibilidade desejada
+    // (enemies ~7-10% da altura = 42-60px). Escala via opção, até sprites
+    // finais do Visual Designer já virem em 80-96px.
+    const scale = cfg.scale ?? 2;
+    if (scale !== 1) this.setScale(scale);
   }
 
   takeHit(damage = 1): boolean {

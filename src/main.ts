@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import { GAME_WIDTH, GAME_HEIGHT, BACKGROUND_COLOR } from './config';
+import { GAME_WIDTH, GAME_HEIGHT, SCENE_BG } from './config';
 import { waitForFonts } from './fonts';
 import { BootScene } from './scenes/BootScene';
 import { PreloadScene } from './scenes/PreloadScene';
@@ -12,10 +12,11 @@ import { PauseScene } from './scenes/PauseScene';
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   parent: 'game',
-  backgroundColor: BACKGROUND_COLOR,
+  backgroundColor: SCENE_BG.MENU,
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
+    parent: 'game',
     width: GAME_WIDTH,
     height: GAME_HEIGHT
   },

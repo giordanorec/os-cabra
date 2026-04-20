@@ -3,7 +3,20 @@
 
 export const GAME_WIDTH = 800;
 export const GAME_HEIGHT = 600;
-export const BACKGROUND_COLOR = '#1a0f08';
+
+// Paleta nova (cordel colorido, pivot visual 2026-04-19).
+// Sem marrom chapado — cenas usam cor vibrante da fase como fallback.
+export const SCENE_BG = {
+  MENU:       '#2db8d6', // turquesa
+  FASE1:      '#6fc5ea', // azul céu
+  FASE2:      '#f0a040', // laranja Olinda
+  FASE3:      '#e84a4a', // vermelho Carnaval
+  FASE4:      '#4aa8b8', // água Capibaribe
+  FASE5:      '#d89045', // poeira sertão
+  BOSS:       '#6fc5ea', // mesmo da fase por default
+  GAMEOVER:   '#2a2540', // roxo profundo (ainda não-marrom)
+  VICTORY:    '#f0c840'  // amarelo ouro festivo
+} as const;
 
 // Player
 export const PLAYER_SPEED = 320;
@@ -34,12 +47,13 @@ export const FASE1 = {
   CHECKPOINT_AFTER_WAVE: 3
 } as const;
 
-// Paleta (referência ART_BIBLE)
+// Paleta suplementar (acentos UI — pivot)
 export const PALETTE = {
-  BG: 0x1a0f08,
-  CREAM: 0xf4e4c1,
-  GOLD: 0xd4a04c,
-  RED: 0xb84a2e,
-  GREEN: 0x5a7a3a,
-  BROWN: 0x7a6850
+  CREAM:  0xfff2cc,
+  GOLD:   0xf0c840,
+  RED:    0xe84a4a,
+  GREEN:  0x8dc850,
+  PINK:   0xf06aa8,
+  TEAL:   0x2db8d6,
+  SKY:    0x6fc5ea
 } as const;

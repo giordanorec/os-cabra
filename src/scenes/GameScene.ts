@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import { FASE1, GAME_HEIGHT, GAME_WIDTH } from '../config';
+import { FASE1, GAME_HEIGHT, GAME_WIDTH, SCENE_BG } from '../config';
 import { Player } from '../entities/Player';
 import { BulletGroup } from '../entities/Bullet';
 import { Enemy } from '../entities/Enemy';
@@ -10,6 +10,7 @@ import { ScoreManager, ScoreSnapshot } from '../systems/ScoreManager';
 import { AudioManager } from '../systems/AudioManager';
 import { Parallax } from '../systems/Parallax';
 import { Effects } from '../systems/Effects';
+import { attachFullscreenToggle } from '../systems/Fullscreen';
 import { getString } from '../strings';
 import { MaracatuNacao } from '../bosses/MaracatuNacao';
 
@@ -47,11 +48,13 @@ export class GameScene extends Phaser.Scene {
     this.ended = false;
     this.bossActive = false;
     this.boss = undefined;
-    this.parallax = new Parallax(this);
+    this.cameras.main.setBackgroundColor(SCENE_BG.FASE1);
+    this.parallax = new Parallax(this, 'fase1');
     this.inputManager = new InputManager(this);
     this.scoreManager = new ScoreManager();
     this.audio = new AudioManager(this);
     this.fx = new Effects(this);
+    attachFullscreenToggle(this);
 
     this.audio.playMusic('music_phase1', 800);
 

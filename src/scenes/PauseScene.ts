@@ -20,13 +20,15 @@ export class PauseScene extends Phaser.Scene {
     this.audio.play('pause_in');
     this.justOpenedAt = this.time.now;
 
-    const dim = this.add.rectangle(GAME_WIDTH / 2, GAME_HEIGHT / 2, GAME_WIDTH, GAME_HEIGHT, 0x1a0f08, 0.65);
+    const dim = this.add.rectangle(GAME_WIDTH / 2, GAME_HEIGHT / 2, GAME_WIDTH, GAME_HEIGHT, 0x2a2540, 0.55);
     dim.setDepth(1000);
 
     const title = this.add.text(GAME_WIDTH / 2, GAME_HEIGHT / 2 - 60, getString('pause.title'), {
       fontFamily: FONTS.DISPLAY,
       fontSize: '72px',
-      color: '#f4e4c1'
+      color: '#fff2cc',
+      stroke: '#2a2540',
+      strokeThickness: 4
     }).setOrigin(0.5).setDepth(1001).setScale(0.5);
     this.tweens.add({
       targets: title,
@@ -38,14 +40,14 @@ export class PauseScene extends Phaser.Scene {
     this.add.text(GAME_WIDTH / 2, GAME_HEIGHT / 2 + 20, getString('pause.resume'), {
       fontFamily: FONTS.DISPLAY,
       fontSize: '36px',
-      color: '#d4a04c'
+      color: '#f0c840'
     }).setOrigin(0.5).setDepth(1001);
 
     this.add.text(GAME_WIDTH / 2, GAME_HEIGHT / 2 + 90, getString('pause.controls_hint'), {
       fontFamily: FONTS.MONO,
       fontSize: '14px',
-      color: '#7a6850'
-    }).setOrigin(0.5).setDepth(1001);
+      color: '#fff2cc'
+    }).setOrigin(0.5).setDepth(1001).setAlpha(0.8);
   }
 
   override update() {

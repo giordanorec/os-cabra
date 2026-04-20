@@ -139,7 +139,8 @@ const STRINGS: Record<string, string> = {
   'stage.complete.hint': '[ENTER] volta pro menu',
 
   // Controles
-  'controls.hint': '[SETAS] move  [ESPAÇO] atira  [ESC] pausa'
+  'controls.hint': '[SETAS] move  [ESPAÇO] atira  [ESC] pausa  [F] tela cheia',
+  'controls.fullscreen_hint': '[F] TELA CHEIA'
 };
 
 export function getString(key: string, ...args: Array<string | number>): string {
