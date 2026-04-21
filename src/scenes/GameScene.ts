@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import { FASE1, GAME_HEIGHT, GAME_WIDTH, SCENE_BG } from '../config';
+import { ENDLESS, GAME_HEIGHT, GAME_WIDTH, LOCALSTORAGE_ENDLESS_HIGHSCORE_KEY } from '../config';
 import { Player } from '../entities/Player';
 import { BulletGroup } from '../entities/Bullet';
 import { Enemy } from '../entities/Enemy';
@@ -8,26 +8,24 @@ import { HomingEnemyBullet, HomingEnemyBulletGroup } from '../entities/HomingEne
 import { PowerUp, PowerUpType } from '../entities/PowerUp';
 import { Action, InputManager } from '../systems/InputManager';
 import { EnemySpawner } from '../systems/EnemySpawner';
-import { ScoreManager, ScoreSnapshot } from '../systems/ScoreManager';
+import { ScoreManager } from '../systems/ScoreManager';
 import { AudioManager } from '../systems/AudioManager';
-import { Parallax } from '../systems/Parallax';
+import { BiomeTransition } from '../systems/BiomeTransition';
+import { EndlessDirector } from '../systems/EndlessDirector';
 import { Effects } from '../systems/Effects';
 import { attachFullscreenToggle } from '../systems/Fullscreen';
 import { TouchInput } from '../systems/TouchInput';
 import { shouldUseTouchControls } from '../systems/Platform';
 import { getString } from '../strings';
-import { MaracatuNacao } from '../bosses/MaracatuNacao';
 
-const BOSS_BONUS_BASE = 5000;
-const BOSS_BONUS_PER_LIFE = 1000;
-const BOSS_DEFEATED_VIEW_MS = 2500;
-
-interface Checkpoint {
-  waveIndex: number;
-  lives: number;
-  score: ScoreSnapshot;
-}
-
+// Modo endless: sem fim de fase, sem boss obrigatório. Survival puro até
+// morrer. O EndlessDirector coordena tempo, biomas e spawns procedurais; a
+// cena só plumba colisões, HUD events e lifecycle do player.
+//
+// Compatibilidade: o ScoreManager original + ChainMultiplier continuam — kills
+// somam pontos normalmente. Sobrevivência soma score extra via timer.
+// Highscore agora persiste em LOCALSTORAGE_ENDLESS_HIGHSCORE_KEY (separado do
+// highscore de story mode antigo).
 export class GameScene extends Phaser.Scene {
   private player!: Player;
   private playerBullets!: BulletGroup;
@@ -39,14 +37,13 @@ export class GameScene extends Phaser.Scene {
   private spawner!: EnemySpawner;
   private scoreManager!: ScoreManager;
   private audio!: AudioManager;
-  private parallax!: Parallax;
+  private biome!: BiomeTransition;
+  private director!: EndlessDirector;
   private fx!: Effects;
-  private checkpoint: Checkpoint | null = null;
   private ended = false;
-  private boss?: MaracatuNacao;
-  private bossActive = false;
   private touchInput?: TouchInput;
   private killCount = 0;
+  private survivalAccumMs = 0;
 
   constructor() {
     super({ key: 'GameScene' });
@@ -54,10 +51,11 @@ export class GameScene extends Phaser.Scene {
 
   create() {
     this.ended = false;
-    this.bossActive = false;
-    this.boss = undefined;
-    this.cameras.main.setBackgroundColor(SCENE_BG.FASE1);
-    this.parallax = new Parallax(this, 'fase1');
+    this.survivalAccumMs = 0;
+
+    this.biome = new BiomeTransition(this, 'fase1');
+    this.biome.attachToScene();
+
     this.inputManager = new InputManager(this);
     if (shouldUseTouchControls()) {
       this.touchInput = new TouchInput(this);
@@ -65,6 +63,7 @@ export class GameScene extends Phaser.Scene {
       this.inputManager.attachTouch(this.touchInput);
     }
     this.scoreManager = new ScoreManager();
+    this.scoreManager.highscoreKey = LOCALSTORAGE_ENDLESS_HIGHSCORE_KEY;
     this.audio = new AudioManager(this);
     this.fx = new Effects(this);
     attachFullscreenToggle(this);
@@ -90,7 +89,7 @@ export class GameScene extends Phaser.Scene {
     };
     this.player.onDeath = () => {
       this.audio.play('player_die');
-      this.endGame(false);
+      this.endGame();
     };
     this.player.onShieldBreak = (x, y) => {
       this.audio.play('shield_break');
@@ -121,17 +120,14 @@ export class GameScene extends Phaser.Scene {
       this.player,
       {
         onEnemySpawned: (e) => this.onEnemySpawned(e),
-        onEnemyKilled: (e) => this.onEnemyKilled(e),
-        onCheckpoint: (waveIdx) => this.saveCheckpoint(waveIdx),
-        onAllWavesCleared: () => this.scheduleBossEntry()
+        onEnemyKilled: (e) => this.onEnemyKilled(e)
       },
-      this.checkpoint?.waveIndex ?? 0
+      0,
+      'procedural'
     );
+    this.spawner.start();
 
-    if (this.checkpoint) {
-      this.player.lives = this.checkpoint.lives;
-      this.scoreManager.restore(this.checkpoint.score);
-    }
+    this.director = new EndlessDirector(this, this.spawner);
 
     this.registerPlayerVsEnemyBullets();
 
@@ -140,15 +136,34 @@ export class GameScene extends Phaser.Scene {
       this.events.emit('hud-lives', this.player.lives);
       this.events.emit('hud-score', this.scoreManager.value, this.scoreManager.multiplierActive);
       this.events.emit('hud-kills', this.killCount);
+      this.director.announceInitialBiome();
+      // Mostra o intro do primeiro biome (overlay "Fase 1" reaproveitado)
       this.events.emit('hud-phase-intro', getString('stage.1.name'), getString('stage.1.subtitle'), 1);
       this.audio.play('phase_intro');
     });
 
-    this.spawner.start();
+    // Escuta as trocas de bioma pra feedback HUD (intro de novo biome).
+    this.events.on(
+      'endless-biome-change',
+      (
+        _sceneId: string,
+        _shortLabel: string,
+        nameKey: string,
+        subtitleKey: string,
+        biomeIndex: number,
+        loopIndex: number,
+        initial: boolean
+      ) => {
+        if (initial) return;
+        const displayNum = (biomeIndex % 3) + 1 + loopIndex * 3;
+        this.events.emit('hud-phase-intro', getString(nameKey), getString(subtitleKey), displayNum);
+        this.audio.play('phase_intro');
+      }
+    );
   }
 
   override update(time: number, delta: number) {
-    this.parallax.tick(delta);
+    this.biome.tick(delta);
     this.touchInput?.update(time);
     if (this.ended) return;
     if (this.inputManager.justPressed(Action.PAUSE)) {
@@ -156,9 +171,16 @@ export class GameScene extends Phaser.Scene {
       return;
     }
     this.player.tick(time, this.inputManager, this.playerBullets);
-    if (!this.bossActive) this.spawner.tick();
-    this.boss?.tick(time);
     this.scoreManager.tick(time);
+    this.director.tick(time, delta);
+
+    // Survival score: +ENDLESS.SURVIVAL_POINTS_PER_SEC a cada 1000ms decorridos
+    this.survivalAccumMs += delta;
+    if (this.survivalAccumMs >= 1000) {
+      const seconds = Math.floor(this.survivalAccumMs / 1000);
+      this.survivalAccumMs -= seconds * 1000;
+      this.scoreManager.addSurvivalPoints(seconds * ENDLESS.SURVIVAL_POINTS_PER_SEC);
+    }
   }
 
   private pauseGame() {
@@ -222,94 +244,20 @@ export class GameScene extends Phaser.Scene {
   private maybeDropPowerUp(x: number, y: number) {
     const dropRate = (window as unknown as { __DEBUG_POWERUP_RATE?: number }).__DEBUG_POWERUP_RATE ?? 0.15;
     if (Math.random() >= dropRate) return;
-    // Só sombrinha implementada; escolha randômica dos 5 tipos prevista
-    // mas neutralizada até os outros 4 efeitos entrarem.
     const type: PowerUpType = 'sombrinha';
     const pu = new PowerUp(this, x, y, type);
     this.powerUps.add(pu);
   }
 
-  private saveCheckpoint(waveIndex: number) {
-    this.checkpoint = {
-      waveIndex: waveIndex + 1,
-      lives: this.player.lives,
-      score: this.scoreManager.snapshot()
-    };
-    this.audio.play('checkpoint');
-    this.events.emit('hud-checkpoint');
-  }
-
-  private scheduleBossEntry() {
-    this.bossActive = true;
-    this.audio.play('wave_clear');
-    this.time.delayedCall(FASE1.BREATHER_BEFORE_BOSS_MS, () => this.spawnBoss());
-  }
-
-  private spawnBoss() {
-    this.boss = new MaracatuNacao(
-      this,
-      this.enemyBullets,
-      () => this.player,
-      {
-        onPhaseChange: (phase) => {
-          const key = phase === 'B' ? 'boss.phase2' : phase === 'C' ? 'boss.phase3' : '';
-          if (key) {
-            this.events.emit('hud-boss-phase', getString(key));
-            this.audio.play('boss_phase_change');
-            this.fx.bossPhaseChange();
-          }
-        },
-        onHPChange: (hp, hpMax) => this.events.emit('hud-boss-hp', hp, hpMax),
-        onDefeated: () => this.finishBoss()
-      }
-    );
-    this.boss.playIntro(() => undefined);
-    this.audio.playMusic('music_boss', 600);
-    this.audio.play('boss_appear');
-    this.audio.play('voc_oxe');
-    this.events.emit('hud-boss-intro', getString('boss.1.name'), getString('boss.1.epithet'));
-    this.events.emit('hud-boss-hp', this.boss.hp, this.boss.hpMax);
-    this.registerBossCollisions();
-  }
-
-  private registerBossCollisions() {
-    if (!this.boss) return;
-    for (const member of this.boss.members()) {
-      this.physics.add.overlap(member, this.playerBullets, (memberObj, bulletObj) => {
-        const bullet = bulletObj as Phaser.Physics.Arcade.Sprite;
-        if (!bullet.active || !this.boss) return;
-        bullet.disableBody(true, true);
-        this.audio.play('boss_hit');
-        this.fx.bossHit(memberObj as Phaser.GameObjects.Sprite);
-        this.boss.registerMemberHit(memberObj as typeof member);
-      });
-      this.physics.add.overlap(this.player, member, () => {
-        if (!this.boss) return;
-        this.player.takeDamage(this.time.now);
-      });
-    }
-  }
-
-  private finishBoss() {
-    const lives = this.player.lives;
-    const bonus = BOSS_BONUS_BASE + BOSS_BONUS_PER_LIFE * lives;
-    this.scoreManager.registerKill(bonus, this.time.now);
-    if (this.boss) this.fx.bossDefeated(this.boss.calunga.x, this.boss.calunga.y);
-    this.audio.play('boss_defeat');
-    this.audio.play('voc_pai_degua');
-    this.events.emit('hud-boss-defeated', BOSS_BONUS_BASE, lives, bonus);
-    this.events.emit('hud-boss-hide');
-    this.time.delayedCall(BOSS_DEFEATED_VIEW_MS, () => this.endGame(true));
-  }
-
-  private endGame(victory: boolean) {
+  private endGame() {
     if (this.ended) return;
     this.ended = true;
+    this.director.stop();
     this.scoreManager.saveHighscore();
     this.audio.stopMusic(400);
     this.scene.stop('HUDScene');
     this.time.delayedCall(600, () => {
-      this.scene.start('GameOverScene', { score: this.scoreManager.value, victory });
+      this.scene.start('GameOverScene', { score: this.scoreManager.value, victory: false });
     });
   }
 }

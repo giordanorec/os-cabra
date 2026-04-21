@@ -24,10 +24,21 @@ export class ScoreManager {
   private chainCount = 0;
   private lastKillAt = 0;
   private milestonesHit = new Set<number>();
+  // Default = story mode. Endless mode troca p/ LOCALSTORAGE_ENDLESS_HIGHSCORE_KEY.
+  highscoreKey: string = LOCALSTORAGE_HIGHSCORE_KEY;
   onChange?: (score: number, multiplierActive: boolean) => void;
   onChainStart?: () => void;
   onChainChange?: (multiplier: number, active: boolean) => void;
   onMilestone?: (milestone: number) => void;
+
+  // Pontos de sobrevivência (endless): adiciona sem alimentar o chain,
+  // porque chain é por kill. Emite onChange p/ HUD atualizar.
+  addSurvivalPoints(pts: number) {
+    if (pts <= 0) return;
+    this.score += pts;
+    this.onChange?.(this.score, this.multiplierActive);
+    this.checkMilestones();
+  }
 
   registerKill(points: number, now: number) {
     if (now - this.lastKillAt > CHAIN_RESET_MS) {
@@ -102,22 +113,22 @@ export class ScoreManager {
 
   saveHighscore() {
     try {
-      const existing = ScoreManager.loadHighscore();
+      const existing = ScoreManager.loadHighscore(this.highscoreKey);
       if (this.score > existing) {
         const record: HighscoreRecord = {
           best: this.score,
           updatedAt: new Date().toISOString()
         };
-        localStorage.setItem(LOCALSTORAGE_HIGHSCORE_KEY, JSON.stringify(record));
+        localStorage.setItem(this.highscoreKey, JSON.stringify(record));
       }
     } catch {
       // localStorage indisponível (Safari privacy mode, etc.) — silencioso
     }
   }
 
-  static loadHighscore(): number {
+  static loadHighscore(key: string = LOCALSTORAGE_HIGHSCORE_KEY): number {
     try {
-      const raw = localStorage.getItem(LOCALSTORAGE_HIGHSCORE_KEY);
+      const raw = localStorage.getItem(key);
       if (!raw) return 0;
       const r = JSON.parse(raw) as HighscoreRecord;
       return r.best ?? 0;

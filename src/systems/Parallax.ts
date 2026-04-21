@@ -99,6 +99,9 @@ export class Parallax {
   private readonly scene: Phaser.Scene;
   private readonly sceneId: SceneId;
   private elapsed = 0;
+  // Crossfade entre biomas: a instância "outgoing" continua tickando enquanto
+  // a nova sobe alpha; completa o fade → destrói outgoing e limpa a ref.
+  private outgoing?: Parallax;
 
   constructor(scene: Phaser.Scene, sceneId: SceneId = 'generic') {
     this.scene = scene;
@@ -116,6 +119,64 @@ export class Parallax {
     for (const layer of this.layers) {
       this.tickLayer(layer, deltaMs);
     }
+    this.outgoing?.tick(deltaMs);
+  }
+
+  // Substitui progressivamente as camadas atuais pelas de um novo sceneId,
+  // com crossfade alpha em durationMs. Usado pelo EndlessDirector nas
+  // transições de bioma. A instância antiga é tickada até o fim do fade e
+  // então destruída.
+  transitionTo(newSceneId: SceneId, durationMs: number, tint?: number): Parallax {
+    const incoming = new Parallax(this.scene, newSceneId);
+    incoming.applyAlpha(0);
+    if (tint !== undefined) incoming.applyTint(tint);
+    incoming.outgoing = this;
+    this.scene.tweens.addCounter({
+      from: 0,
+      to: 1,
+      duration: durationMs,
+      ease: 'Sine.easeInOut',
+      onUpdate: (tween) => {
+        const t = tween.getValue() ?? 0;
+        incoming.applyAlpha(t);
+        this.applyAlpha(1 - t);
+      },
+      onComplete: () => {
+        this.destroy();
+        if (incoming.outgoing === this) incoming.outgoing = undefined;
+      }
+    });
+    return incoming;
+  }
+
+  private applyAlpha(a: number) {
+    for (const layer of this.layers) {
+      if (layer.kind === 'scroll-single') layer.image.setAlpha(a);
+      else if (layer.kind === 'scroll-tiled') layer.tile.setAlpha(a);
+      else if (layer.kind === 'procedural') layer.graphics.setAlpha(a);
+      else if (layer.kind === 'postal') layer.current.setAlpha(a);
+    }
+  }
+
+  private applyTint(tint: number) {
+    for (const layer of this.layers) {
+      if (layer.kind === 'scroll-single') layer.image.setTint(tint);
+      else if (layer.kind === 'scroll-tiled') layer.tile.setTint(tint);
+      else if (layer.kind === 'postal') layer.current.setTint(tint);
+      // procedural (graphics) não aceita tint — ignora.
+    }
+  }
+
+  destroy() {
+    for (const layer of this.layers) {
+      if (layer.kind === 'scroll-single') layer.image.destroy();
+      else if (layer.kind === 'scroll-tiled') layer.tile.destroy();
+      else if (layer.kind === 'procedural') layer.graphics.destroy();
+      else if (layer.kind === 'postal') layer.current.destroy();
+    }
+    this.layers.length = 0;
+    this.outgoing?.destroy();
+    this.outgoing = undefined;
   }
 
   private tickLayer(layer: Layer, deltaMs: number) {

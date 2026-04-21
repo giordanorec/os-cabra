@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import { GAME_HEIGHT, GAME_WIDTH, SCENE_BG } from '../config';
+import { GAME_HEIGHT, GAME_WIDTH, LOCALSTORAGE_ENDLESS_HIGHSCORE_KEY, SCENE_BG } from '../config';
 import { getString } from '../strings';
 import { ScoreManager } from '../systems/ScoreManager';
 import { InputManager, Action } from '../systems/InputManager';
@@ -94,9 +94,12 @@ export class MenuScene extends Phaser.Scene {
       color: '#fff2cc'
     }).setOrigin(0.5).setDepth(TEXT_DEPTH);
 
-    const hs = ScoreManager.loadHighscore();
+    // Highscore: endless é o modo canônico do v1. Se ainda não houver, tenta
+    // o antigo (compat) — zero não aparece.
+    const hsEndless = ScoreManager.loadHighscore(LOCALSTORAGE_ENDLESS_HIGHSCORE_KEY);
+    const hs = hsEndless > 0 ? hsEndless : ScoreManager.loadHighscore();
     if (hs > 0) {
-      this.add.text(cx, GAME_HEIGHT - 25, getString('menu.highscore', hs.toString().padStart(6, '0')), {
+      this.add.text(cx, GAME_HEIGHT - 25, getString('hud.endless_highscore', hs.toString().padStart(6, '0')), {
         fontFamily: FONTS.MONO,
         fontSize: '14px',
         color: '#f0c840'
