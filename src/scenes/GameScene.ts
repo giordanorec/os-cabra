@@ -4,6 +4,8 @@ import { Player } from '../entities/Player';
 import { BulletGroup } from '../entities/Bullet';
 import { Enemy } from '../entities/Enemy';
 import { EnemyBullet, EnemyBulletGroup } from '../entities/EnemyBullet';
+import { HomingEnemyBullet, HomingEnemyBulletGroup } from '../entities/HomingEnemyBullet';
+import { PowerUp, PowerUpType } from '../entities/PowerUp';
 import { Action, InputManager } from '../systems/InputManager';
 import { EnemySpawner } from '../systems/EnemySpawner';
 import { ScoreManager, ScoreSnapshot } from '../systems/ScoreManager';
@@ -30,6 +32,8 @@ export class GameScene extends Phaser.Scene {
   private player!: Player;
   private playerBullets!: BulletGroup;
   private enemyBullets!: EnemyBulletGroup;
+  private homingEnemyBullets!: HomingEnemyBulletGroup;
+  private powerUps!: Phaser.Physics.Arcade.Group;
   private enemies!: Phaser.GameObjects.Group;
   private inputManager!: InputManager;
   private spawner!: EnemySpawner;
@@ -73,6 +77,8 @@ export class GameScene extends Phaser.Scene {
     };
     this.playerBullets = new BulletGroup(this, 'bullet-player', 32);
     this.enemyBullets = new EnemyBulletGroup(this, 'enemy-bullet-flecha', 64);
+    this.homingEnemyBullets = new HomingEnemyBulletGroup(this, 'enemy-bullet-cabeca', 16);
+    this.powerUps = this.physics.add.group({ classType: PowerUp, runChildUpdate: true });
     this.enemies = this.add.group({ runChildUpdate: false });
 
     this.player.onDamage = (lives) => {
@@ -85,15 +91,33 @@ export class GameScene extends Phaser.Scene {
       this.audio.play('player_die');
       this.endGame(false);
     };
+    this.player.onShieldBreak = (x, y) => {
+      this.audio.play('shield_break');
+      this.fx.shieldShatter(x, y);
+    };
+    this.player.onPowerUpCollected = (type) => {
+      this.audio.play('pickup_sombrinha');
+      this.fx.pickup(this.player.x, this.player.y);
+      this.events.emit('hud-pickup-text', type);
+    };
 
     this.scoreManager.onChange = (score, mult) => {
       this.events.emit('hud-score', score, mult);
     };
     this.scoreManager.onChainStart = () => this.audio.play('chain_multiplier');
+    this.scoreManager.onChainChange = (multiplier, active) => {
+      this.events.emit('hud-chain', multiplier, active);
+    };
+    this.scoreManager.onMilestone = (ms) => {
+      this.audio.play('score_milestone');
+      this.events.emit('hud-milestone', ms);
+    };
 
     this.spawner = new EnemySpawner(
       this,
       this.enemyBullets,
+      this.homingEnemyBullets,
+      this.player,
       {
         onEnemySpawned: (e) => this.onEnemySpawned(e),
         onEnemyKilled: (e) => this.onEnemyKilled(e),
@@ -149,6 +173,19 @@ export class GameScene extends Phaser.Scene {
         bullet.disableBody(true, true);
       }
     });
+    this.physics.add.overlap(this.player, this.homingEnemyBullets, (_p, bulletObj) => {
+      const bullet = bulletObj as HomingEnemyBullet;
+      if (!bullet.active) return;
+      if (this.player.takeDamage(this.time.now)) {
+        bullet.disableBody(true, true);
+      }
+    });
+    this.physics.add.overlap(this.player, this.powerUps, (_p, puObj) => {
+      const pu = puObj as PowerUp;
+      if (!pu.active) return;
+      pu.collect();
+      this.player.applyPowerUp(pu.type);
+    });
   }
 
   private onEnemySpawned(enemy: Enemy) {
@@ -174,6 +211,17 @@ export class GameScene extends Phaser.Scene {
     this.audio.play('enemy_explode_small');
     this.fx.enemyDeath(enemy.x, enemy.y);
     this.scoreManager.registerKill(enemy.points, this.time.now);
+    this.maybeDropPowerUp(enemy.x, enemy.y);
+  }
+
+  private maybeDropPowerUp(x: number, y: number) {
+    const dropRate = (window as unknown as { __DEBUG_POWERUP_RATE?: number }).__DEBUG_POWERUP_RATE ?? 0.15;
+    if (Math.random() >= dropRate) return;
+    // Só sombrinha implementada; escolha randômica dos 5 tipos prevista
+    // mas neutralizada até os outros 4 efeitos entrarem.
+    const type: PowerUpType = 'sombrinha';
+    const pu = new PowerUp(this, x, y, type);
+    this.powerUps.add(pu);
   }
 
   private saveCheckpoint(waveIndex: number) {

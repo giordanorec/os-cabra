@@ -56,6 +56,12 @@ export class Effects {
     this.spawnBurst(x, y, 'vfx-ember', 10, 400);
   }
 
+  // Sombrinha absorve hit: shatter de fragmentos dourados em todas direções
+  shieldShatter(x: number, y: number) {
+    this.scene.cameras.main.flash(100, 240, 200, 76);
+    this.spawnBurst(x, y, 'vfx-shield-shatter', 14, 500);
+  }
+
   private spawnBurst(x: number, y: number, key: string, count: number, lifespan: number) {
     if (!this.scene.textures.exists(key)) return;
     const emitter = this.scene.add.particles(x, y, key, {

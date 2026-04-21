@@ -4,7 +4,11 @@ import { Enemy } from '../entities/Enemy';
 import { Caboclinho } from '../entities/enemies/Caboclinho';
 import { PassistaFrevo } from '../entities/enemies/PassistaFrevo';
 import { MoscaManga } from '../entities/enemies/MoscaManga';
+import { Mamulengo } from '../entities/enemies/Mamulengo';
+import { UrubuCapibaribe } from '../entities/enemies/UrubuCapibaribe';
+import { PapaFigo } from '../entities/enemies/PapaFigo';
 import { EnemyBulletGroup } from '../entities/EnemyBullet';
+import { HomingEnemyBulletGroup } from '../entities/HomingEnemyBullet';
 
 export interface SpawnerEvents {
   onEnemySpawned: (enemy: Enemy) => void;
@@ -22,6 +26,8 @@ export class EnemySpawner {
   constructor(
     private readonly scene: Phaser.Scene,
     private readonly enemyBullets: EnemyBulletGroup,
+    private readonly homingBullets: HomingEnemyBulletGroup,
+    private readonly target: Phaser.GameObjects.Sprite,
     private readonly events: SpawnerEvents,
     startWaveIndex = 0
   ) {
@@ -68,6 +74,12 @@ export class EnemySpawner {
     } else if (spawn.type === 'moscaManga') {
       const offset = (spawn.x / 60) % (Math.PI * 2);
       enemy = new MoscaManga(this.scene, spawn.x, y, { orbitOffsetRad: offset }, onDeath);
+    } else if (spawn.type === 'mamulengo') {
+      enemy = new Mamulengo(this.scene, spawn.x, y, this.homingBullets, this.target, {}, onDeath);
+    } else if (spawn.type === 'urubuCapibaribe') {
+      enemy = new UrubuCapibaribe(this.scene, spawn.x, y, this.target, onDeath);
+    } else if (spawn.type === 'papaFigo') {
+      enemy = new PapaFigo(this.scene, spawn.x, y, this.enemyBullets, this.target, onDeath);
     }
     if (enemy) {
       this.aliveEnemies.add(enemy);
