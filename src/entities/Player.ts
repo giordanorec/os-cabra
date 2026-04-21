@@ -34,12 +34,23 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     scene.add.existing(this);
     scene.physics.add.existing(this);
     this.setCollideWorldBounds(true);
-    // player.png é 128×128; target ~96px na tela (16% da altura do game).
-    this.setScale(0.75);
-    // Hitbox ~60% do sprite pra dar fair-play nas bullets inimigas.
+    // player.png é 128×128. Polish visual: escala 1.0 (128px ≈ 21% da altura)
+    // pra dar presença visual no meio do cenário denso.
+    this.setScale(1.0);
+    // Hitbox proporcional ~75% do sprite.
     const body = this.body as Phaser.Physics.Arcade.Body | null;
-    if (body) body.setSize(72, 72).setOffset(28, 32);
+    if (body) body.setSize(96, 96).setOffset(16, 24);
     this.setDepth(DEPTH.PLAYER);
+    // Bob sutil — dá "vida" ao sprite parado e destaca sobre o background.
+    scene.tweens.add({
+      targets: this,
+      scaleX: { from: 1.0, to: 1.04 },
+      scaleY: { from: 1.0, to: 0.96 },
+      duration: 520,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut'
+    });
   }
 
   tick(time: number, input: InputManager, bullets: BulletGroup) {
