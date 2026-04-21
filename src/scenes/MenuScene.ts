@@ -11,7 +11,6 @@ import { FONTS } from '../fonts';
 export class MenuScene extends Phaser.Scene {
   private inputManager!: InputManager;
   private audio!: AudioManager;
-  private parallax!: Parallax;
   private confirmed = false;
 
   constructor() {
@@ -21,7 +20,11 @@ export class MenuScene extends Phaser.Scene {
   create() {
     this.confirmed = false;
     this.cameras.main.setBackgroundColor(SCENE_BG.MENU);
-    this.parallax = new Parallax(this, 'menu');
+    // Parallax construído mas NÃO tickado — menu é estático (pivot polish 2026-04-21).
+    // Usuário reclamou de rolagem distraindo no menu. Imagem do galo fica
+    // parada no fundo; texto sobre backdrops escuros. Instância descartada após
+    // renderizar camadas iniciais (sem ref pra evitar tick acidental).
+    new Parallax(this, 'menu');
     this.inputManager = new InputManager(this);
     this.inputManager.registerAnyTapAsConfirm(this);
     this.audio = new AudioManager(this);
@@ -29,15 +32,25 @@ export class MenuScene extends Phaser.Scene {
     attachFullscreenToggle(this);
 
     const cx = GAME_WIDTH / 2;
-    const cy = GAME_HEIGHT / 2;
 
-    const title = this.add.text(cx, cy - 120, getString('boot.title'), {
+    // Layout Opção A: título no topo, CTA no rodapé, galo (do background) ocupa
+    // o centro visual. Backdrops semi-opacos garantem contraste sobre qualquer
+    // arte de fundo sem esconder totalmente o galo.
+    const BACKDROP_COLOR = 0x1a0f08;
+    const BACKDROP_ALPHA = 0.55;
+    const TEXT_DEPTH = 10;
+    const BACKDROP_DEPTH = 9;
+
+    // ── Título topo ──────────────────────────────────────────────
+    this.add.rectangle(cx, 80, 640, 110, BACKDROP_COLOR, BACKDROP_ALPHA)
+      .setDepth(BACKDROP_DEPTH);
+    const title = this.add.text(cx, 80, getString('boot.title'), {
       fontFamily: FONTS.DISPLAY,
-      fontSize: '96px',
+      fontSize: '88px',
       color: '#f0c840',
-      stroke: '#2a2540',
+      stroke: '#1a0f08',
       strokeThickness: 6
-    }).setOrigin(0.5);
+    }).setOrigin(0.5).setDepth(TEXT_DEPTH);
     this.tweens.add({
       targets: title,
       scale: { from: 1, to: 1.04 },
@@ -46,21 +59,23 @@ export class MenuScene extends Phaser.Scene {
       repeat: -1,
       ease: 'Sine.easeInOut'
     });
-
-    this.add.text(cx, cy - 40, getString('boot.tagline'), {
+    this.add.text(cx, 142, getString('boot.tagline'), {
       fontFamily: FONTS.BODY,
-      fontSize: '20px',
+      fontSize: '18px',
       color: '#fff2cc',
       fontStyle: 'italic'
-    }).setOrigin(0.5);
+    }).setOrigin(0.5).setDepth(TEXT_DEPTH);
 
-    const playText = this.add.text(cx, cy + 60, getString('menu.play'), {
+    // ── CTA centro-baixo ─────────────────────────────────────────
+    this.add.rectangle(cx, 490, 520, 90, BACKDROP_COLOR, BACKDROP_ALPHA)
+      .setDepth(BACKDROP_DEPTH);
+    const playText = this.add.text(cx, 490, getString('menu.play'), {
       fontFamily: FONTS.DISPLAY,
       fontSize: '56px',
       color: '#fff2cc',
-      stroke: '#2a2540',
-      strokeThickness: 4
-    }).setOrigin(0.5);
+      stroke: '#1a0f08',
+      strokeThickness: 5
+    }).setOrigin(0.5).setDepth(TEXT_DEPTH);
     this.tweens.add({
       targets: playText,
       scale: { from: 1, to: 1.08 },
@@ -70,32 +85,37 @@ export class MenuScene extends Phaser.Scene {
       ease: 'Sine.easeInOut'
     });
 
-    this.add.text(cx, cy + 130, getString('menu.hint'), {
+    // ── Hint rodapé + highscore ──────────────────────────────────
+    this.add.rectangle(cx, GAME_HEIGHT - 35, 560, 55, BACKDROP_COLOR, BACKDROP_ALPHA)
+      .setDepth(BACKDROP_DEPTH);
+    this.add.text(cx, GAME_HEIGHT - 48, getString('menu.hint'), {
       fontFamily: FONTS.MONO,
-      fontSize: '14px',
+      fontSize: '13px',
       color: '#fff2cc'
-    }).setOrigin(0.5).setAlpha(0.8);
+    }).setOrigin(0.5).setDepth(TEXT_DEPTH);
 
-    // Fullscreen: ícone clicável + hint textual
+    const hs = ScoreManager.loadHighscore();
+    if (hs > 0) {
+      this.add.text(cx, GAME_HEIGHT - 25, getString('menu.highscore', hs.toString().padStart(6, '0')), {
+        fontFamily: FONTS.MONO,
+        fontSize: '14px',
+        color: '#f0c840'
+      }).setOrigin(0.5).setDepth(TEXT_DEPTH);
+    }
+
+    // Fullscreen: ícone clicável + hint textual (com backdrop próprio).
+    this.add.rectangle(GAME_WIDTH - 90, 32, 172, 52, BACKDROP_COLOR, BACKDROP_ALPHA)
+      .setDepth(BACKDROP_DEPTH);
     addFullscreenButton(this, GAME_WIDTH - 24, 24);
     this.add.text(GAME_WIDTH - 44, 46, getString('controls.fullscreen_hint'), {
       fontFamily: FONTS.MONO,
       fontSize: '11px',
       color: '#fff2cc'
-    }).setOrigin(1, 0).setAlpha(0.75);
-
-    const hs = ScoreManager.loadHighscore();
-    if (hs > 0) {
-      this.add.text(cx, GAME_HEIGHT - 30, getString('menu.highscore', hs.toString().padStart(6, '0')), {
-        fontFamily: FONTS.MONO,
-        fontSize: '16px',
-        color: '#f0c840'
-      }).setOrigin(0.5);
-    }
+    }).setOrigin(1, 0).setDepth(TEXT_DEPTH);
   }
 
-  override update(_time: number, delta: number) {
-    this.parallax.tick(delta);
+  override update(_time: number, _delta: number) {
+    // Parallax intencionalmente não tickado — menu é estático.
     if (this.confirmed) return;
     if (this.inputManager.justPressed(Action.CONFIRM) || this.inputManager.justPressed(Action.FIRE)) {
       this.confirmed = true;

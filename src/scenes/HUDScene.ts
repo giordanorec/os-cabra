@@ -25,12 +25,24 @@ export class HUDScene extends Phaser.Scene {
   }
 
   create() {
+    // Backdrop da faixa HUD: rect escuro no topo pra garantir contraste do texto
+    // sobre qualquer cenário (pivot polish 2026-04-21 — usuário reclamou de HUD
+    // "cortado, sem contraste"). Depth abaixo dos widgets mas no HUDScene inteiro
+    // está acima do GameScene por ordem de launch.
+    this.add.rectangle(GAME_WIDTH / 2, 26, GAME_WIDTH, 52, 0x1a0f08, 0.6)
+      .setDepth(HUD_DEPTH - 1);
+    // Backdrop do hint inferior (mesma lógica).
+    this.add.rectangle(GAME_WIDTH / 2, 600 - 12, GAME_WIDTH, 24, 0x1a0f08, 0.55)
+      .setDepth(HUD_DEPTH - 1);
+
     for (let i = 0; i < PLAYER_LIVES; i++) {
-      const x = 20 + i * 32 + 12;
-      const slot = this.add.rectangle(x, 22, 24, 24, 0xb84a2e, 0.3)
-        .setStrokeStyle(1, 0xb84a2e, 0.5)
+      const x = 20 + i * 34 + 12;
+      const slot = this.add.rectangle(x, 26, 28, 28, 0xb84a2e, 0.35)
+        .setStrokeStyle(2, 0xf0c840, 0.75)
         .setDepth(HUD_DEPTH);
-      const icon = this.add.image(x, 22, 'ui-life-icon').setDepth(HUD_DEPTH + 1);
+      const icon = this.add.image(x, 26, 'ui-life-icon')
+        .setDepth(HUD_DEPTH + 1)
+        .setTint(0xffffff);
       this.lifeSlots.push(slot);
       this.lifeIcons.push(icon);
     }
@@ -38,27 +50,36 @@ export class HUDScene extends Phaser.Scene {
     this.add.text(300, 12, getString('hud.score_label'), {
       fontFamily: FONTS.BODY,
       fontSize: '14px',
-      color: '#f4e4c1'
-    }).setAlpha(0.7).setDepth(HUD_DEPTH);
-
-    this.scoreValue = this.add.text(360, 8, '000000', {
-      fontFamily: FONTS.MONO,
-      fontSize: '24px',
       color: '#f4e4c1',
-      fontStyle: 'bold'
+      stroke: '#1a0f08',
+      strokeThickness: 2
     }).setDepth(HUD_DEPTH);
 
-    this.multiplierText = this.add.text(520, 10, '×1.5', {
+    this.scoreValue = this.add.text(360, 4, '000000', {
+      fontFamily: FONTS.MONO,
+      fontSize: '28px',
+      color: '#fff2cc',
+      fontStyle: 'bold',
+      stroke: '#1a0f08',
+      strokeThickness: 3,
+      shadow: { offsetX: 1, offsetY: 1, color: '#000000', blur: 2, fill: true }
+    }).setDepth(HUD_DEPTH);
+
+    this.multiplierText = this.add.text(540, 8, '×1.5', {
       fontFamily: FONTS.DISPLAY,
-      fontSize: '20px',
-      color: '#d4a04c'
+      fontSize: '22px',
+      color: '#f0c840',
+      stroke: '#1a0f08',
+      strokeThickness: 3
     }).setVisible(false).setDepth(HUD_DEPTH);
 
-    this.add.text(GAME_WIDTH / 2, 600 - 14, getString('controls.hint'), {
+    this.add.text(GAME_WIDTH / 2, 600 - 12, getString('controls.hint'), {
       fontFamily: FONTS.MONO,
       fontSize: '12px',
-      color: '#7a6850'
-    }).setOrigin(0.5, 1).setAlpha(0.7).setDepth(HUD_DEPTH);
+      color: '#f4e4c1',
+      stroke: '#1a0f08',
+      strokeThickness: 2
+    }).setOrigin(0.5, 0.5).setDepth(HUD_DEPTH);
 
     const game = this.scene.get('GameScene');
     game.events.on('hud-lives', (lives: number) => this.setLives(lives));
@@ -117,6 +138,9 @@ export class HUDScene extends Phaser.Scene {
   private showPhaseIntro(name: string, subtitle: string, num: number) {
     this.clearGroup(this.phaseGroup);
     const cx = GAME_WIDTH / 2;
+    const panel = this.add.rectangle(cx, 300, 620, 180, 0x1a0f08, 0.7)
+      .setDepth(OVERLAY_DEPTH - 1).setAlpha(0);
+    this.phaseGroup.push(panel);
     const header = this.add.text(cx, 240, getString('stage.header', num), {
       fontFamily: FONTS.MONO,
       fontSize: '20px',
@@ -133,7 +157,7 @@ export class HUDScene extends Phaser.Scene {
       color: '#f4e4c1',
       fontStyle: 'italic'
     }).setOrigin(0.5).setDepth(OVERLAY_DEPTH).setAlpha(0);
-    this.phaseGroup = [header, title, sub];
+    this.phaseGroup = [panel, header, title, sub];
     this.tweens.add({
       targets: this.phaseGroup,
       alpha: 1,
