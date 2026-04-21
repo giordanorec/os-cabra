@@ -14,6 +14,12 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
   readonly points: number;
   private readonly onDeath?: (enemy: Enemy) => void;
   protected spawnedAt = 0;
+  // Pivot juice 2026-04-21: inimigos cresceram 50% sobre o scale config de cada
+  // subclasse — usuário reclamou "inimigos pequenos, sem impacto". baseScale é
+  // o valor-alvo após spawn-jump; pulse idle yoyo gira em torno dele.
+  protected baseScale: number;
+  private idlePulseTween?: Phaser.Tweens.Tween;
+  private hitPunchTween?: Phaser.Tweens.Tween;
 
   constructor(scene: Phaser.Scene, x: number, y: number, cfg: EnemyConfig) {
     super(scene, x, y, cfg.texture);
@@ -26,16 +32,43 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
     this.points = cfg.points;
     this.onDeath = cfg.onDeath;
     this.setDepth(DEPTH.ENEMY);
-    // Sprites de origem 14-32px são pequenos pra visibilidade desejada
-    // (enemies ~7-10% da altura = 42-60px). Escala via opção, até sprites
-    // finais do Visual Designer já virem em 80-96px.
-    const scale = cfg.scale ?? 2;
-    if (scale !== 1) this.setScale(scale);
+    // Scale final de presença visual (10-15% altura = 60-90px). Cada subclasse
+    // já passa o scale calibrado para seu sprite; aplicamos um bump universal
+    // em quem não sobrescrever explicitamente.
+    this.baseScale = cfg.scale ?? 3;
+    // Spawn-jump: começa pequeno e invisível, cresce com Back.easeOut.
+    this.setScale(this.baseScale * 0.3);
+    this.setAlpha(0);
+    scene.tweens.add({
+      targets: this,
+      alpha: 1,
+      scaleX: this.baseScale,
+      scaleY: this.baseScale,
+      duration: 350,
+      ease: 'Back.easeOut',
+      onComplete: () => {
+        if (!this.active) return;
+        this.startIdlePulse();
+      }
+    });
+  }
+
+  private startIdlePulse() {
+    this.idlePulseTween?.stop();
+    this.idlePulseTween = this.scene.tweens.add({
+      targets: this,
+      scaleX: this.baseScale * 1.08,
+      scaleY: this.baseScale * 1.08,
+      duration: 600,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut'
+    });
   }
 
   takeHit(damage = 1): boolean {
     this.hp -= damage;
-    this.flashTint();
+    this.flashHit();
     if (this.hp <= 0) {
       this.die();
       return true;
@@ -43,12 +76,30 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
     return false;
   }
 
-  private flashTint() {
-    this.setTint(0xf4e4c1);
-    this.scene.time.delayedCall(80, () => this.clearTint());
+  private flashHit() {
+    // Tint branco puro + punch scale — muito mais visível que o tint creme anterior.
+    this.setTint(0xffffff);
+    this.scene.time.delayedCall(120, () => {
+      if (this.active) this.clearTint();
+    });
+    this.hitPunchTween?.stop();
+    this.idlePulseTween?.pause();
+    this.setScale(this.baseScale * 1.18);
+    this.hitPunchTween = this.scene.tweens.add({
+      targets: this,
+      scaleX: this.baseScale,
+      scaleY: this.baseScale,
+      duration: 80,
+      ease: 'Cubic.easeOut',
+      onComplete: () => {
+        if (this.active) this.idlePulseTween?.resume();
+      }
+    });
   }
 
   private die() {
+    this.idlePulseTween?.stop();
+    this.hitPunchTween?.stop();
     this.disableBody(true, true);
     this.onDeath?.(this);
   }
@@ -59,6 +110,7 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
     if (this.spawnedAt === 0) this.spawnedAt = time;
     this.onTick(time, delta);
     if (this.isOffscreen()) {
+      this.idlePulseTween?.stop();
       this.disableBody(true, true);
     }
   }

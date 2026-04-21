@@ -30,7 +30,8 @@ export class PapaFigo extends Enemy {
     target: Phaser.GameObjects.Sprite,
     onDeath: (enemy: Enemy) => void
   ) {
-    super(scene, x, y, { hp: 4, points: 400, texture: 'enemy-papa-figo', scale: 0.75, onDeath });
+    // Papa-Figo é 72×72 blob — scale 1.3 → 94px (~15% altura).
+    super(scene, x, y, { hp: 4, points: 400, texture: 'enemy-papa-figo', scale: 1.3, onDeath });
     this.baseX = x;
     this.target = target;
     this.bullets = bullets;

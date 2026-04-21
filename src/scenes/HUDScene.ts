@@ -14,6 +14,14 @@ export class HUDScene extends Phaser.Scene {
   private multiplierCenter!: Phaser.GameObjects.Text;
   private multiplierCenterPulse?: Phaser.Tweens.Tween;
   private multiplierTween?: Phaser.Tweens.Tween;
+  // Pivot juice 2026-04-21: widgets novos pedidos pelo usuário
+  // (kill counter, distância, score animado).
+  private killText!: Phaser.GameObjects.Text;
+  private distanceText!: Phaser.GameObjects.Text;
+  private displayedScore = 0;
+  private scoreCountTween?: Phaser.Tweens.Tween;
+  private scorePulseTween?: Phaser.Tweens.Tween;
+  private distanceStartMs = 0;
   private phaseGroup: Phaser.GameObjects.GameObject[] = [];
   private checkpointText?: Phaser.GameObjects.Text;
   private bossHpBg?: Phaser.GameObjects.Rectangle;
@@ -75,6 +83,28 @@ export class HUDScene extends Phaser.Scene {
       strokeThickness: 3
     }).setVisible(false).setDepth(HUD_DEPTH);
 
+    // Kill counter — top-right (dentro da faixa HUD escura já existente).
+    this.killText = this.add.text(GAME_WIDTH - 20, 16, 'KILLS: 0', {
+      fontFamily: FONTS.MONO,
+      fontSize: '16px',
+      color: '#fff2cc',
+      fontStyle: 'bold',
+      stroke: '#1a0f08',
+      strokeThickness: 2
+    }).setOrigin(1, 0.5).setDepth(HUD_DEPTH);
+
+    // Distance meter — inferior direito, acima do hint de controles (backdrop
+    // do hint no y=588 cobre a área; a dist fica logo acima).
+    this.add.rectangle(GAME_WIDTH - 85, 570, 150, 22, 0x1a0f08, 0.55)
+      .setDepth(HUD_DEPTH - 1);
+    this.distanceText = this.add.text(GAME_WIDTH - 20, 570, 'DIST: 0.0 km', {
+      fontFamily: FONTS.MONO,
+      fontSize: '12px',
+      color: '#fff2cc',
+      stroke: '#1a0f08',
+      strokeThickness: 2
+    }).setOrigin(1, 0.5).setDepth(HUD_DEPTH);
+
     // Multiplier central (top-center) — pulso suave enquanto chain ativo.
     this.multiplierCenter = this.add.text(GAME_WIDTH / 2, 44, `×${CHAIN_MULTIPLIER}`, {
       fontFamily: FONTS.DISPLAY,
@@ -111,6 +141,28 @@ export class HUDScene extends Phaser.Scene {
     );
     game.events.on('hud-milestone', (ms: number) => this.showMilestone(ms));
     game.events.on('hud-pickup-text', (type: string) => this.showPickupText(type));
+    game.events.on('hud-kills', (count: number) => this.setKills(count));
+  }
+
+  override update(time: number, _delta: number) {
+    if (!this.distanceText?.active) return;
+    if (this.distanceStartMs === 0) this.distanceStartMs = time;
+    // Escala fictícia: 1 km a cada 20s de jogo (evoca o trajeto Recife-Olinda).
+    const km = ((time - this.distanceStartMs) / 1000) * 0.05;
+    this.distanceText.setText(`DIST: ${km.toFixed(1)} km`);
+  }
+
+  private setKills(count: number) {
+    if (!this.killText?.active) return;
+    this.killText.setText(`KILLS: ${count}`);
+    this.tweens.killTweensOf(this.killText);
+    this.killText.setScale(1.25);
+    this.tweens.add({
+      targets: this.killText,
+      scale: 1,
+      duration: 160,
+      ease: 'Back.easeOut'
+    });
   }
 
   private setChainMultiplier(multiplier: number, active: boolean) {
@@ -203,13 +255,70 @@ export class HUDScene extends Phaser.Scene {
   }
 
   private setLives(lives: number) {
+    // Pivot juice 2026-04-21: ao perder vida, ícones restantes pulsam e
+    // o slot perdido "estoura" com fade+scale — em vez do setVisible seco.
     this.lifeIcons.forEach((icon, i) => {
-      icon.setVisible(i < lives);
+      const shouldBeVisible = i < lives;
+      if (icon.visible && !shouldBeVisible) {
+        // Perdeu esta vida — anima o estouro antes de esconder.
+        this.tweens.add({
+          targets: icon,
+          scale: 1.8,
+          alpha: 0,
+          duration: 260,
+          ease: 'Cubic.easeOut',
+          onComplete: () => {
+            icon.setVisible(false).setScale(1).setAlpha(1);
+          }
+        });
+      } else if (!icon.visible && shouldBeVisible) {
+        icon.setVisible(true).setScale(1).setAlpha(1);
+      }
     });
+    // Pulsa os slots restantes em reação — reforça "uau, perdi uma".
+    if (lives > 0) {
+      const remaining = this.lifeIcons.slice(0, lives);
+      this.tweens.add({
+        targets: remaining,
+        scale: 1.2,
+        duration: 120,
+        yoyo: true,
+        ease: 'Sine.easeInOut'
+      });
+    }
   }
 
   private setScore(score: number, multiplierActive: boolean) {
-    this.scoreValue.setText(score.toString().padStart(6, '0'));
+    // Tween o valor exibido do atual até o novo em 400ms — dá sensação de
+    // "contagem" tradicional de arcade em vez do número saltar.
+    this.scoreCountTween?.stop();
+    const from = this.displayedScore;
+    if (from !== score) {
+      this.scoreCountTween = this.tweens.addCounter({
+        from,
+        to: score,
+        duration: 400,
+        ease: 'Sine.easeOut',
+        onUpdate: (tween) => {
+          const v = Math.round(tween.getValue() as number);
+          this.displayedScore = v;
+          this.scoreValue.setText(v.toString().padStart(6, '0'));
+        },
+        onComplete: () => {
+          this.displayedScore = score;
+          this.scoreValue.setText(score.toString().padStart(6, '0'));
+        }
+      });
+      // Pulse scale 1 → 1.15 → 1 a cada acréscimo.
+      this.scorePulseTween?.stop();
+      this.scoreValue.setScale(1.15);
+      this.scorePulseTween = this.tweens.add({
+        targets: this.scoreValue,
+        scale: 1,
+        duration: 200,
+        ease: 'Back.easeOut'
+      });
+    }
     if (multiplierActive && !this.multiplierText.visible) {
       this.multiplierText.setVisible(true).setScale(1.4);
       this.multiplierTween?.stop();

@@ -34,7 +34,8 @@ export class Mamulengo extends Enemy {
     _params: MamulengoParams,
     onDeath: (enemy: Enemy) => void
   ) {
-    super(scene, x, y, { hp: 2, points: 200, texture: 'enemy-mamulengo', scale: 0.5, onDeath });
+    // Mamulengo é 96×96 ilustração única — scale 0.9 → 86px (~14% altura).
+    super(scene, x, y, { hp: 2, points: 200, texture: 'enemy-mamulengo', scale: 0.9, onDeath });
     this.baseX = x;
     this.target = target;
     this.homingBullets = homingBullets;
