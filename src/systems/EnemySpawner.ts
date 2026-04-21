@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import { fase1Waves, Wave, Spawn, CaboclinhoOverride, PassistaOverride } from './waves/fase1';
+import { fase1Waves, Wave, Spawn, EnemyType, CaboclinhoOverride, PassistaOverride } from './waves/fase1';
 import { Enemy } from '../entities/Enemy';
 import { Caboclinho } from '../entities/enemies/Caboclinho';
 import { PassistaFrevo } from '../entities/enemies/PassistaFrevo';
@@ -13,11 +13,18 @@ import { HomingEnemyBulletGroup } from '../entities/HomingEnemyBullet';
 export interface SpawnerEvents {
   onEnemySpawned: (enemy: Enemy) => void;
   onEnemyKilled: (enemy: Enemy) => void;
-  onCheckpoint: (waveIndex: number) => void;
-  onAllWavesCleared: () => void;
+  onCheckpoint?: (waveIndex: number) => void;
+  onAllWavesCleared?: () => void;
 }
 
+// O spawner suporta dois modos:
+//   "waves"       — consome fase1Waves linearmente (modo STORY original)
+//   "procedural"  — exposto pra quem dirige (EndlessDirector): chama
+//                   .spawnType(type, x) ad hoc e ignora waves/tick.
+export type SpawnerMode = 'waves' | 'procedural';
+
 export class EnemySpawner {
+  private readonly mode: SpawnerMode;
   private readonly waves: Wave[];
   private currentWave = 0;
   private waveSpawning = false;
@@ -29,19 +36,30 @@ export class EnemySpawner {
     private readonly homingBullets: HomingEnemyBulletGroup,
     private readonly target: Phaser.GameObjects.Sprite,
     private readonly events: SpawnerEvents,
-    startWaveIndex = 0
+    startWaveIndex = 0,
+    mode: SpawnerMode = 'waves'
   ) {
+    this.mode = mode;
     this.waves = fase1Waves;
     this.currentWave = startWaveIndex;
   }
 
   start() {
-    this.scheduleNextWave();
+    if (this.mode === 'waves') {
+      this.scheduleNextWave();
+    }
+    // procedural: controlado externamente via spawnType().
+  }
+
+  // Modo procedural: dispara um inimigo no ponto x (y = -30, acima da tela).
+  // EndlessDirector usa isso com posições sorteadas.
+  spawnType(type: EnemyType, x: number) {
+    this.spawnOne({ type, x, delayMs: 0 });
   }
 
   private scheduleNextWave() {
     if (this.currentWave >= this.waves.length) {
-      this.events.onAllWavesCleared();
+      this.events.onAllWavesCleared?.();
       return;
     }
     this.waveSpawning = true;
@@ -94,12 +112,13 @@ export class EnemySpawner {
   }
 
   tick() {
+    if (this.mode !== 'waves') return;
     if (this.waveSpawning) return;
     this.cleanupDeadRefs();
     if (this.aliveEnemies.size === 0) {
       const justCleared = this.waves[this.currentWave];
       if (justCleared?.checkpointOnClear) {
-        this.events.onCheckpoint(this.currentWave);
+        this.events.onCheckpoint?.(this.currentWave);
       }
       this.currentWave += 1;
       this.scheduleNextWave();
@@ -114,6 +133,10 @@ export class EnemySpawner {
 
   get currentWaveIndex(): number {
     return this.currentWave;
+  }
+
+  get aliveCount(): number {
+    return this.aliveEnemies.size;
   }
 
   isIdle(): boolean {

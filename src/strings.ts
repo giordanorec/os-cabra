@@ -69,6 +69,11 @@ const STRINGS: Record<string, string> = {
   'hud.multiplier': '×%s',
   'hud.powerup_timer': '%ns',
   'hud.powerup_expiring': 'JÁ VAI!',
+  'hud.distance_label': 'METROS',
+  'hud.time_label': 'TEMPO',
+  'hud.biome_prefix': 'POR ',
+  'hud.loop_suffix': ' (NOITE %n)',
+  'hud.endless_highscore': 'RECORDE ENDLESS: %n',
 
   // 8. Feedback de gameplay
   'feedback.ready': "PAI D'ÉGUA",

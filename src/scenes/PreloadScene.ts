@@ -69,8 +69,14 @@ const AMBIENCE_TRACKS = [
 const BACKGROUND_IMAGES = [
   { key: 'bg-menu-back',  file: 'assets/backgrounds/menu.png' },
   { key: 'bg-fase1-back', file: 'assets/backgrounds/fase1/back.png' },
-  { key: 'bg-fase1-mid',  file: 'assets/backgrounds/fase1/mid.png' }
-  // { key: 'bg-fase1-fore', file: 'assets/backgrounds/fase1/fore.png' }  // bloqueia gameplay — ver comentário acima
+  { key: 'bg-fase1-mid',  file: 'assets/backgrounds/fase1/mid.png' },
+  // fore de fase1 bloqueia gameplay — ver comentário acima
+  // Biomas adicionais do modo endless (fase2 e fase4). fase3/fase5 ainda não
+  // existem como arte — EndlessDirector só rota entre estes 3. TODO Visual Dsgn.
+  { key: 'bg-fase2-back', file: 'assets/backgrounds/fase2/back.png' },
+  { key: 'bg-fase2-mid',  file: 'assets/backgrounds/fase2/mid.png' },
+  { key: 'bg-fase4-back', file: 'assets/backgrounds/fase4/back.png' },
+  { key: 'bg-fase4-mid',  file: 'assets/backgrounds/fase4/mid.png' }
 ];
 
 export class PreloadScene extends Phaser.Scene {

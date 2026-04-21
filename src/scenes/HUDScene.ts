@@ -21,7 +21,6 @@ export class HUDScene extends Phaser.Scene {
   private displayedScore = 0;
   private scoreCountTween?: Phaser.Tweens.Tween;
   private scorePulseTween?: Phaser.Tweens.Tween;
-  private distanceStartMs = 0;
   private phaseGroup: Phaser.GameObjects.GameObject[] = [];
   private checkpointText?: Phaser.GameObjects.Text;
   private bossHpBg?: Phaser.GameObjects.Rectangle;
@@ -29,6 +28,8 @@ export class HUDScene extends Phaser.Scene {
   private bossIntroGroup: Phaser.GameObjects.GameObject[] = [];
   private bossPhaseLabel?: Phaser.GameObjects.Text;
   private bossDefeatedGroup: Phaser.GameObjects.GameObject[] = [];
+  private biomeLabel!: Phaser.GameObjects.Text;
+  private timeText!: Phaser.GameObjects.Text;
 
   constructor() {
     super({ key: 'HUDScene' });
@@ -93,18 +94,6 @@ export class HUDScene extends Phaser.Scene {
       strokeThickness: 2
     }).setOrigin(1, 0.5).setDepth(HUD_DEPTH);
 
-    // Distance meter — inferior direito, acima do hint de controles (backdrop
-    // do hint no y=588 cobre a área; a dist fica logo acima).
-    this.add.rectangle(GAME_WIDTH - 85, 570, 150, 22, 0x1a0f08, 0.55)
-      .setDepth(HUD_DEPTH - 1);
-    this.distanceText = this.add.text(GAME_WIDTH - 20, 570, 'DIST: 0.0 km', {
-      fontFamily: FONTS.MONO,
-      fontSize: '12px',
-      color: '#fff2cc',
-      stroke: '#1a0f08',
-      strokeThickness: 2
-    }).setOrigin(1, 0.5).setDepth(HUD_DEPTH);
-
     // Multiplier central (top-center) — pulso suave enquanto chain ativo.
     this.multiplierCenter = this.add.text(GAME_WIDTH / 2, 44, `×${CHAIN_MULTIPLIER}`, {
       fontFamily: FONTS.DISPLAY,
@@ -121,6 +110,32 @@ export class HUDScene extends Phaser.Scene {
       stroke: '#1a0f08',
       strokeThickness: 2
     }).setOrigin(0.5, 0.5).setDepth(HUD_DEPTH);
+
+    // ── HUD endless: bioma (top-center abaixo do score) + distância/tempo (direita) ──
+    this.biomeLabel = this.add.text(GAME_WIDTH / 2, 72, '', {
+      fontFamily: FONTS.MONO,
+      fontSize: '12px',
+      color: '#f4e4c1',
+      stroke: '#1a0f08',
+      strokeThickness: 2
+    }).setOrigin(0.5).setDepth(HUD_DEPTH).setAlpha(0.9);
+
+    this.distanceText = this.add.text(GAME_WIDTH - 16, 8, '0 m', {
+      fontFamily: FONTS.MONO,
+      fontSize: '16px',
+      color: '#f4e4c1',
+      stroke: '#1a0f08',
+      strokeThickness: 3,
+      fontStyle: 'bold'
+    }).setOrigin(1, 0).setDepth(HUD_DEPTH);
+
+    this.timeText = this.add.text(GAME_WIDTH - 16, 30, '00:00', {
+      fontFamily: FONTS.MONO,
+      fontSize: '14px',
+      color: '#f0c840',
+      stroke: '#1a0f08',
+      strokeThickness: 3
+    }).setOrigin(1, 0).setDepth(HUD_DEPTH);
 
     const game = this.scene.get('GameScene');
     game.events.on('hud-lives', (lives: number) => this.setLives(lives));
@@ -142,14 +157,12 @@ export class HUDScene extends Phaser.Scene {
     game.events.on('hud-milestone', (ms: number) => this.showMilestone(ms));
     game.events.on('hud-pickup-text', (type: string) => this.showPickupText(type));
     game.events.on('hud-kills', (count: number) => this.setKills(count));
-  }
-
-  override update(time: number, _delta: number) {
-    if (!this.distanceText?.active) return;
-    if (this.distanceStartMs === 0) this.distanceStartMs = time;
-    // Escala fictícia: 1 km a cada 20s de jogo (evoca o trajeto Recife-Olinda).
-    const km = ((time - this.distanceStartMs) / 1000) * 0.05;
-    this.distanceText.setText(`DIST: ${km.toFixed(1)} km`);
+    game.events.on(
+      'endless-tick',
+      (elapsedMs: number, distanceM: number, biomeShort: string, loopIndex: number) => {
+        this.updateEndlessHud(elapsedMs, distanceM, biomeShort, loopIndex);
+      }
+    );
   }
 
   private setKills(count: number) {
@@ -163,6 +176,16 @@ export class HUDScene extends Phaser.Scene {
       duration: 160,
       ease: 'Back.easeOut'
     });
+  }
+
+  private updateEndlessHud(elapsedMs: number, distanceM: number, biomeShort: string, loopIndex: number) {
+    const totalSec = Math.floor(elapsedMs / 1000);
+    const mm = Math.floor(totalSec / 60).toString().padStart(2, '0');
+    const ss = (totalSec % 60).toString().padStart(2, '0');
+    this.timeText.setText(`${mm}:${ss}`);
+    this.distanceText.setText(`${distanceM} m`);
+    const loopSuffix = loopIndex > 0 ? ` (NOITE ${loopIndex})` : '';
+    this.biomeLabel.setText(`POR ${biomeShort}${loopSuffix}`);
   }
 
   private setChainMultiplier(multiplier: number, active: boolean) {
