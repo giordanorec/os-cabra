@@ -22,8 +22,10 @@ const REAL_SPRITES: RealSprite[] = [
 // Sprites de imagem única (não spritesheet) — cada PNG é uma pose só.
 // player.png é 128×128 ilustração completa; carregar como spritesheet 32×32
 // fatiaria em 16 frames-pedaço e renderizaria uma tira ilegível.
+// enemy-mamulengo.png é 96×96 ilustração única — mesmo caso.
 const SINGLE_SPRITES: Array<{ key: string; path: string }> = [
-  { key: 'player', path: 'assets/sprites/player.png' }
+  { key: 'player', path: 'assets/sprites/player.png' },
+  { key: 'enemy-mamulengo', path: 'assets/sprites/enemy-mamulengo.png' }
 ];
 
 const SFX_KEYS = [
@@ -157,16 +159,84 @@ export class PreloadScene extends Phaser.Scene {
     // Bullets inimigas
     this.generateRect('enemy-bullet-flecha', 6, 18, 0xe84a4a);
     this.generateRect('enemy-bullet-bombinha', 10, 10, 0xf0c840);
+    this.generateCircle('enemy-bullet-cabeca', 16, 0x2a2540);
+    this.generateCircle('enemy-bullet-figo', 14, 0xb84a2e);
     // HUD icons
     this.generateRect('ui-life-icon', 24, 24, 0xe84a4a);
     this.generateRect('ui-bomb-icon', 24, 24, 0xf0c840);
     // VFX
     this.generateRect('vfx-spark', 3, 3, 0xf0c840);
     this.generateRect('vfx-ember', 4, 4, 0xfff2cc);
+    this.generateRect('vfx-shield-shatter', 4, 4, 0xd4a04c);
     // Boss members — Visual Designer ainda não separou o atlas; placeholders diferenciados
     this.generateRect('boss-rei', 48, 56, 0xf0c840);
     this.generateRect('boss-rainha', 48, 56, 0xe84a4a);
     this.generateRect('boss-calunga', 36, 44, 0x8dc850);
+    // Inimigos sem asset entregue (Visual Designer M3+): placeholders distintos
+    // por silhueta. Urubu = triângulo escuro (pássaro aéreo). Papa-figo = círculo
+    // carmim com anel (criatura bio-orgânica central).
+    this.generateTriangle('enemy-urubu', 56, 44, 0x2a2540);
+    this.generateTargetBlob('enemy-papa-figo', 72, 72, 0xb84a2e, 0x2a2540);
+    // Power-up sombrinha (placeholder): diamante dourado com cabo — evoca
+    // sombrinha de frevo (versão final virá do Visual Designer).
+    this.generateUmbrella('powerup-sombrinha', 0xf0c840, 0xe84a4a);
+  }
+
+  private generateCircle(key: string, d: number, color: number) {
+    const g = this.add.graphics({ x: 0, y: 0 });
+    g.fillStyle(color, 1);
+    g.fillCircle(d / 2, d / 2, d / 2);
+    g.generateTexture(key, d, d);
+    g.destroy();
+  }
+
+  private generateTriangle(key: string, w: number, h: number, color: number) {
+    const g = this.add.graphics({ x: 0, y: 0 });
+    g.fillStyle(color, 1);
+    // triângulo apontando pra baixo (urubu planando) com braços laterais
+    g.fillTriangle(0, 0, w, 0, w / 2, h);
+    g.lineStyle(2, 0xf4e4c1, 0.7);
+    g.strokeTriangle(0, 0, w, 0, w / 2, h);
+    g.generateTexture(key, w, h);
+    g.destroy();
+  }
+
+  private generateTargetBlob(key: string, w: number, h: number, fill: number, stroke: number) {
+    const g = this.add.graphics({ x: 0, y: 0 });
+    const cx = w / 2;
+    const cy = h / 2;
+    g.fillStyle(fill, 1);
+    g.fillCircle(cx, cy, Math.min(w, h) / 2 - 2);
+    g.lineStyle(3, stroke, 1);
+    g.strokeCircle(cx, cy, Math.min(w, h) / 2 - 2);
+    g.lineStyle(2, 0xf0c840, 0.9);
+    g.strokeCircle(cx, cy, Math.min(w, h) / 4);
+    g.generateTexture(key, w, h);
+    g.destroy();
+  }
+
+  private generateUmbrella(key: string, canopy: number, accent: number) {
+    // 36×44 sombrinha: meia-cúpula no topo + cabo vertical curto
+    const w = 36;
+    const h = 44;
+    const g = this.add.graphics({ x: 0, y: 0 });
+    g.fillStyle(canopy, 1);
+    g.slice(w / 2, 22, 16, Math.PI, 0, true);
+    g.fillPath();
+    g.lineStyle(2, 0x2a2540, 1);
+    g.strokeCircle(w / 2, 22, 16);
+    // gomos de cor alternada (xilogravura ingênua)
+    g.lineStyle(1, accent, 0.9);
+    g.lineBetween(w / 2, 22, 4, 22);
+    g.lineBetween(w / 2, 22, w - 4, 22);
+    g.lineBetween(w / 2, 22, w / 2, 6);
+    // cabo
+    g.fillStyle(accent, 1);
+    g.fillRect(w / 2 - 1, 22, 2, 18);
+    g.fillStyle(canopy, 1);
+    g.fillCircle(w / 2, 42, 3);
+    g.generateTexture(key, w, h);
+    g.destroy();
   }
 
   private generateRect(key: string, w: number, h: number, color: number) {

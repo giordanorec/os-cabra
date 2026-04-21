@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import { DEPTH, GAME_WIDTH, PLAYER_LIVES } from '../config';
+import { DEPTH, GAME_WIDTH, PLAYER_LIVES, CHAIN_MULTIPLIER } from '../config';
 import { getString } from '../strings';
 import { FONTS } from '../fonts';
 
@@ -11,6 +11,8 @@ export class HUDScene extends Phaser.Scene {
   private lifeSlots: Phaser.GameObjects.Rectangle[] = [];
   private scoreValue!: Phaser.GameObjects.Text;
   private multiplierText!: Phaser.GameObjects.Text;
+  private multiplierCenter!: Phaser.GameObjects.Text;
+  private multiplierCenterPulse?: Phaser.Tweens.Tween;
   private multiplierTween?: Phaser.Tweens.Tween;
   private phaseGroup: Phaser.GameObjects.GameObject[] = [];
   private checkpointText?: Phaser.GameObjects.Text;
@@ -73,6 +75,15 @@ export class HUDScene extends Phaser.Scene {
       strokeThickness: 3
     }).setVisible(false).setDepth(HUD_DEPTH);
 
+    // Multiplier central (top-center) — pulso suave enquanto chain ativo.
+    this.multiplierCenter = this.add.text(GAME_WIDTH / 2, 44, `×${CHAIN_MULTIPLIER}`, {
+      fontFamily: FONTS.DISPLAY,
+      fontSize: '32px',
+      color: '#f0c840',
+      stroke: '#2a2540',
+      strokeThickness: 4
+    }).setOrigin(0.5).setVisible(false).setDepth(HUD_DEPTH);
+
     this.add.text(GAME_WIDTH / 2, 600 - 12, getString('controls.hint'), {
       fontFamily: FONTS.MONO,
       fontSize: '12px',
@@ -95,6 +106,100 @@ export class HUDScene extends Phaser.Scene {
       this.showBossDefeated(bonus, lives, total)
     );
     game.events.on('hud-boss-hide', () => this.hideBossHp());
+    game.events.on('hud-chain', (multiplier: number, active: boolean) =>
+      this.setChainMultiplier(multiplier, active)
+    );
+    game.events.on('hud-milestone', (ms: number) => this.showMilestone(ms));
+    game.events.on('hud-pickup-text', (type: string) => this.showPickupText(type));
+  }
+
+  private setChainMultiplier(multiplier: number, active: boolean) {
+    if (active) {
+      this.multiplierCenter.setText(`×${multiplier}`);
+      if (!this.multiplierCenter.visible) {
+        this.multiplierCenter.setVisible(true).setAlpha(0).setScale(1.4);
+        this.tweens.add({
+          targets: this.multiplierCenter,
+          alpha: 1,
+          scale: 1,
+          duration: 250,
+          ease: 'Back.easeOut',
+          onComplete: () => {
+            this.multiplierCenterPulse = this.tweens.add({
+              targets: this.multiplierCenter,
+              scale: 1.08,
+              duration: 450,
+              yoyo: true,
+              repeat: -1,
+              ease: 'Sine.easeInOut'
+            });
+          }
+        });
+      }
+    } else if (this.multiplierCenter.visible) {
+      this.multiplierCenterPulse?.stop();
+      this.multiplierCenterPulse = undefined;
+      this.tweens.add({
+        targets: this.multiplierCenter,
+        alpha: 0,
+        duration: 250,
+        onComplete: () => this.multiplierCenter.setVisible(false)
+      });
+    }
+  }
+
+  private showMilestone(ms: number) {
+    const key = ms >= 100_000
+      ? 'feedback.milestone_100k'
+      : ms >= 50_000
+      ? 'feedback.milestone_50k'
+      : 'feedback.milestone_10k';
+    const label = this.add.text(GAME_WIDTH / 2, 300, getString(key), {
+      fontFamily: FONTS.DISPLAY,
+      fontSize: '56px',
+      color: '#f0c840',
+      stroke: '#2a2540',
+      strokeThickness: 6
+    }).setOrigin(0.5).setDepth(OVERLAY_DEPTH).setAlpha(0).setScale(0.6);
+    this.tweens.add({
+      targets: label,
+      alpha: 1,
+      scale: 1,
+      duration: 400,
+      ease: 'Back.easeOut',
+      hold: 400,
+      yoyo: true,
+      onComplete: () => label.destroy()
+    });
+    this.cameras.main.flash(120, 240, 200, 64);
+  }
+
+  private showPickupText(type: string) {
+    const key = type === 'sombrinha' ? 'pickup.arretado' : 'pickup.visse';
+    const txt = this.add.text(GAME_WIDTH / 2, 200, getString(key), {
+      fontFamily: FONTS.DISPLAY,
+      fontSize: '40px',
+      color: '#f0c840',
+      stroke: '#2a2540',
+      strokeThickness: 5
+    }).setOrigin(0.5).setDepth(OVERLAY_DEPTH).setAlpha(0).setScale(0.6);
+    this.tweens.add({
+      targets: txt,
+      alpha: 1,
+      scale: 1,
+      duration: 250,
+      ease: 'Back.easeOut',
+      onComplete: () => {
+        this.tweens.add({
+          targets: txt,
+          alpha: 0,
+          y: 170,
+          duration: 600,
+          delay: 400,
+          onComplete: () => txt.destroy()
+        });
+      }
+    });
   }
 
   private setLives(lives: number) {

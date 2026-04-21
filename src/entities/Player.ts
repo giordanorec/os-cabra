@@ -11,6 +11,10 @@ import {
 } from '../config';
 import { Action, InputManager } from '../systems/InputManager';
 import { BulletGroup } from './Bullet';
+import { PowerUpType } from './PowerUp';
+
+const SHIELD_ORBIT_RADIUS = 38;
+const SHIELD_ORBIT_RAD_PER_MS = Phaser.Math.DegToRad(120) / 1000;
 
 // Folgas das bordas do canvas — HUD fica sempre visível (80px top/bottom).
 const BOUND_MARGIN_X = 32;
@@ -25,9 +29,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   private lastFireMs = 0;
   private invulnUntilMs = 0;
   lives = PLAYER_LIVES;
+  hasShield = false;
+  private shieldSprite?: Phaser.GameObjects.Sprite;
   onDeath?: () => void;
   onDamage?: (livesLeft: number) => void;
   onFire?: (x: number, y: number) => void;
+  onShieldBreak?: (x: number, y: number) => void;
+  onPowerUpCollected?: (type: PowerUpType) => void;
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, 'player');
@@ -96,6 +104,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.setAlpha(phase === 0 ? 1 : 0.3);
       }
     }
+
+    if (this.shieldSprite) {
+      const angle = time * SHIELD_ORBIT_RAD_PER_MS;
+      this.shieldSprite.x = this.x + Math.cos(angle) * SHIELD_ORBIT_RADIUS;
+      this.shieldSprite.y = this.y + Math.sin(angle) * SHIELD_ORBIT_RADIUS;
+      this.shieldSprite.setRotation(angle + Math.PI / 2);
+    }
   }
 
   isInvulnerable(time: number): boolean {
@@ -104,6 +119,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
   takeDamage(time: number): boolean {
     if (this.isInvulnerable(time)) return false;
+    if (this.hasShield) {
+      this.breakShield();
+      this.invulnUntilMs = time + PLAYER_INVULN_MS;
+      return true;
+    }
     this.lives -= 1;
     this.invulnUntilMs = time + PLAYER_INVULN_MS;
     this.onDamage?.(this.lives);
@@ -111,5 +131,30 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       this.onDeath?.();
     }
     return true;
+  }
+
+  applyPowerUp(type: PowerUpType) {
+    this.onPowerUpCollected?.(type);
+    if (type === 'sombrinha') {
+      this.enableShield();
+    }
+    // outros tipos: no-op por enquanto (implementação futura)
+  }
+
+  private enableShield() {
+    if (this.shieldSprite) this.shieldSprite.destroy();
+    this.hasShield = true;
+    this.shieldSprite = this.scene.add.sprite(this.x, this.y - SHIELD_ORBIT_RADIUS, 'powerup-sombrinha');
+    this.shieldSprite.setDepth(DEPTH.PLAYER + 1);
+    this.shieldSprite.setScale(0.6);
+  }
+
+  private breakShield() {
+    this.hasShield = false;
+    const sx = this.shieldSprite?.x ?? this.x;
+    const sy = this.shieldSprite?.y ?? this.y;
+    this.shieldSprite?.destroy();
+    this.shieldSprite = undefined;
+    this.onShieldBreak?.(sx, sy);
   }
 }
