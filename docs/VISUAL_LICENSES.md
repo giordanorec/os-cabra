@@ -27,9 +27,16 @@ Arquivos que vão para o build. Toda linha precisa de autor, licença compatíve
 | `public/assets/sprites/boss-{rei,rainha,calunga}.png` | Trio Maracatu 256×256 | Gemini / 2026-04-19 (M3) | Próprio (IA) | raw (`--reference=boss-rei.png` pra Rainha/Calunga) | Paleta frevo |
 | `public/assets/sprites/bullet-player.png` | Grão de milho dourado (16×16 + @2x) | Gemini / 2026-04-19 (M3) | Próprio (IA) | raw | Tiro do player |
 | `public/assets/backgrounds/menu.png` | Capa: Galo gigante em mangue radiante (800×600) | Gemini / 2026-04-19 (M3) | Próprio (IA) | raw | Splash screen |
-| `public/assets/backgrounds/fase1/{back,mid,fore}.png` | Marco Zero carnaval, 3 camadas parallax | Gemini / 2026-04-19 (M3) | Próprio (IA) | raw | Paleta frevo, mid/fore com alpha |
-| `public/assets/backgrounds/fase2/{back,mid,fore}.png` | Ladeiras de Olinda, 3 camadas parallax | Gemini / 2026-04-19 (M3) | Próprio (IA) | raw | Paleta frevo, mid/fore com alpha |
-| `public/assets/backgrounds/fase4/{back,mid,fore}.png` | Capibaribe entardecer, 3 camadas parallax | Gemini / 2026-04-19 (M3) | Próprio (IA) | raw | Paleta frevo, mid/fore com alpha |
+| ~~`public/assets/backgrounds/fase{1,2,4}/{back,mid,fore}.png`~~ (M3 frontal) | Substituído em M5 por vista aérea | — | — | — | **Obsoleto** — M3 usava vista frontal errada (street-level) |
+| `public/assets/backgrounds/fase1/back.png` | Marco Zero aéreo top-down (800×2400) | Gemini / 2026-04-20 (M5) | Próprio (IA) | 3 secções stitched: `fase1-aerial-{north,mid,south}.png` | Mapa aéreo xilogravura |
+| `public/assets/backgrounds/fase1/mid.png` | Overlay nuvens/bandeirinhas (800×1600) | Gemini / 2026-04-20 (M5) | Próprio (IA) | `fase1-mid-layer.png` raw | Alpha flood-filled |
+| `public/assets/backgrounds/fase1/fore.png` | Overlay aves/pipas close (800×1200) | Gemini / 2026-04-20 (M5) | Próprio (IA) | `fase1-fore-layer.png` raw | Alpha, usar alpha=0.4 em Phaser |
+| `public/assets/backgrounds/fase2/back.png` | Olinda hillside aéreo top-down (800×2400) | Gemini / 2026-04-20 (M5) | Próprio (IA) | 3 secções stitched | Igrejas brancas + ladeiras coloridas |
+| `public/assets/backgrounds/fase2/mid.png` | Overlay mid (800×1600) | Gemini / 2026-04-20 (M5) | Próprio (IA) | `fase2-mid-layer.png` raw | |
+| `public/assets/backgrounds/fase2/fore.png` | Overlay fore (800×1200) | Gemini / 2026-04-20 (M5) | Próprio (IA) | `fase2-fore-layer.png` raw | |
+| `public/assets/backgrounds/fase4/back.png` | Capibaribe pôr-do-sol aéreo (800×2400) | Gemini / 2026-04-20 (M5) | Próprio (IA) | 3 secções stitched | Rio serpentinando + palafitas |
+| `public/assets/backgrounds/fase4/mid.png` | Overlay mid (800×1600) | Gemini / 2026-04-20 (M5) | Próprio (IA) | `fase4-mid-layer.png` raw | |
+| `public/assets/backgrounds/fase4/fore.png` | Overlay fore (800×1200) | Gemini / 2026-04-20 (M5) | Próprio (IA) | `fase4-fore-layer.png` raw | |
 | `public/assets/ui/logo-os-cabra.png` | Logo colorido lettering xilografado (700×620) | Gemini / 2026-04-19 (M3) | Próprio (IA) | raw | Pra MenuScene |
 | `public/assets/ui/moldura-cordel.png` | Frame decorativo colorido (600×450) | Gemini / 2026-04-19 (M3) | Próprio (IA) | raw | Center transparente |
 | `public/assets/ui/icon-vida.png`, `icon-bomba.png` | HUD galinho + garrafinha (64×64) | Gemini / 2026-04-19 (M3) | Próprio (IA) | raw | |
