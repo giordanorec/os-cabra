@@ -356,6 +356,13 @@ Caso o Gameplay Dev queira mostrar nome do inimigo em popup ao primeiro encontro
 | `error.webgl` | TEU NAVEGADOR TÁ FRACO | fallback WebGL ausente |
 | `error.generic` | DEU RUIM, CABRA. | genérico |
 
+### Controles (strings runtime, mantidas em `src/strings.ts`)
+
+| Chave | String | Nota |
+|---|---|---|
+| `controls.hint` | [SETAS] move (4 direções)  [ESPAÇO] atira  [ESC] pausa  [F] tela cheia | HUD footer |
+| `controls.fullscreen_hint` | [F] TELA CHEIA | botão canto sup. direito |
+
 ---
 
 ## Notas gerais de i18n

@@ -79,14 +79,14 @@ Todas as strings do jogo — ~120 entradas cobrindo menus, feedbacks, fases, bos
 
 | Tecla | Ação | Contexto | Exibido no HUD |
 |---|---|---|---|
-| ← → | Mover player | Gameplay | `[SETAS] move` |
+| ← → ↑ ↓ | Mover player (4 direções, livre dentro dos bounds 32..768 × 80..520; diagonais normalizadas) | Gameplay | `[SETAS] move (4 direções)` |
 | Espaço | Atirar (hold = auto-fire com cooldown) | Gameplay | `[ESPAÇO] atira` |
 | Espaço / Enter | Confirmar | Menus / overlays | (contextual) |
 | ESC | Pause / resume / fechar overlay | Gameplay, menus secundários | `[ESC] pausa` |
 | **F** | **Toggle browser fullscreen** (não só FIT do canvas) | Qualquer cena | `[F] TELA CHEIA` (canto sup. direito no Menu, inline no HUD) |
 | X | Smart bomb (Cachaça Boa) — quando estocada | Gameplay | HUD condicional |
 
-Chave do glossário: `controls.hint` concatena `[SETAS] move · [ESPAÇO] atira · [ESC] pausa · [F] tela cheia`. Botão clicável de fullscreen no canto superior direito do MenuScene dispara `this.scale.toggleFullscreen()` via user gesture (requisito Chrome).
+Chave do glossário: `controls.hint` concatena `[SETAS] move (4 direções) · [ESPAÇO] atira · [ESC] pausa · [F] tela cheia`. Botão clicável de fullscreen no canto superior direito do MenuScene dispara `this.scale.toggleFullscreen()` via user gesture (requisito Chrome).
 
 ## 5. Tipografia
 
