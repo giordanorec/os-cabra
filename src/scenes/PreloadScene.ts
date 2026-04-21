@@ -13,11 +13,17 @@ interface RealSprite {
 
 // Sprites reais em public/assets/sprites/ (entregues pelo Visual Designer M2+).
 const REAL_SPRITES: RealSprite[] = [
-  { key: 'player',           path: 'assets/sprites/player.png',           frameWidth: 32, frameHeight: 32 },
   { key: 'enemy-passista',   path: 'assets/sprites/enemy-passista.png',   frameWidth: 32, frameHeight: 32 },
   { key: 'enemy-caboclinho', path: 'assets/sprites/enemy-caboclinho.png', frameWidth: 28, frameHeight: 28 },
   { key: 'enemy-mosca',      path: 'assets/sprites/enemy-mosca.png',      frameWidth: 14, frameHeight: 14 },
   { key: 'boss-maracatu',    path: 'assets/sprites/boss-maracatu.png',    frameWidth: 256, frameHeight: 256 }
+];
+
+// Sprites de imagem única (não spritesheet) — cada PNG é uma pose só.
+// player.png é 128×128 ilustração completa; carregar como spritesheet 32×32
+// fatiaria em 16 frames-pedaço e renderizaria uma tira ilegível.
+const SINGLE_SPRITES: Array<{ key: string; path: string }> = [
+  { key: 'player', path: 'assets/sprites/player.png' }
 ];
 
 const SFX_KEYS = [
@@ -51,19 +57,18 @@ const AMBIENCE_TRACKS = [
 // `load.image` silenciosamente falha se o arquivo não existir; Parallax.ts
 // detecta `textures.exists(key)` e cai pro fallback procedural nesse caso.
 //
-// NOTA 2026-04-20: PNGs frontais da fase 1 DESATIVADOS temporariamente.
-// - back.png: vista frontal de cidade → tila como parede de casas.
-// - fore.png: faixa de casarios de Olinda → mesmo problema, fila contínua
-//   cobrindo o gameplay inteiro (confirmado por smoke screenshot 2026-04-20).
-// Visual Designer está regerando em vista aérea em
-// `art/milestone-5-backgrounds-aerea`. Reativar quando novo asset chegar.
-// Mid.png (balões/pipas/nuvens) permanece ativo — é decorativo com bastante
-// alpha e não bloqueia o jogador.
+// back.png (milestone-5) é a vista aérea de Recife — casas coloridas de cima,
+// Capibaburibe, quarteirões — entregue alta (800×2400) para scroll ping-pong
+// vertical ao longo da fase.
+// mid.png: bandeirinhas/balões/nuvens em PNG com alpha — decorativo.
+// fore.png (milestone-5) regerada mas AINDA é postal frontal (galo + pássaros
+// tamanho tela inteira) → bloqueia gameplay. Desativado até Visual Designer
+// entregar variante aérea/silhueta leve.
 const BACKGROUND_IMAGES = [
   { key: 'bg-menu-back',  file: 'assets/backgrounds/menu.png' },
-  // { key: 'bg-fase1-back', file: 'assets/backgrounds/fase1/back.png' }, // DESATIVADO — vista frontal
+  { key: 'bg-fase1-back', file: 'assets/backgrounds/fase1/back.png' },
   { key: 'bg-fase1-mid',  file: 'assets/backgrounds/fase1/mid.png' }
-  // { key: 'bg-fase1-fore', file: 'assets/backgrounds/fase1/fore.png' }  // DESATIVADO — faixa frontal de casarios
+  // { key: 'bg-fase1-fore', file: 'assets/backgrounds/fase1/fore.png' }  // bloqueia gameplay — ver comentário acima
 ];
 
 export class PreloadScene extends Phaser.Scene {
@@ -88,6 +93,9 @@ export class PreloadScene extends Phaser.Scene {
 
     for (const s of REAL_SPRITES) {
       this.load.spritesheet(s.key, s.path, { frameWidth: s.frameWidth, frameHeight: s.frameHeight });
+    }
+    for (const s of SINGLE_SPRITES) {
+      this.load.image(s.key, s.path);
     }
     this.generateAllPlaceholders();
     for (const k of SFX_KEYS) {

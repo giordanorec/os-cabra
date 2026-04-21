@@ -24,16 +24,15 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   onFire?: (x: number, y: number) => void;
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
-    // O spritesheet `player.png` tem 17 frames mas vários são vazios (atlas pipeline
-    // do Visual Designer gerou placeholders). Frame 10 mostra o galo colorido.
-    // Substituir pelo frame correto quando art/milestone-4 padronizar as poses.
-    super(scene, x, y, 'player', 10);
+    super(scene, x, y, 'player');
     scene.add.existing(this);
     scene.physics.add.existing(this);
     this.setCollideWorldBounds(true);
-    // Sprite base 32×32 → 64×64 (≈10.7% da altura do game). Voltar pra 1x
-    // quando Visual Designer empurrar assets já no tamanho 64-96px.
-    this.setScale(2);
+    // player.png é 128×128; target ~96px na tela (16% da altura do game).
+    this.setScale(0.75);
+    // Hitbox ~60% do sprite pra dar fair-play nas bullets inimigas.
+    const body = this.body as Phaser.Physics.Arcade.Body | null;
+    if (body) body.setSize(72, 72).setOffset(28, 32);
     this.setDepth(DEPTH.PLAYER);
     this.baseY = y;
     this.startBob();
