@@ -90,3 +90,101 @@ Fazer *Os Cabra* rodar no iPad do usuário mantendo a experiência desktop atual
 - Inspeção visual dos 5 screenshots em `docs/milestone-reports/mobile-v1/`
 
 Suíte desktop (`playwright.config.ts`) não foi rerodada localmente porque a porta 5173 está servindo outro worktree durante a sessão; nenhum dos caminhos que ela exercita (keyboard input, fluxo menu→game→gameover) foi alterado em comportamento — touch é aditivo.
+
+---
+
+## Rebase pós #29 — BLOQUEIO parcial (sessão headless sem permissão pra escrever git)
+
+**Data**: 2026-04-20
+**Situação**: Arquiteto mergeou #29 (hotfix strings + DEPTH enum) + #27 (art M4) em `main` depois do PR #28 ser aberto. PR #28 ficou com conflito. Tarefa: rebasar `feat/mobile-v1` em cima de `origin/main` (`825a2d4`).
+
+### BLOQUEIO: permissões
+
+Esta sessão está em modo headless (`claude -p`) com autoapprove restrito. `git fetch`, `git rebase`, `git merge`, `git commit` e `git push` pedem aprovação interativa e são negados. Só comandos read-only (`git log`, `git diff`, `git status`, `git branch`) rodam. Não consigo completar o rebase daqui — o Arquiteto (ou uma nova sessão com `--dangerously-skip-permissions` / `acceptAll`) precisa executar os passos abaixo. Tudo já está pré-resolvido na análise.
+
+### Diagnóstico dos conflitos
+
+Base comum: `63664eb` (merge commit do `feat/visual-pivot` em main).
+Commits novos em `origin/main` não presentes em `feat/mobile-v1`: `a8a8024` (fix nave/bob/parallax), `afd43fc` (art M4), `c95f6da` (hotfix strings+depth), `25e86ee` (merge #29), `825a2d4` (merge #27).
+
+Cruzando `git diff --name-only 63664eb HEAD` com `git diff --name-only 63664eb origin/main`:
+
+**Arquivos que só minha branch tocou** (aplicam limpo — zero conflito):
+`docs/REPORT_MOBILE.md`, `docs/milestone-reports/mobile-v1/*.png`, `playwright.mobile.config.ts`, `public/manifest.webmanifest`, `src/main.ts`, `src/scenes/GameOverScene.ts`, `src/scenes/GameScene.ts`, `src/scenes/MenuScene.ts`, `src/systems/InputManager.ts`, `src/systems/Platform.ts`, `src/systems/TouchInput.ts`, `tests/smoke/mobile-ipad.spec.ts`.
+
+**Arquivos que só `origin/main` tocou** (auto-merge, adoção *theirs* no rebase):
+`src/strings.ts` (novas chaves do hotfix — incluindo `pickup.danou`/`bicho`, `victory.*`, `codes.*`, `stage_end.*`, remoção de `pickup.massa` e ajustes de tom), `src/config.ts` (novo enum `DEPTH`), `src/entities/*.ts`, `src/bosses/BossMember.ts`, `src/scenes/HUDScene.ts`, `src/scenes/PreloadScene.ts`, `src/systems/{Effects,Fullscreen,Parallax}.ts`, assets `@2x` e sky/sprites, docs/*. Minha branch não adicionou nenhuma chave de string `controls.touch.*` — TouchInput.ts usa UI desenhada (shapes + texto hardcoded do chip `AUTO ON/OFF`), que é a única string fora do sistema `getString`. Fica como débito pós-rebase se o Arquiteto quiser consolidar (ver "Próximo passo" abaixo).
+
+**Arquivos tocados pelos dois lados — CONFLITO REAL**:
+
+1. **`index.html`** — conflito em duas regiões:
+   - Bloco `#game`: main removeu `display:flex + align-items + justify-content` e adicionou `position: relative` + comentário explicando que Phaser Scale.FIT cuidava do posicionamento e o flex estava zerando altura em certos viewports. Minha branch manteve o `display:flex` e adicionou `padding: env(safe-area-inset-*)` + `box-sizing: border-box` no mesmo bloco.
+   - Seletor `canvas`: main renomeou para `#game canvas`. Minha branch adicionou `-webkit-touch-callout: none` dentro do bloco `canvas`.
+
+   **Resolução proposta (merge dos dois)**:
+   ```html
+   /*
+     Não usamos display:flex aqui — o Phaser Scale.FIT+CENTER_BOTH já
+     posiciona o canvas via position:absolute. Flex layout no parent
+     conflita com o cálculo do Phaser e em alguns viewports o canvas
+     resultava em height=0 (nave ficava fora da tela).
+   */
+   #game {
+     width: 100vw;
+     height: 100vh;
+     position: relative;
+     /* iPad: evita que a barra de status/home-bar corte os controles touch */
+     padding: env(safe-area-inset-top) env(safe-area-inset-right)
+              env(safe-area-inset-bottom) env(safe-area-inset-left);
+     box-sizing: border-box;
+   }
+   #game canvas {
+     display: block;
+     image-rendering: pixelated;
+     /* Em mobile, evita menu de contexto em long-press */
+     -webkit-touch-callout: none;
+   }
+   ```
+   Tudo o mais da minha branch (meta tags PWA, `touch-action: none`, `overscroll-behavior: none` no body, etc.) é acréscimo em regiões não tocadas por main — entra sem conflito.
+
+2. **`src/scenes/PauseScene.ts`** — muito provavelmente **auto-merge limpo**, regiões disjuntas:
+   - Main: substituiu números mágicos `1000`/`1001` por `DEPTH.PAUSE`/`DEPTH.PAUSE + 1` e adicionou import de `DEPTH` na linha 2 (já importa `GAME_HEIGHT, GAME_WIDTH` de `../config`).
+   - Minha branch: adicionou uma linha `this.inputManager.registerAnyTapAsConfirm(this);` logo após a construção do `inputManager` no `create()` (região diferente).
+   - Git deve fazer 3-way merge sem conflito. Se por acaso conflitar no bloco de imports (hunk adjacente), basta aceitar a versão de `origin/main` (com `DEPTH`) e preservar a linha do tap handler mais abaixo.
+
+### Plano de execução (após aprovação das permissões git)
+
+```bash
+cd /home/grec/oscabra-worktrees/mobile-v1
+git fetch origin main
+git rebase origin/main
+
+# Se parar em index.html: editar manualmente pro merge descrito acima, depois:
+git add index.html
+git rebase --continue
+
+# Se parar em PauseScene.ts (improvável): aceitar o import de DEPTH de main e
+# preservar a linha registerAnyTapAsConfirm. Depois:
+git add src/scenes/PauseScene.ts
+git rebase --continue
+
+# strings.ts e config.ts devem aplicar limpo (theirs), nenhuma edição manual.
+
+npm run typecheck     # deve passar
+npm run build         # deve passar
+
+git push --force-with-lease origin feat/mobile-v1
+```
+
+Depois do push, PR #28 reabre automático e CI roda.
+
+### Risco residual pós-rebase
+
+- `src/scenes/PauseScene.ts` passa a usar `DEPTH.PAUSE` (=2000) vinda do enum; valores equivalem aos literais anteriores (1000/1001 viraram 2000/2001). Subiu em 1000, mas PauseScene é render por cima de tudo mesmo — efeito prático é zero em cenários normais, e HUD_OVERLAY (1100) agora fica sob pause, que é o comportamento correto (pause deve cobrir HUD).
+- `src/strings.ts` remove `pickup.massa` (hotfix PE). Minha branch nunca lê essa chave, e `getPickupTaunt` em main já tirou ela da lista de variantes — seguro.
+- Manifest/touch/PWA não dependem de nada de main, então intocados.
+
+### Próximo passo (pós-rebase)
+
+1. Arquiteto roda o rebase conforme plano acima e mergeia #28.
+2. (Opcional / débito futuro) Mover os textos `AUTO ON`/`AUTO OFF` do chip do auto-fire em `TouchInput.ts` pro sistema `getString` — adicionar chaves `controls.touch.autofire_on`/`autofire_off` em `src/strings.ts` e no glossário. Baixa prioridade, fica bom numa v1.1.
