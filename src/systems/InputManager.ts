@@ -4,6 +4,8 @@ import { TouchInput, TouchState } from './TouchInput';
 export enum Action {
   MOVE_LEFT = 'MOVE_LEFT',
   MOVE_RIGHT = 'MOVE_RIGHT',
+  MOVE_UP = 'MOVE_UP',
+  MOVE_DOWN = 'MOVE_DOWN',
   FIRE = 'FIRE',
   PAUSE = 'PAUSE',
   CONFIRM = 'CONFIRM'
@@ -26,6 +28,8 @@ export class InputManager {
     this.keys = {
       [Action.MOVE_LEFT]: kb.addKey(K.LEFT),
       [Action.MOVE_RIGHT]: kb.addKey(K.RIGHT),
+      [Action.MOVE_UP]: kb.addKey(K.UP),
+      [Action.MOVE_DOWN]: kb.addKey(K.DOWN),
       [Action.FIRE]: kb.addKey(K.SPACE),
       [Action.PAUSE]: kb.addKey(K.ESC),
       [Action.CONFIRM]: kb.addKey(K.ENTER)
@@ -53,6 +57,8 @@ export class InputManager {
     if (this.touchState) {
       if (action === Action.MOVE_LEFT && this.touchState.left) return true;
       if (action === Action.MOVE_RIGHT && this.touchState.right) return true;
+      if (action === Action.MOVE_UP && this.touchState.up) return true;
+      if (action === Action.MOVE_DOWN && this.touchState.down) return true;
       if (action === Action.FIRE && this.touchState.fire) return true;
     }
     return false;

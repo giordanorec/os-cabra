@@ -23,7 +23,7 @@
 ## 4. Controle do jogador
 
 - Teclado apenas (confirmado)
-- Setas esquerda/direita: movimento horizontal na faixa inferior (~20% inferior da tela)
+- Setas 4 direções: movimento livre dentro da área de jogo (delimitada por bounds, HUD sempre visível)
 - Espaço: atirar (hold para disparo repetido, respeitando cooldown)
 - ESC: pausa
 - Enter/Espaço: confirmar em menus

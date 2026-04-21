@@ -200,7 +200,7 @@ const STRINGS: Record<string, string> = {
   'error.generic': 'DEU RUIM, CABRA.',
 
   // Controles
-  'controls.hint': '[SETAS] move  [ESPAÇO] atira  [ESC] pausa  [F] tela cheia',
+  'controls.hint': '[SETAS] move (4 direções)  [ESPAÇO] atira  [ESC] pausa  [F] tela cheia',
   'controls.fullscreen_hint': '[F] TELA CHEIA'
 };
 

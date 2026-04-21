@@ -9,6 +9,8 @@ import { GAME_HEIGHT, GAME_WIDTH } from '../config';
 export interface TouchState {
   left: boolean;
   right: boolean;
+  up: boolean;
+  down: boolean;
   fire: boolean;
   pauseJustPressed: boolean;
 }
@@ -37,7 +39,7 @@ const DOUBLE_TAP_MAX_DIST = 80;
 const AUTOFIRE_STORAGE_KEY = 'os_cabra_autofire';
 
 export class TouchInput {
-  readonly state: TouchState = { left: false, right: false, fire: false, pauseJustPressed: false };
+  readonly state: TouchState = { left: false, right: false, up: false, down: false, fire: false, pauseJustPressed: false };
 
   private scene: Phaser.Scene;
   private joyBase!: Phaser.GameObjects.Arc;
@@ -229,6 +231,8 @@ export class TouchInput {
       this.joyPointerId = null;
       this.state.left = false;
       this.state.right = false;
+      this.state.up = false;
+      this.state.down = false;
       this.joyKnob.setPosition(JOY_CX, JOY_CY);
     }
     if (pointer.id === this.firePointerId) {
@@ -255,6 +259,13 @@ export class TouchInput {
     } else {
       this.state.left = dx < 0;
       this.state.right = dx > 0;
+    }
+    if (Math.abs(dy) < JOY_DEADZONE) {
+      this.state.up = false;
+      this.state.down = false;
+    } else {
+      this.state.up = dy < 0;
+      this.state.down = dy > 0;
     }
   }
 

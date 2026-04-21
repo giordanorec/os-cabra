@@ -66,7 +66,7 @@ export class GameScene extends Phaser.Scene {
 
     this.audio.playMusic('music_phase1', 800);
 
-    this.player = new Player(this, GAME_WIDTH / 2, GAME_HEIGHT - 60);
+    this.player = new Player(this, GAME_WIDTH / 2, GAME_HEIGHT - 100);
     this.player.onFire = (x, y) => {
       this.audio.play('player_fire');
       this.fx.muzzleFlash(x, y - 10);
