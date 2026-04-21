@@ -16,6 +16,7 @@ export class PauseScene extends Phaser.Scene {
 
   create() {
     this.inputManager = new InputManager(this);
+    this.inputManager.registerAnyTapAsConfirm(this);
     this.audio = new AudioManager(this);
     this.audio.play('pause_in');
     this.justOpenedAt = this.time.now;

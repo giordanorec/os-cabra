@@ -11,6 +11,8 @@ import { AudioManager } from '../systems/AudioManager';
 import { Parallax } from '../systems/Parallax';
 import { Effects } from '../systems/Effects';
 import { attachFullscreenToggle } from '../systems/Fullscreen';
+import { TouchInput } from '../systems/TouchInput';
+import { shouldUseTouchControls } from '../systems/Platform';
 import { getString } from '../strings';
 import { MaracatuNacao } from '../bosses/MaracatuNacao';
 
@@ -39,6 +41,7 @@ export class GameScene extends Phaser.Scene {
   private ended = false;
   private boss?: MaracatuNacao;
   private bossActive = false;
+  private touchInput?: TouchInput;
 
   constructor() {
     super({ key: 'GameScene' });
@@ -51,6 +54,11 @@ export class GameScene extends Phaser.Scene {
     this.cameras.main.setBackgroundColor(SCENE_BG.FASE1);
     this.parallax = new Parallax(this, 'fase1');
     this.inputManager = new InputManager(this);
+    if (shouldUseTouchControls()) {
+      this.touchInput = new TouchInput(this);
+      this.touchInput.mount();
+      this.inputManager.attachTouch(this.touchInput);
+    }
     this.scoreManager = new ScoreManager();
     this.audio = new AudioManager(this);
     this.fx = new Effects(this);
@@ -115,6 +123,7 @@ export class GameScene extends Phaser.Scene {
 
   override update(time: number, delta: number) {
     this.parallax.tick(delta);
+    this.touchInput?.update(time);
     if (this.ended) return;
     if (this.inputManager.justPressed(Action.PAUSE)) {
       this.pauseGame();
