@@ -46,6 +46,7 @@ export class GameScene extends Phaser.Scene {
   private boss?: MaracatuNacao;
   private bossActive = false;
   private touchInput?: TouchInput;
+  private killCount = 0;
 
   constructor() {
     super({ key: 'GameScene' });
@@ -138,6 +139,7 @@ export class GameScene extends Phaser.Scene {
     this.time.delayedCall(50, () => {
       this.events.emit('hud-lives', this.player.lives);
       this.events.emit('hud-score', this.scoreManager.value, this.scoreManager.multiplierActive);
+      this.events.emit('hud-kills', this.killCount);
       this.events.emit('hud-phase-intro', getString('stage.1.name'), getString('stage.1.subtitle'), 1);
       this.audio.play('phase_intro');
     });
@@ -209,7 +211,10 @@ export class GameScene extends Phaser.Scene {
 
   private onEnemyKilled(enemy: Enemy) {
     this.audio.play('enemy_explode_small');
-    this.fx.enemyDeath(enemy.x, enemy.y);
+    // Pivot juice 2026-04-21: enemyDeath recebe points pra score popup.
+    this.fx.enemyDeath(enemy.x, enemy.y, enemy.points);
+    this.killCount += 1;
+    this.events.emit('hud-kills', this.killCount);
     this.scoreManager.registerKill(enemy.points, this.time.now);
     this.maybeDropPowerUp(enemy.x, enemy.y);
   }

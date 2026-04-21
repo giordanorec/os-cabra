@@ -21,8 +21,8 @@ export class MoscaManga extends Enemy {
     params: MoscaParams,
     onDeath: (enemy: Enemy) => void
   ) {
-    // Mosca é 14×14 — scale 3x → 42px (~7% altura, suficiente pro swarm ainda parecer nuvem)
-    super(scene, x, y, { hp: 1, points: 10, texture: 'enemy-mosca', scale: 3, onDeath });
+    // Mosca é 14×14 — scale 4.5x → 63px (~10% altura) após juice pivot 2026-04-21.
+    super(scene, x, y, { hp: 1, points: 10, texture: 'enemy-mosca', scale: 4.5, onDeath });
     this.centerX = x;
     this.centerStartY = y;
     this.orbitOffset = params.orbitOffsetRad ?? 0;

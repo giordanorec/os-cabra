@@ -20,7 +20,8 @@ export class UrubuCapibaribe extends Enemy {
     target: Phaser.GameObjects.Sprite,
     onDeath: (enemy: Enemy) => void
   ) {
-    super(scene, x, y, { hp: 1, points: 150, texture: 'enemy-urubu', scale: 1, onDeath });
+    // Urubu é 56×44 triângulo — scale 1.7 → 95×75 (~12-16% área).
+    super(scene, x, y, { hp: 1, points: 150, texture: 'enemy-urubu', scale: 1.7, onDeath });
     const dx = target.x - x;
     const dy = Math.max(60, target.y - y);
     const mag = Math.hypot(dx, dy) || 1;
